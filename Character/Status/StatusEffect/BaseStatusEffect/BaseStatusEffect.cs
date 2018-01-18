@@ -5,19 +5,19 @@ public class BaseStatusEffect
 {
     public static int NO_DURATION = -1;
     public int Duration { get; set; }
-    private Status Owner { get; set; }
+    private CharacterManager Owner { get; set; }
     public Persistance Persistance { get; set; }
 
-    public BaseStatusEffect(Status owner, Persistance persistance, int duration)
+    public BaseStatusEffect(CharacterManager owner, Persistance persistance, int duration)
     {
         Duration = duration;
         Owner = owner;
         Persistance = persistance;
     }
 
-    public void Trigger(Trigger effect, Status status)
+    public void Trigger(CharacterTrigger effect, CharacterManager status)
     {
-        if (effect.Equals(Triggers.TURN_END) && Duration != NO_DURATION)
+        if (effect.Equals(CharacterTriggers.TURN_END) && Duration != NO_DURATION)
         {
             Duration--;
             if (Duration <= 0)
@@ -26,9 +26,9 @@ public class BaseStatusEffect
             }
         }
     }
-    public void Apply(Status status) { }
-    public void Remove(Status status) { }
-    public void End(Status status) { }
+    public void Apply(CharacterManager status) { }
+    public void Remove(CharacterManager status) { }
+    public void End(CharacterManager status) { }
 
     public object Icon { get; set; }
     public bool IsHidden { get; set; }

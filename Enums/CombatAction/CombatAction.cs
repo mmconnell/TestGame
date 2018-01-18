@@ -3,14 +3,14 @@
     public class CombatAction
     {
         private CombatAction Parent { get; set; }
-        public Action_Enum ActionValue { get; set; }
+        public Character_Action_Enum ActionValue { get; set; }
 
-        public CombatAction(Action_Enum actionValue)
+        public CombatAction(Character_Action_Enum actionValue)
         {
             ActionValue = actionValue;
         }
 
-        public CombatAction(Action_Enum actionValue, CombatAction parent)
+        public CombatAction(Character_Action_Enum actionValue, CombatAction parent)
         {
             ActionValue = actionValue;
             Parent = parent;

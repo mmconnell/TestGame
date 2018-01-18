@@ -1,22 +1,22 @@
 ﻿namespace Enums.Trigger
 {
-    public class Trigger
+    public class CharacterTrigger
     {
-        private Trigger Parent { get; set; }
-        public Trigger_Enum TriggerValue { get; set; }
-        public Trigger(Trigger_Enum triggerValue)
+        private CharacterTrigger Parent { get; set; }
+        public Character_Trigger_Enum TriggerValue { get; set; }
+        public CharacterTrigger(Character_Trigger_Enum triggerValue)
         {
             Parent = null;
             TriggerValue = triggerValue;
         }
 
-        public Trigger(Trigger_Enum triggerValue, Trigger parent)
+        public CharacterTrigger(Character_Trigger_Enum triggerValue, CharacterTrigger parent)
         {
             Parent = parent;
             TriggerValue = triggerValue;
         }
 
-        public bool Equals(Trigger trigger)
+        public bool Equals(CharacterTrigger trigger)
         {
             bool returnValue = trigger.TriggerValue.Equals(TriggerValue);
             if (Parent != null)

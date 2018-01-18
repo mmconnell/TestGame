@@ -3,11 +3,11 @@
 public class DamagePack
 {
     public double DamageValue { get; set; }
-    public Damage Damage { get; set; }
+    public DamageType Damage { get; set; }
     public bool CanMiss { get; set; }
     public double HitChance { get; set; }
 
-    public DamagePack(double damageValue, Damage damage)
+    public DamagePack(double damageValue, DamageType damage)
     {
         DamageValue = damageValue;
         Damage = damage;
@@ -15,7 +15,7 @@ public class DamagePack
         HitChance = 0;
     }
 
-    public DamagePack(double damageValue, Damage damage, double hitChance)
+    public DamagePack(double damageValue, DamageType damage, double hitChance)
     {
         DamageValue = damageValue;
         Damage = damage;

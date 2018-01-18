@@ -1,21 +1,21 @@
 ﻿namespace Enums.Damage {
-    public class Damage
+    public class DamageType
     {
-        private Damage Parent { get; set; }
-        public Damage_Enum DamageValue { get; set; }
+        private DamageType Parent { get; set; }
+        public Damage_Type_Enum DamageValue { get; set; }
 
-        public Damage(Damage_Enum damage_Enum)
+        public DamageType(Damage_Type_Enum damage_Enum)
         {
             DamageValue = damage_Enum;
         }
 
-        public Damage(Damage_Enum damage_Enum, Damage parent)
+        public DamageType(Damage_Type_Enum damage_Enum, DamageType parent)
         {
             DamageValue = damage_Enum;
             Parent = parent;
         }
 
-        public bool Equals(Damage damage)
+        public bool Equals(DamageType damage)
         {
             bool returnValue = damage.DamageValue.Equals(DamageValue);
             if (Parent != null)

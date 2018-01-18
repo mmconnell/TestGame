@@ -3,8 +3,8 @@ using Enums.Trigger;
 
 public class TriggeredStatusEffect : BaseStatusEffect
 {
-    public Trigger StatusTrigger { get; set; }
-    public TriggeredStatusEffect(Status owner, Trigger statusTrigger, Persistance persistance, int duration) : base(owner, persistance, duration)
+    public CharacterTrigger StatusTrigger { get; set; }
+    public TriggeredStatusEffect(CharacterManager owner, Persistance persistance, int duration, CharacterTrigger statusTrigger) : base(owner, persistance, duration)
     {
         StatusTrigger = statusTrigger;
     }

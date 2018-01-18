@@ -1,6 +1,6 @@
 ﻿namespace Enums
 {
-    public enum Trigger_Enum
+    public enum Character_Trigger_Enum
     {
         //No Children
         TURN_START, TURN_END, DEFEND, RUN_AWAY, ATTACK, USE_ABILITY, ATTACKED,
@@ -30,7 +30,7 @@
             RECEIVE_UNTYPED
     }
 
-    public enum Action_Enum
+    public enum Character_Action_Enum
     {
         TAKE_TURN, WAIT, USE_ITEM, USE_ABILITY,
         USE_MIND,
@@ -43,7 +43,7 @@
                 ESCAPE
     }
 
-    public enum Damage_Enum
+    public enum Damage_Type_Enum
     {
         PHYSICAL,
             PIERCING,
@@ -62,7 +62,7 @@
         COMBAT, DUNGEON, WORLD
     }
 
-    public enum Character_Status_Enum
+    public enum Character_Attribute_Enum
     {
         STAT,
             PHYSICAL_STAT,
