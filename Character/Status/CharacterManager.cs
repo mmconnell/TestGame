@@ -9,13 +9,15 @@ public class CharacterManager {
 
     public Dictionary<Character_Trigger_Enum, List<BaseStatusEffect>> StatusEffects { get; set; }
     public Dictionary<Character_Action_Enum, int> DisableCount { get; set; }
-    public Dictionary<Character_Attribute_Enum, int> CharacterAttributeAlteration { get; set; }
+    public Dictionary<Character_Attribute_Enum, AttributeShift> CharacterAttributeAlteration { get; set; }
+    public Dictionary<Persistance, List<BaseStatusEffect>> PersistanceTracker { get; set; }
 
     public CharacterManager()
     {
         StatusEffects = new Dictionary<Character_Trigger_Enum, List<BaseStatusEffect>>();
         DisableCount = new Dictionary<Character_Action_Enum, int>();
-        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, int>();
+        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, AttributeShift>();
+        PersistanceTracker = new Dictionary<Persistance, List<BaseStatusEffect>>();
 
         foreach (Character_Action_Enum a in Enum.GetValues(typeof(Character_Action_Enum)))
         {
@@ -27,7 +29,11 @@ public class CharacterManager {
         }
         foreach (Character_Attribute_Enum cae in Enum.GetValues(typeof(Character_Attribute_Enum)))
         {
-            CharacterAttributeAlteration.Add(cae, 0);
+            CharacterAttributeAlteration.Add(cae, new AttributeShift());
+        }
+        foreach (Persistance p in Enum.GetValues(typeof(Persistance)))
+        {
+            PersistanceTracker.Add(p, new List<BaseStatusEffect>());
         }
     }
 

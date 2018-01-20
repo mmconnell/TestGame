@@ -17,7 +17,7 @@ public class BaseStatusEffect
 
     public void Trigger(CharacterTrigger effect, CharacterManager status)
     {
-        if (effect.Equals(CharacterTriggers.TURN_END) && Duration != NO_DURATION)
+        if (effect.TriggerValue.Equals(CharacterTriggers.TURN_END))
         {
             Duration--;
             if (Duration <= 0)
@@ -26,9 +26,28 @@ public class BaseStatusEffect
             }
         }
     }
-    public void Apply(CharacterManager status) { }
-    public void Remove(CharacterManager status) { }
-    public void End(CharacterManager status) { }
+    public void Apply(CharacterManager characterManager)
+    {
+        if (Duration != NO_DURATION)
+        {
+            characterManager.StatusEffects[Character_Trigger_Enum.TURN_END].Add(this);
+        }
+        characterManager.PersistanceTracker[Persistance].Add(this);
+    }
+
+    public void Remove(CharacterManager characterManager)
+    {
+        End(characterManager);
+    }
+
+    public void End(CharacterManager characterManager)
+    {
+        if (Duration != NO_DURATION)
+        {
+            characterManager.StatusEffects[Character_Trigger_Enum.TURN_END].Remove(this);
+        }
+        characterManager.PersistanceTracker[Persistance].Add(this);
+    }
 
     public object Icon { get; set; }
     public bool IsHidden { get; set; }

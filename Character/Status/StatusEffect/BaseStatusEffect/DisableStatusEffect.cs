@@ -13,15 +13,15 @@ public class DisableStatusEffect : BaseStatusEffect
         base.Trigger(effect, status);
     }
 
-    public new void Apply(CharacterManager status)
+    public new void Apply(CharacterManager characterManager)
     {
-        status.DisableCount[CombatAction.ActionValue]++;
-        base.Apply(status);
+        characterManager.DisableCount[CombatAction.ActionValue]++;
+        base.Apply(characterManager);
     }
 
-    public new void Remove(CharacterManager status)
+    public new void End(CharacterManager characterManager)
     {
-        status.DisableCount[CombatAction.ActionValue]--;
-        base.Apply(status);
+        characterManager.DisableCount[CombatAction.ActionValue]--;
+        base.End(characterManager);
     }
 }

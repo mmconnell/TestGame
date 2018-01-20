@@ -17,9 +17,14 @@ public class DelayedStatusEffect : BaseStatusEffect
         DeliveryPack = deliveryPack;
     }
 
-    public new void Apply(CharacterManager status)
+    public new void End(CharacterManager characterManager)
     {
-        status.Apply(DeliveryPack);
-        base.Apply(status);
+        characterManager.Apply(DeliveryPack);
+        base.End(characterManager);
+    }
+
+    public new void Remove(CharacterManager characterManager)
+    {
+        base.End(characterManager);
     }
 }
