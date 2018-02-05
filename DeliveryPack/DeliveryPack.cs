@@ -2,22 +2,24 @@
 
 public class DeliveryPack
 {
-    public List<DamagePack> DamagePack { get; set; }
-    public List<EffectPack> EffectPack { get; set; }
+    public List<DamagePack> DamagePacks { get; set; }
+    public List<EffectPack> EffectPacks { get; set; }
+    public CharacterManager Owner { get; set; }
 
-    public DeliveryPack()
+    public DeliveryPack(CharacterManager owner)
     {
-        DamagePack = new List<DamagePack>();
-        EffectPack = new List<EffectPack>();
+        DamagePacks = new List<DamagePack>();
+        EffectPacks = new List<EffectPack>();
+        Owner = owner;
     }
 
-    public void AddDamagePack(DamagePack damagePack)
+    public void AddDamagePack(DamagePack DamagePack)
     {
-        DamagePack.Add(damagePack);
+        DamagePacks.Add(DamagePack);
     }
 
     public void AddEffectPack(EffectPack effectPack)
     {
-        EffectPack.Add(effectPack);
+        EffectPacks.Add(effectPack);
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Enums.Damage {
     public class DamageType
     {
-        private DamageType Parent { get; set; }
+        public DamageType Parent { get; set; }
         public Damage_Type_Enum DamageValue { get; set; }
 
         public DamageType(Damage_Type_Enum damage_Enum)

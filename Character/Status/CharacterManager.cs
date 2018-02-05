@@ -1,23 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enums;
-using Enums.CombatAction;
+using Enums.CharacterStat;
+using Enums.CharacterStatus;
+using Enums.Damage;
 using Enums.Trigger;
+using UnityEngine;
 
-public class CharacterManager {
+public class CharacterManager : MonoBehaviour {
     public int Health { get; set; }
+    public int MaxHealth { get; set; }
+    public int Level { get; set; }
 
-    public Dictionary<Character_Trigger_Enum, List<BaseStatusEffect>> StatusEffects { get; set; }
+    public Dictionary<Character_Trigger_Enum, List<StatusEffectWrapper>> StatusEffects { get; set; }
     public Dictionary<Character_Action_Enum, int> DisableCount { get; set; }
-    public Dictionary<Character_Attribute_Enum, AttributeShift> CharacterAttributeAlteration { get; set; }
-    public Dictionary<Persistance, List<BaseStatusEffect>> PersistanceTracker { get; set; }
+    public Dictionary<Character_Attribute_Enum, List<AttributeShift>> CharacterAttributeAlteration { get; set; }
+    public Dictionary<Persistance, List<StatusEffectWrapper>> PersistanceTracker { get; set; }
+    public Dictionary<Damage_Type_Enum, int> DamageTaken { get; set; }
+    public Dictionary<StatusEffectWrapper, HashSet<CharacterManager>> AuraLastEffected { get; set; }
+    public Dictionary<Character_Stat, int> CurrentStats { get; set; }
+
+    public List<DamageType> DamageTypesTaken { get; set; }
+
+    public List<DerivedStatusEffect> BuffAndDebuffList { get; set; }
+
+    public System.Random RandomGenerator { get; set; }
 
     public CharacterManager()
     {
-        StatusEffects = new Dictionary<Character_Trigger_Enum, List<BaseStatusEffect>>();
+        StatusEffects = new Dictionary<Character_Trigger_Enum, List<StatusEffectWrapper>>();
         DisableCount = new Dictionary<Character_Action_Enum, int>();
-        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, AttributeShift>();
-        PersistanceTracker = new Dictionary<Persistance, List<BaseStatusEffect>>();
+        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, List<AttributeShift>>();
+        PersistanceTracker = new Dictionary<Persistance, List<StatusEffectWrapper>>();
+        DamageTaken = new Dictionary<Damage_Type_Enum, int>();
+        AuraLastEffected = new Dictionary<StatusEffectWrapper, HashSet<CharacterManager>>();
+        CurrentStats = new Dictionary<Character_Stat, int>();
+
+        DamageTypesTaken = new List<DamageType>();
+        BuffAndDebuffList = new List<DerivedStatusEffect>();
+
+        RandomGenerator = new System.Random();
 
         foreach (Character_Action_Enum a in Enum.GetValues(typeof(Character_Action_Enum)))
         {
@@ -25,50 +47,140 @@ public class CharacterManager {
         }
         foreach (Character_Trigger_Enum se in Enum.GetValues(typeof(Character_Trigger_Enum)))
         {
-            StatusEffects.Add(se, new List<BaseStatusEffect>());
+            StatusEffects.Add(se, new List<StatusEffectWrapper>());
         }
         foreach (Character_Attribute_Enum cae in Enum.GetValues(typeof(Character_Attribute_Enum)))
         {
-            CharacterAttributeAlteration.Add(cae, new AttributeShift());
+            CharacterAttributeAlteration.Add(cae, new List<AttributeShift>());
         }
         foreach (Persistance p in Enum.GetValues(typeof(Persistance)))
         {
-            PersistanceTracker.Add(p, new List<BaseStatusEffect>());
+            PersistanceTracker.Add(p, new List<StatusEffectWrapper>());
         }
+        foreach (Damage_Type_Enum dte in Enum.GetValues(typeof(Damage_Type_Enum)))
+        {
+            DamageTaken.Add(dte, 0);
+        }
+        foreach(Character_Stat cs in Enum.GetValues(typeof(Character_Stat)))
+        {
+            CurrentStats[cs] = 1;
+        }
+
+        Level = 1;
     }
 
     public void Trigger(CharacterTrigger trigger)
     {
-        foreach(BaseStatusEffect se in StatusEffects[trigger.TriggerValue])
+        foreach(StatusEffectWrapper sew in StatusEffects[trigger.TriggerValue])
         {
-            se.Trigger(trigger, this);
+            sew.Trigger(trigger, this);
         }
     }
 
     public void Apply(DeliveryPack deliveryPack)
     {
-        foreach (DamagePack dp in deliveryPack.DamagePack)
+        foreach(DamagePack dpw in deliveryPack.DamagePacks)
         {
-            Apply(dp);
+            TakeDamage(dpw, deliveryPack.Owner);
         }
-        foreach (EffectPack ep in deliveryPack.EffectPack)
+        foreach (EffectPack ep in deliveryPack.EffectPacks)
         {
-            Apply(ep);
+            Apply(ep, deliveryPack.Owner);
         }
     }
 
-    public void Apply(DamagePack damagePack)
+    public void Apply(DamagePack damagePack, CharacterManager owner)
+    {
+        int damageDone = damagePack.GetAmount(this, owner);
+        //....Do stuff
+        Trigger(DamageTypes.DamageToTriggers[damagePack.DamageType.DamageValue].ReceiveDamage);
+        damagePack.Respond(this, owner, damageDone);
+    }
+
+    public void Apply(List<DamagePack> damagePacks)
+    {
+        
+        /*foreach(DamagePack dp in damagePacks)
+        {
+            DamageType damageType = dp.Damage;
+            int damageDealt = CalculateDamage(dp);
+            if (damageDealt > 0)
+            {
+                do
+                {
+                    if (!DamageTypesTaken.Contains(damageType))
+                    {
+                        DamageTypesTaken.Add(damageType);
+                    }
+                    DamageTaken[damageType.DamageValue] += damageDealt;
+                } while (damageType != null);
+            } else if (damageDealt < 0)
+            {
+                DamageTypesTaken.Add(DamageTypes.HEALING);
+                DamageTaken[DamageTypes.HEALING.DamageValue] += damageDealt;
+            }
+        }
+        foreach(DamageType de in DamageTypesTaken)
+        {
+            TakeDamage(DamageTaken[de.DamageValue], de);
+            Trigger(DamageTypes.DamageToTriggers[de].ReceiveDamage);
+            DamageTaken[de.DamageValue] = 0;
+        }
+        DamageTypesTaken.Clear();*/
+    }
+
+    public void Apply(EffectPack effectPack, CharacterManager owner)
+    {
+        bool success = true;
+        if(effectPack.ChanceToSucceed < 100)
+        {
+            int number = RandomGenerator.Next(1, 100);
+            success = number < effectPack.ChanceToSucceed;
+        }
+        if(success)
+        {
+            effectPack.StatusEffect.Apply(this);
+        }
+    }
+
+    public int GetResistance(Damage_Type_Enum damageType)
+    {
+        CharacterAttribute ca = DamageTypes.DamageToResistances[damageType];
+        if(ca == null)
+        {
+            return 0;
+        }
+        double total = 0;
+        foreach(AttributeShift shift in CharacterAttributeAlteration[ca.CharacterAttributeValue])
+        {
+            total += shift.Multiplier;
+            total -= shift.Devisor;
+        }
+        return (int)total;
+    }
+
+    public double GetStatBonus(CharacterStat characterStat)
+    {
+        return (CurrentStats[characterStat.StatValue] * .05) + 1.0;
+    }
+
+    public double GetRadius(double radius)
+    {
+        return radius;
+    }
+
+    public void Response(CharacterManager characterManager, int damage, DamageType damageType)
     {
 
     }
 
-    public void Apply(EffectPack effectPack)
+    public void Response(CharacterManager characterManager, StatusEffectWrapper statusEffect)
     {
 
     }
 
-    public void TakeDamage()
-    {
-
+    public void TakeDamage(DamagePack DamagePack, CharacterManager owner)
+    { 
+        
     }
 }

@@ -19,6 +19,7 @@
                 public static CharacterTrigger DEAL_FIRE = new CharacterTrigger(Character_Trigger_Enum.DEAL_FIRE, DEAL_MAGICAL);
                 public static CharacterTrigger DEAL_SHOCK = new CharacterTrigger(Character_Trigger_Enum.DEAL_SHOCK, DEAL_MAGICAL);
                 public static CharacterTrigger DEAL_COLD = new CharacterTrigger(Character_Trigger_Enum.DEAL_FIRE, DEAL_MAGICAL);
+                public static CharacterTrigger DEAL_POISON = new CharacterTrigger(Character_Trigger_Enum.DEAL_POISION, DEAL_MAGICAL);
             public static CharacterTrigger DEAL_UNTYPED = new CharacterTrigger(Character_Trigger_Enum.DEAL_UNTYPED, DEAL_DAMAGE);
 
         public static CharacterTrigger RECEIVE_DAMAGE = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_DAMAGE);
@@ -30,6 +31,11 @@
                 public static CharacterTrigger RECEIVE_FIRE = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_FIRE, RECEIVE_MAGICAL);
                 public static CharacterTrigger RECEIVE_SHOCK = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_SHOCK, RECEIVE_MAGICAL);
                 public static CharacterTrigger RECEIVE_COLD = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_FIRE, RECEIVE_MAGICAL);
+                public static CharacterTrigger RECEIVE_POISON = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_POISON, RECEIVE_MAGICAL);
             public static CharacterTrigger RECEIVE_UNTYPED = new CharacterTrigger(Character_Trigger_Enum.RECEIVE_UNTYPED, RECEIVE_DAMAGE);
+
+        public static CharacterTrigger HEAL = new CharacterTrigger(Character_Trigger_Enum.HEAL);
+        public static CharacterTrigger HEALED = new CharacterTrigger(Character_Trigger_Enum.HEALED);
+        public static CharacterTrigger FRAME = new CharacterTrigger(Character_Trigger_Enum.FRAME);
     }
 }

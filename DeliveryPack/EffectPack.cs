@@ -1,9 +1,9 @@
 ﻿public class EffectPack 
 {
     public int ChanceToSucceed { get; set; }
-    public BaseStatusEffect StatusEffect { get; set; }
+    public StatusEffectWrapper StatusEffect { get; set; }
 
-    public EffectPack(int chanceToSucceed, BaseStatusEffect statusEffect)
+    public EffectPack(int chanceToSucceed, StatusEffectWrapper statusEffect)
     {
         ChanceToSucceed = chanceToSucceed;
         StatusEffect = statusEffect;
