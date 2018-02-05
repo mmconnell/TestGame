@@ -32,6 +32,7 @@ public class AuraStatusEffect : I_BaseStatusEffect
             }
             foreach(CharacterManager cm in last) {
                 StatusEffect.Remove(cm);
+
             }
         }
     }
