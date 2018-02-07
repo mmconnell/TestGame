@@ -7,7 +7,7 @@ public class LevelBasedDamage : DamagePack
 
     public LevelBasedDamage(DamageType damageType, DamagePack damagePack, bool sourceIsOwner) : base(damageType)
     {
-        if(damagePack is LevelBasedDamage)
+        if(damagePack.Contains(DamagePackType()))
         {
             throw new System.Exception("LevelBasedDamage is not an acceptable argument");
         }
@@ -18,6 +18,16 @@ public class LevelBasedDamage : DamagePack
     public override int GetAmount(CharacterManager target, CharacterManager owner)
     {
         CharacterManager source = SourceIsOwner ? owner : target;
-        return DamagePack.GetAmount(target, owner) * source.Level;
+        return DamagePack.GetAmount(target, owner);
+    }
+
+    public override string DamagePackType()
+    {
+        return "LevelBasedDamage";
+    }
+
+    public new bool Contains(string type)
+    {
+        return base.Contains(type) || DamagePack.Contains(type);
     }
 }

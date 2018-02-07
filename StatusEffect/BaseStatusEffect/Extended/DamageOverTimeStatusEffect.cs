@@ -10,7 +10,7 @@ public class DamageOverTimeStatusEffect : I_BaseStatusEffect
         DamagePack = damagePack;
     }
 
-    public void Trigger(CharacterTrigger effect, CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Trigger(CharacterTrigger effect, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         if(effect.TriggerValue.Equals(Character_Trigger_Enum.TURN_START))
         {
@@ -18,17 +18,17 @@ public class DamageOverTimeStatusEffect : I_BaseStatusEffect
         }
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.StatusEffects[Character_Trigger_Enum.TURN_START].Add(wrapper);
     }
 
-    public void End(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.StatusEffects[Character_Trigger_Enum.TURN_START].Remove(wrapper);
     }
 
-    public void Remove(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         End(target, owner, wrapper);
     }

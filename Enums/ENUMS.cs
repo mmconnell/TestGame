@@ -106,4 +106,9 @@
     {
         FLAT, MULTIPLIER, DIVISOR
     }
+
+    public enum TeamTarget
+    {
+        ALLIES, ENEMIES, ALL, ALLIES_NOT_SELF, ALL_NOT_SELF
+    }
 }

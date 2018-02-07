@@ -20,7 +20,7 @@ public class StatusEffectWrapper : I_StatusEffectWrapper
     public void Trigger(CharacterTrigger trigger, CharacterManager status)
     {
         StatusEffect.Trigger(trigger, status, Owner, this);
-        if (trigger.TriggerValue.Equals(CharacterTriggers.TURN_END))
+        if (trigger.Equals(CharacterTriggers.TURN_END))
         {
             Duration--;
             if (Duration <= 0)
@@ -57,5 +57,10 @@ public class StatusEffectWrapper : I_StatusEffectWrapper
             target.StatusEffects[Character_Trigger_Enum.TURN_END].Remove(this);
         }
         target.PersistanceTracker[Persistance].Remove(this);
+    }
+
+    public CharacterManager getOwner()
+    {
+        return Owner;
     }
 }

@@ -29,7 +29,12 @@ public class PercentBasedDamage : DamagePack
                 health = source.MaxHealth - source.Health;
                 break;
         }
-        return CalculateResistance(target, (health * (Percent)));
+        return (int)(health * (Percent));
+    }
+
+    public override string DamagePackType()
+    {
+        return "PercentBasedDamage";
     }
 }
 

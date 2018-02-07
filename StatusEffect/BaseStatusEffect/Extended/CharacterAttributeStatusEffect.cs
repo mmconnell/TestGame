@@ -33,19 +33,19 @@ public class CharacterAttributeStatusEffect : I_BaseStatusEffect
         }
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Add(AttributeShift);
     }
 
-    public void End(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Remove(AttributeShift);
     }
 
-    public void Trigger(CharacterTrigger trigger, CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper){}
+    public void Trigger(CharacterTrigger trigger, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
 
-    public void Remove(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         End(target, owner, wrapper);
     }

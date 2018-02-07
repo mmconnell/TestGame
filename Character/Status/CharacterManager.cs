@@ -7,18 +7,21 @@ using Enums.Damage;
 using Enums.Trigger;
 using UnityEngine;
 
-public class CharacterManager : MonoBehaviour {
+public class CharacterManager {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int Level { get; set; }
 
-    public Dictionary<Character_Trigger_Enum, List<StatusEffectWrapper>> StatusEffects { get; set; }
+    public MonoBehaviour Parent { get; set; }
+
+    public Dictionary<Character_Trigger_Enum, List<I_StatusEffectWrapper>> StatusEffects { get; set; }
     public Dictionary<Character_Action_Enum, int> DisableCount { get; set; }
     public Dictionary<Character_Attribute_Enum, List<AttributeShift>> CharacterAttributeAlteration { get; set; }
-    public Dictionary<Persistance, List<StatusEffectWrapper>> PersistanceTracker { get; set; }
+    public Dictionary<Persistance, List<I_StatusEffectWrapper>> PersistanceTracker { get; set; }
     public Dictionary<Damage_Type_Enum, int> DamageTaken { get; set; }
-    public Dictionary<StatusEffectWrapper, HashSet<CharacterManager>> AuraLastEffected { get; set; }
+    public Dictionary<I_StatusEffectWrapper, HashSet<CharacterManager>> AuraLastEffected { get; set; }
     public Dictionary<Character_Stat, int> CurrentStats { get; set; }
+    public Dictionary<I_StatusEffectWrapper, List<I_StatusEffectWrapper>> Auras { get; set; }
 
     public List<DamageType> DamageTypesTaken { get; set; }
 
@@ -26,15 +29,19 @@ public class CharacterManager : MonoBehaviour {
 
     public System.Random RandomGenerator { get; set; }
 
-    public CharacterManager()
+    public CharacterManager(MonoBehaviour parent)
     {
-        StatusEffects = new Dictionary<Character_Trigger_Enum, List<StatusEffectWrapper>>();
+        Parent = parent;
+        Health = 997;
+        MaxHealth = 997;
+        StatusEffects = new Dictionary<Character_Trigger_Enum, List<I_StatusEffectWrapper>>();
         DisableCount = new Dictionary<Character_Action_Enum, int>();
         CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, List<AttributeShift>>();
-        PersistanceTracker = new Dictionary<Persistance, List<StatusEffectWrapper>>();
+        PersistanceTracker = new Dictionary<Persistance, List<I_StatusEffectWrapper>>();
         DamageTaken = new Dictionary<Damage_Type_Enum, int>();
-        AuraLastEffected = new Dictionary<StatusEffectWrapper, HashSet<CharacterManager>>();
+        AuraLastEffected = new Dictionary<I_StatusEffectWrapper, HashSet<CharacterManager>>();
         CurrentStats = new Dictionary<Character_Stat, int>();
+        Auras = new Dictionary<I_StatusEffectWrapper, List<I_StatusEffectWrapper>>();
 
         DamageTypesTaken = new List<DamageType>();
         BuffAndDebuffList = new List<DerivedStatusEffect>();
@@ -47,7 +54,7 @@ public class CharacterManager : MonoBehaviour {
         }
         foreach (Character_Trigger_Enum se in Enum.GetValues(typeof(Character_Trigger_Enum)))
         {
-            StatusEffects.Add(se, new List<StatusEffectWrapper>());
+            StatusEffects.Add(se, new List<I_StatusEffectWrapper>());
         }
         foreach (Character_Attribute_Enum cae in Enum.GetValues(typeof(Character_Attribute_Enum)))
         {
@@ -55,7 +62,7 @@ public class CharacterManager : MonoBehaviour {
         }
         foreach (Persistance p in Enum.GetValues(typeof(Persistance)))
         {
-            PersistanceTracker.Add(p, new List<StatusEffectWrapper>());
+            PersistanceTracker.Add(p, new List<I_StatusEffectWrapper>());
         }
         foreach (Damage_Type_Enum dte in Enum.GetValues(typeof(Damage_Type_Enum)))
         {
@@ -71,8 +78,11 @@ public class CharacterManager : MonoBehaviour {
 
     public void Trigger(CharacterTrigger trigger)
     {
-        foreach(StatusEffectWrapper sew in StatusEffects[trigger.TriggerValue])
+        List<I_StatusEffectWrapper> sews = new List<I_StatusEffectWrapper>();
+        sews.AddRange(StatusEffects[trigger.TriggerValue]);
+        for(int x = 0; x < sews.Count; x++)
         {
+            I_StatusEffectWrapper sew = sews[x];
             sew.Trigger(trigger, this);
         }
     }
@@ -81,7 +91,7 @@ public class CharacterManager : MonoBehaviour {
     {
         foreach(DamagePack dpw in deliveryPack.DamagePacks)
         {
-            TakeDamage(dpw, deliveryPack.Owner);
+            Apply(dpw, deliveryPack.Owner);
         }
         foreach (EffectPack ep in deliveryPack.EffectPacks)
         {
@@ -93,6 +103,8 @@ public class CharacterManager : MonoBehaviour {
     {
         int damageDone = damagePack.GetAmount(this, owner);
         //....Do stuff
+        //Debug.Log(damageDone + "");
+        damagePack.Apply(this, owner);
         Trigger(DamageTypes.DamageToTriggers[damagePack.DamageType.DamageValue].ReceiveDamage);
         damagePack.Respond(this, owner, damageDone);
     }
@@ -139,7 +151,14 @@ public class CharacterManager : MonoBehaviour {
         }
         if(success)
         {
-            effectPack.StatusEffect.Apply(this);
+            if (effectPack.BaseStatusEffect != null)
+            {
+                new StatusEffectWrapper(effectPack.BaseStatusEffect, owner, effectPack.Persistance, effectPack.Duration).Apply(this);
+            }
+            else
+            {
+                effectPack.StatusEffect.Apply(this, owner, effectPack.Persistance, effectPack.Duration);
+            }
         }
     }
 
@@ -179,8 +198,18 @@ public class CharacterManager : MonoBehaviour {
 
     }
 
-    public void TakeDamage(DamagePack DamagePack, CharacterManager owner)
-    { 
-        
+    public void TakeDamage(int damageAmount, DamageType damageType, CharacterManager owner)
+    {
+        int damage = CalculateResistance(damageAmount, damageType);
+        Debug.Log(damage);
+    }
+
+    public int CalculateResistance(double amount, DamageType damageType)
+    {
+        double resistance = GetResistance(damageType.DamageValue);
+        resistance /= 100.0;
+        resistance = 1.0 + resistance;
+        amount /= resistance;
+        return (int)amount;
     }
 }

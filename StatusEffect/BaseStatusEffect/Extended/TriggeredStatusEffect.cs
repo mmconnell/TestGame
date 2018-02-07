@@ -12,12 +12,12 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
         DeliveryPack = deliveryPack;
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.StatusEffects[CharacterTrigger.TriggerValue].Add(wrapper);
     }
 
-    public void Trigger(CharacterTrigger characterTrigger, CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Trigger(CharacterTrigger characterTrigger, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         if(characterTrigger.Equals(CharacterTrigger))
         {
@@ -25,12 +25,12 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
         }
     }
 
-    public void End(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         target.StatusEffects[CharacterTrigger.TriggerValue].Remove(wrapper);
     }
 
-    public void Remove(CharacterManager target, CharacterManager owner, StatusEffectWrapper wrapper)
+    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
         End(target, owner, wrapper);
     }

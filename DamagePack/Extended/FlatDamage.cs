@@ -1,4 +1,5 @@
 ﻿using Enums.Damage;
+using UnityEngine;
 
 public class FlatDamage : DamagePack
 {
@@ -16,6 +17,11 @@ public class FlatDamage : DamagePack
 
     public override int GetAmount(CharacterManager target, CharacterManager owner)
     {
-        return CalculateResistance(target, Amount);
+        return Amount;
+    }
+
+    public override string DamagePackType()
+    {
+        return "FlatDamage";
     }
 }

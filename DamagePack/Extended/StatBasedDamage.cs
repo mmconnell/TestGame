@@ -9,7 +9,7 @@ public class StatBasedDamage : DamagePack
 
     public StatBasedDamage(DamageType damageType, DamagePack damagePack, CharacterStat characterStat, bool sourceIsOwner) : base(damageType)
     {
-        if(damagePack is StatBasedDamage)
+        if(damagePack.Contains(DamagePackType()))
         {
             throw new System.Exception("StatBasedDamage is not an allowable argument");
         }
@@ -24,5 +24,15 @@ public class StatBasedDamage : DamagePack
         double value = DamagePack.GetAmount(target, owner);
         value *= source.GetStatBonus(CharacterStat);
         return (int)value;
-    } 
+    }
+
+    public override string DamagePackType()
+    {
+        return "StatBasedDamage";
+    }
+
+    public new bool Contains(string type)
+    {
+        return base.Contains(type) || DamagePack.Contains(type);
+    }
 }

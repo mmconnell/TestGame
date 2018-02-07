@@ -11,17 +11,20 @@ public abstract class DamagePack
 
     public abstract int GetAmount(CharacterManager target, CharacterManager owner);
 
+    public void Apply(CharacterManager target, CharacterManager owner)
+    {
+        target.TakeDamage(GetAmount(target, owner), DamageType, owner);
+    }
+
+    public abstract string DamagePackType();
+
     public void Respond(CharacterManager target, CharacterManager owner, int amount)
     {
         owner.Response(target, amount, DamageType);
     }
 
-    protected int CalculateResistance(CharacterManager target, double amount)
+    public bool Contains(string type)
     {
-        double resistance = target.GetResistance(DamageType.DamageValue);
-        resistance /= 100.0;
-        resistance = 1.0 + resistance;
-        amount *= resistance;
-        return (int)amount;
+        return type.Equals(DamagePackType());
     }
 }

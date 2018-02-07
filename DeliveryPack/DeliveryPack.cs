@@ -13,6 +13,13 @@ public class DeliveryPack
         Owner = owner;
     }
 
+    public DeliveryPack(CharacterManager owner, List<DamagePack> damagePacks, List<EffectPack> effectPacks)
+    {
+        DamagePacks = damagePacks;
+        EffectPacks = effectPacks;
+        Owner = owner;
+    }
+
     public void AddDamagePack(DamagePack DamagePack)
     {
         DamagePacks.Add(DamagePack);
