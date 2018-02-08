@@ -25,7 +25,7 @@ public class CharacterManager {
 
     public List<DamageType> DamageTypesTaken { get; set; }
 
-    public List<DerivedStatusEffect> BuffAndDebuffList { get; set; }
+    public HashSet<DerivedStatusEffect> BuffAndDebuffList { get; set; }
 
     public System.Random RandomGenerator { get; set; }
 
@@ -44,7 +44,7 @@ public class CharacterManager {
         Auras = new Dictionary<I_StatusEffectWrapper, List<I_StatusEffectWrapper>>();
 
         DamageTypesTaken = new List<DamageType>();
-        BuffAndDebuffList = new List<DerivedStatusEffect>();
+        BuffAndDebuffList = new HashSet<DerivedStatusEffect>();
 
         RandomGenerator = new System.Random();
 
@@ -215,8 +215,15 @@ public class CharacterManager {
             amount *= (resistance + 1.0);
         } else
         {
-
+            resistance = 1 - resistance;
             amount *= resistance;
+            // if(resistance < 0) {
+            //     resistance = Mathf.Abs((float)resistance);
+            //     amount *= resistance;
+            // } else 
+            // {
+            //     amount *= resistance;
+            // }
         }
         return (int)amount;
     }

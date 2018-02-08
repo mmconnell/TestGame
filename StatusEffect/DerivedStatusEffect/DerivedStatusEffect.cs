@@ -17,6 +17,10 @@ public abstract class DerivedStatusEffect
 
     public void Apply(CharacterManager target, CharacterManager owner, Persistance persistance, int duration)
     {
+        if(target.BuffAndDebuffList.Contains(this)) 
+        {
+            return;
+        }
         foreach(I_BaseStatusEffect bse in BaseStatusEffects)
         {
             I_StatusEffectWrapper statusEffectWrapper = new StatusEffectWrapper(bse, owner, persistance, duration);
