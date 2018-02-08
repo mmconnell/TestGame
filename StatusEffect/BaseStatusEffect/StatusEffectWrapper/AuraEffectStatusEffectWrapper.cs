@@ -8,13 +8,11 @@ public class AuraEffectStatusEffectWrapper : I_StatusEffectWrapper
 {
     public CharacterManager Owner { get; private set; }
     public I_BaseStatusEffect StatusEffect { get; private set; }
-    public TeamTarget TeamToTarget { get; set; }
 
-    public AuraEffectStatusEffectWrapper(I_BaseStatusEffect statusEffect, CharacterManager owner, TeamTarget teamTarget)
+    public AuraEffectStatusEffectWrapper(I_BaseStatusEffect statusEffect, CharacterManager owner)
     {
         StatusEffect = statusEffect;
         Owner = owner;
-        TeamToTarget = teamTarget;
     }
 
     public void Apply(CharacterManager target)

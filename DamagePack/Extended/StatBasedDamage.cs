@@ -31,7 +31,7 @@ public class StatBasedDamage : DamagePack
         return "StatBasedDamage";
     }
 
-    public new bool Contains(string type)
+    public override bool Contains(string type)
     {
         return base.Contains(type) || DamagePack.Contains(type);
     }

@@ -3,26 +3,15 @@ using System.Collections.Generic;
 
 public class DelayedStatusEffect : I_BaseStatusEffect
 {
-    public List<EffectPack> StatusEffect { get; set; }
-    public List<DamagePack> DamagePack { get; set; }
-    public DelayedStatusEffect(List<DamagePack> damagePack, List<EffectPack> statusEffect)
+    public DeliveryPack DeliveryPack { get; set; }
+    public DelayedStatusEffect(DeliveryPack deliveryPack)
     {
-        StatusEffect = statusEffect;
-        if(StatusEffect == null)
-        {
-            StatusEffect = new List<EffectPack>();
-        }
-        DamagePack = damagePack;
-        if(DamagePack == null)
-        {
-            DamagePack = new List<DamagePack>();
-        }
+        DeliveryPack = deliveryPack;
     }
 
     public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
     {
-        DeliveryPack dp = new DeliveryPack(owner, DamagePack, StatusEffect);
-        target.Apply(dp);
+        target.Apply(DeliveryPack, owner);
     }
 
     public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}

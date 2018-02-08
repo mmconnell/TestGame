@@ -29,7 +29,7 @@ public class Burst : DamagePack
         return DamagePack.GetAmount(target, owner);
     }
 
-    public new void Apply(CharacterManager target, CharacterManager owner)
+    public override void Apply(CharacterManager target, CharacterManager owner)
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(target.Parent.transform.position, (float)target.GetRadius(Radius));
         foreach (Collider2D col in colliders)
@@ -45,7 +45,7 @@ public class Burst : DamagePack
         }
     }
 
-    public new bool Contains(string type)
+    public override bool Contains(string type)
     {
         return base.Contains(type) || DamagePack.Contains(type);
     }

@@ -21,7 +21,7 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
     {
         if(characterTrigger.Equals(CharacterTrigger))
         {
-            target.Apply(DeliveryPack);
+            target.Apply(DeliveryPack, owner);
         }
     }
 

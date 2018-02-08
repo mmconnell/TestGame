@@ -18,7 +18,7 @@ public class LevelBasedDamage : DamagePack
     public override int GetAmount(CharacterManager target, CharacterManager owner)
     {
         CharacterManager source = SourceIsOwner ? owner : target;
-        return DamagePack.GetAmount(target, owner);
+        return DamagePack.GetAmount(source, owner);
     }
 
     public override string DamagePackType()
@@ -26,7 +26,7 @@ public class LevelBasedDamage : DamagePack
         return "LevelBasedDamage";
     }
 
-    public new bool Contains(string type)
+    public override bool Contains(string type)
     {
         return base.Contains(type) || DamagePack.Contains(type);
     }

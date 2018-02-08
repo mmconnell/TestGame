@@ -87,15 +87,15 @@ public class CharacterManager {
         }
     }
 
-    public void Apply(DeliveryPack deliveryPack)
+    public void Apply(DeliveryPack deliveryPack, CharacterManager owner)
     {
         foreach(DamagePack dpw in deliveryPack.DamagePacks)
         {
-            Apply(dpw, deliveryPack.Owner);
+            Apply(dpw, owner);
         }
         foreach (EffectPack ep in deliveryPack.EffectPacks)
         {
-            Apply(ep, deliveryPack.Owner);
+            Apply(ep, owner);
         }
     }
 
@@ -201,15 +201,23 @@ public class CharacterManager {
     public void TakeDamage(int damageAmount, DamageType damageType, CharacterManager owner)
     {
         int damage = CalculateResistance(damageAmount, damageType);
-        Debug.Log(damage);
+        Debug.Log(Parent.GetType() + " " + damage);
     }
 
     public int CalculateResistance(double amount, DamageType damageType)
     {
         double resistance = GetResistance(damageType.DamageValue);
+        bool negative = resistance < 0;
+        resistance = Mathf.Abs((float)resistance);
         resistance /= 100.0;
-        resistance = 1.0 + resistance;
-        amount /= resistance;
+        if(negative)
+        {
+            amount *= (resistance + 1.0);
+        } else
+        {
+
+            amount *= resistance;
+        }
         return (int)amount;
     }
 }

@@ -49,7 +49,7 @@ public class AuraStatusEffect : I_BaseStatusEffect
                 List<I_StatusEffectWrapper> wrappers = new List<I_StatusEffectWrapper>();
                 if (StatusEffect.StatusEffect == null)
                 {
-                    I_StatusEffectWrapper sew = new AuraEffectStatusEffectWrapper(StatusEffect.BaseStatusEffect, owner, TeamToTarget);
+                    I_StatusEffectWrapper sew = new AuraEffectStatusEffectWrapper(StatusEffect.BaseStatusEffect, owner);
                     sew.Apply(cm);
                     wrappers.Add(sew);
                 }
@@ -57,7 +57,7 @@ public class AuraStatusEffect : I_BaseStatusEffect
                 {
                     foreach (I_BaseStatusEffect bse in StatusEffect.StatusEffect.BaseStatusEffects)
                     {
-                        I_StatusEffectWrapper sew = new AuraEffectStatusEffectWrapper(bse, wrapper.getOwner(), TeamToTarget);
+                        I_StatusEffectWrapper sew = new AuraEffectStatusEffectWrapper(bse, wrapper.getOwner());
                         sew.Apply(cm);
                         wrappers.Add(sew);
                     }

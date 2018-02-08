@@ -11,6 +11,7 @@ public class PoorGuy : MonoBehaviour
     void Start()
     {
         CharacterManager = new CharacterManager(this);
+        InvokeRepeating("TriggerTime", 1, 1);
     }
 
     // Update is called once per frame
@@ -21,9 +22,15 @@ public class PoorGuy : MonoBehaviour
         if (FrameCount%30 == 0)
         {
             
-            CharacterManager.Trigger(CharacterTriggers.TURN_START);
-            CharacterManager.Trigger(CharacterTriggers.TURN_END);
+            //CharacterManager.Trigger(CharacterTriggers.TURN_START);
+            //CharacterManager.Trigger(CharacterTriggers.TURN_END);
             FrameCount = 0;
         }
+    }
+
+    void TriggerTime()
+    {
+        CharacterManager.Trigger(CharacterTriggers.TURN_START);
+        CharacterManager.Trigger(CharacterTriggers.TURN_END);
     }
 }
