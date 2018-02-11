@@ -7,6 +7,7 @@ public class FireTotem : MonoBehaviour
 {
     public CharacterManager CharacterManager { get; set; }
     public int FrameCount { get; set; }
+    public bool test = true;
 
     // Use this for initialization
     void Start()
@@ -60,6 +61,12 @@ public class FireTotem : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(test)
+        {
+            TestScript ts = GameObject.Find("poorGuy").AddComponent<TestScript>();
+            ts.num = 1;
+            test = false;
+        }
         CharacterManager.Trigger(CharacterTriggers.FRAME);
         FrameCount++;
         if(FrameCount >= 30)
