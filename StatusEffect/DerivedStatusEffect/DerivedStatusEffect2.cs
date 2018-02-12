@@ -17,15 +17,15 @@ public abstract class DerivedStatusEffect2 : MonoBehaviour
 
     public virtual void Start()
     {
-        //bool applied = target.StringStatusEffectList.ContainsKey(GetName()) && target.StringStatusEffectList[GetName()] > 0;
-        //if (canStack || !applied)
-        //{
-          //  if(!applied)
-            //{
-            //    target.StringStatusEffectList.Add(GetName(), 0);
-            //}
-//            target.StringStatusEffectList[GetName()]++;
-  //          target.StatusEffectList.Add(this);
+        // bool applied = target.StringStatusEffectList.ContainsKey(GetName()) && target.StringStatusEffectList[GetName()] > 0;
+        // if (canStack || !applied)
+        // {
+        //    if(!applied)
+        //     {
+        //        target.StringStatusEffectList.Add(GetName(), 0);
+        //     }
+        //    target.StringStatusEffectList[GetName()]++;
+        //    target.StatusEffectList.Add(this);
             if (duration != null)
             {
                 EventManager.StartListening(target, "TURN_END", TurnEnd);
@@ -34,7 +34,7 @@ public abstract class DerivedStatusEffect2 : MonoBehaviour
             {
                 bse.Apply();
             }
-        //}
+        // }
     }
 
     public void AddBaseStatusEffect(I_BaseStatusEffect2 baseStatusEffect)
@@ -53,8 +53,8 @@ public abstract class DerivedStatusEffect2 : MonoBehaviour
 
     public virtual void OnDisable()
     {
- //       target.StringStatusEffectList[GetName()]--;
- //       target.StatusEffectList.Remove(this);
+    //    target.StringStatusEffectList[GetName()]--;
+    //    target.StatusEffectList.Remove(this);
         foreach(I_BaseStatusEffect2 bse in BaseStatusEffects)
         {
             bse.End();
