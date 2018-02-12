@@ -13,8 +13,9 @@ public class FireTotem : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
-        CharacterManager = new CharacterManager(this);
-        DerivedStatusEffect fireAura = DerivedStatusEffects.AURA_OF_FIRE_DAMAGE;
+        CharacterManager = GetComponent<CharacterManager>();
+        //CharacterManager = new CharacterManager(this);
+        /*DerivedStatusEffect fireAura = DerivedStatusEffects.AURA_OF_FIRE_DAMAGE;
         fireAura.Apply(CharacterManager, CharacterManager, Enums.Persistance.WORLD, -1);
         fireAura.Apply(CharacterManager, CharacterManager, Enums.Persistance.WORLD, -1);
         fireAura.Apply(CharacterManager, CharacterManager, Enums.Persistance.WORLD, -1);
@@ -54,7 +55,22 @@ public class FireTotem : MonoBehaviour
         fireAura.Apply(CharacterManager, CharacterManager, Enums.Persistance.WORLD, -1);
 
         DerivedStatusEffects.BLEEDING.Apply(CharacterManager, CharacterManager, Enums.Persistance.COMBAT, 10);
-        DerivedStatusEffects.BOMB.Apply(CharacterManager, CharacterManager, Enums.Persistance.COMBAT, 10);
+        DerivedStatusEffects.BOMB.Apply(CharacterManager, CharacterManager, Enums.Persistance.COMBAT, 10);*/
+        GameObject go = GameObject.Find("poorGuy");
+        Chilled c = go.AddComponent<Chilled>();
+        c.duration = 10;
+        c.owner = CharacterManager;
+        AuraStatusEffect2 aura1 = gameObject.AddComponent<AuraStatusEffect2>();
+        aura1.auraEffect = typeof(Chilled);
+        aura1.radius = 1;
+        aura1.owner = CharacterManager;
+        AuraStatusEffect2 aura2 = gameObject.AddComponent<AuraStatusEffect2>();
+        aura2.auraEffect = typeof(OnFire2);
+        aura2.radius = 1;
+        aura2.owner = CharacterManager;
+        TimedBomb tb = gameObject.AddComponent<TimedBomb>();
+        tb.duration = 5;
+        tb.owner = CharacterManager;
         InvokeRepeating("TriggerTime", 1, 1);
     }
 
@@ -67,19 +83,19 @@ public class FireTotem : MonoBehaviour
             ts.num = 1;
             test = false;
         }
-        CharacterManager.Trigger(CharacterTriggers.FRAME);
-        FrameCount++;
+        //CharacterManager.Trigger(CharacterTriggers.FRAME);
+        //FrameCount++;
         if(FrameCount >= 30)
         {
-            CharacterManager.Trigger(CharacterTriggers.FRAME);
+       //     CharacterManager.Trigger(CharacterTriggers.FRAME);
             
-            FrameCount = 0;
+       //     FrameCount = 0;
         }
     }
 
     void TriggerTime()
     {
-        CharacterManager.Trigger(CharacterTriggers.TURN_START);
-        CharacterManager.Trigger(CharacterTriggers.TURN_END);
+        EventManager.TriggerEvent(CharacterManager, "TURN_START");
+        EventManager.TriggerEvent(CharacterManager, "TURN_END");
     }
 }

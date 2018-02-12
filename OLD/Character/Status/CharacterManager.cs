@@ -7,7 +7,7 @@ using Enums.Damage;
 using Enums.Trigger;
 using UnityEngine;
 
-public class CharacterManager {
+public class CharacterManager : MonoBehaviour {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int Level { get; set; }
@@ -26,12 +26,14 @@ public class CharacterManager {
     public List<DamageType> DamageTypesTaken { get; set; }
 
     public HashSet<DerivedStatusEffect> BuffAndDebuffList { get; set; }
+    public HashSet<DerivedStatusEffect2> StatusEffectList { get; set; }
+    public Dictionary<string, int> StringStatusEffectList { get; set; }
 
     public System.Random RandomGenerator { get; set; }
 
-    public CharacterManager(MonoBehaviour parent)
+    public void Start()//CharacterManager(MonoBehaviour parent)
     {
-        Parent = parent;
+        //Parent = parent;
         Health = 997;
         MaxHealth = 997;
         StatusEffects = new Dictionary<Character_Trigger_Enum, List<I_StatusEffectWrapper>>();
@@ -45,6 +47,8 @@ public class CharacterManager {
 
         DamageTypesTaken = new List<DamageType>();
         BuffAndDebuffList = new HashSet<DerivedStatusEffect>();
+        StatusEffectList = new HashSet<DerivedStatusEffect2>();
+        StringStatusEffectList = new Dictionary<string, int>();
 
         RandomGenerator = new System.Random();
 
@@ -106,7 +110,7 @@ public class CharacterManager {
         //Debug.Log(damageDone + "");
         damagePack.Apply(this, owner);
         Trigger(DamageTypes.DamageToTriggers[damagePack.DamageType.DamageValue].ReceiveDamage);
-        damagePack.Respond(this, owner, damageDone);
+        //damagePack.Respond(this, owner, damageDone);
     }
 
     public void Apply(List<DamagePack> damagePacks)
@@ -201,7 +205,7 @@ public class CharacterManager {
     public void TakeDamage(int damageAmount, DamageType damageType, CharacterManager owner)
     {
         int damage = CalculateResistance(damageAmount, damageType);
-        Debug.Log(Parent.GetType() + " " + damage);
+        Debug.Log(gameObject.name + " took " + damageType.DamageValue.ToString() + " " + damage);
     }
 
     public int CalculateResistance(double amount, DamageType damageType)

@@ -1,6 +1,5 @@
 ﻿using Enums;
 using System.Collections.Generic;
-using UnityEngine;
 
 public abstract class DerivedStatusEffect
 {
@@ -18,11 +17,11 @@ public abstract class DerivedStatusEffect
 
     public void Apply(CharacterManager target, CharacterManager owner, Persistance persistance, int duration)
     {
-        if(target.BuffAndDebuffList.Contains(this)) 
+        if (target.BuffAndDebuffList.Contains(this))
         {
             return;
         }
-        foreach(I_BaseStatusEffect bse in BaseStatusEffects)
+        foreach (I_BaseStatusEffect bse in BaseStatusEffects)
         {
             I_StatusEffectWrapper statusEffectWrapper = new StatusEffectWrapper(bse, owner, persistance, duration);
             statusEffectWrapper.Apply(target);

@@ -10,7 +10,7 @@ public class PoorGuy : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        CharacterManager = new CharacterManager(this);
+        CharacterManager = GetComponent<CharacterManager>();
         InvokeRepeating("TriggerTime", 1, 1);
     }
 
@@ -30,6 +30,8 @@ public class PoorGuy : MonoBehaviour
 
     void TriggerTime()
     {
+        EventManager.TriggerEvent(CharacterManager, "TURN_START");
+        EventManager.TriggerEvent(CharacterManager, "TURN_END");
         CharacterManager.Trigger(CharacterTriggers.TURN_START);
         CharacterManager.Trigger(CharacterTriggers.TURN_END);
     }

@@ -1,5 +1,4 @@
 ﻿using Enums.Trigger;
-using System.Collections.Generic;
 
 public class DelayedStatusEffect : I_BaseStatusEffect
 {

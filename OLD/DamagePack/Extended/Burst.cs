@@ -31,7 +31,7 @@ public class Burst : DamagePack
 
     public override void Apply(CharacterManager target, CharacterManager owner)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(target.Parent.transform.position, (float)target.GetRadius(Radius));
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(target.gameObject.transform.position, (float)target.GetRadius(Radius));
         foreach (Collider2D col in colliders)
         {
             GameObject go = col.gameObject;
