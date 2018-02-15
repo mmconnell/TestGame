@@ -1,27 +1,28 @@
-﻿using Enums;
-using Enums.CharacterStatus;
-using Enums.Trigger;
+﻿using Enums.CharacterStatus;
+using Enums;
 
 public class CharacterAttributeStatusEffect : I_BaseStatusEffect
 {
-    public CharacterAttribute CharacterAttribute { get; set; }
-    public AttributeShift AttributeShift { get; set; }
+    private CharacterAttribute CharacterAttribute { get; set; }
+    private AttributeShift AttributeShift { get; set; }
+    public DerivedStatusEffect DerivedStatusEffect { get; set; }
 
-    public CharacterAttributeStatusEffect(CharacterAttribute characterAttribute, double attributeShift, Character_Attribute_Shift_Type shiftType)
+    public CharacterAttributeStatusEffect(DerivedStatusEffect derivedStatusEffect, CharacterAttribute characterAttribute, double attributeShift, Character_Attribute_Shift_Type shiftType)
     {
         CharacterAttribute = characterAttribute;
         AttributeShift = new AttributeShift();
-        switch(shiftType)
+        DerivedStatusEffect = derivedStatusEffect;
+        switch (shiftType)
         {
             case Character_Attribute_Shift_Type.DIVISOR:
-                if(attributeShift < 1 || attributeShift > 100)
+                if (attributeShift < 1 || attributeShift > 100)
                 {
                     throw new System.Exception("Attribute Shift of " + attributeShift + " is invalid");
                 }
                 AttributeShift.Devisor += attributeShift;
                 break;
             case Character_Attribute_Shift_Type.MULTIPLIER:
-                if(attributeShift < 1 || attributeShift > 100)
+                if (attributeShift < 1 || attributeShift > 100)
                 {
                     throw new System.Exception("Attribute shift of " + attributeShift + " is invalid");
                 }
@@ -33,20 +34,18 @@ public class CharacterAttributeStatusEffect : I_BaseStatusEffect
         }
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Apply()
     {
-        target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Add(AttributeShift);
+        DerivedStatusEffect.target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Add(AttributeShift);
     }
 
-    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void End()
     {
-        target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Remove(AttributeShift);
+        Remove();
     }
 
-    public void Trigger(CharacterTrigger trigger, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
-
-    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Remove()
     {
-        End(target, owner, wrapper);
+        DerivedStatusEffect.target.CharacterAttributeAlteration[CharacterAttribute.CharacterAttributeValue].Remove(AttributeShift);
     }
 }

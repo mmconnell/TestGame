@@ -1,23 +1,23 @@
-﻿using Enums.Trigger;
+﻿using UnityEngine;
+using System.Collections;
 
 public class DelayedStatusEffect : I_BaseStatusEffect
 {
     public DeliveryPack DeliveryPack { get; set; }
-    public DelayedStatusEffect(DeliveryPack deliveryPack)
+    public DerivedStatusEffect DerivedStatusEffect { get; set; }
+
+    public DelayedStatusEffect(DerivedStatusEffect derivedStatusEffect, DeliveryPack deliveryPack)
     {
         DeliveryPack = deliveryPack;
+        DerivedStatusEffect = derivedStatusEffect;
     }
 
-    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Apply(){}
+
+    public void End()
     {
-        target.Apply(DeliveryPack, owner);
+        DerivedStatusEffect.target.Apply(DeliveryPack, DerivedStatusEffect.owner);
     }
 
-    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
-
-    public void Trigger(CharacterTrigger trigger, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
-
-    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
-
-    void I_BaseStatusEffect.Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
+    public void Remove(){}
 }

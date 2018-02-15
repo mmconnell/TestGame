@@ -11,7 +11,7 @@ public class PoorGuy : MonoBehaviour
     void Start()
     {
         CharacterManager = GetComponent<CharacterManager>();
-        InvokeRepeating("TriggerTime", 1, 1);
+        EventManager.StartListening("TIME_INSTANCE", TriggerTime);
     }
 
     // Update is called once per frame
@@ -26,6 +26,7 @@ public class PoorGuy : MonoBehaviour
             //CharacterManager.Trigger(CharacterTriggers.TURN_END);
             FrameCount = 0;
         }
+
     }
 
     void TriggerTime()

@@ -4,32 +4,35 @@ using Enums.Trigger;
 public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 {
     public DamagePack DamagePack { get; set; }
+    public DerivedStatusEffect DerivedStatusEffect { get; set; }
 
-    public DamageOverTimeStatusEffect(DamagePack damagePack) : base()
+    public DamageOverTimeStatusEffect(DerivedStatusEffect derivedStatusEffect, DamagePack damagePack) : base()
     {
         DamagePack = damagePack;
+        DerivedStatusEffect = derivedStatusEffect;
     }
 
-    public void Trigger(CharacterTrigger effect, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Apply()
     {
-        if(effect.TriggerValue.Equals(Character_Trigger_Enum.TURN_START))
+        EventManager.StartListening(DerivedStatusEffect.target, "TURN_START", TurnStart);
+    }
+
+    public void Remove()
+    {
+        EventManager.StopListening(DerivedStatusEffect.target, "TURN_START", TurnStart);
+    }
+
+    public void End()
+    {
+        Remove();
+    }
+
+    public void TurnStart()
+    {
+        CharacterManager characterManager = DerivedStatusEffect.target;
+        if(characterManager != null)
         {
-            target.Apply(DamagePack, owner);
+            characterManager.Apply(DamagePack, DerivedStatusEffect.owner);
         }
-    }
-
-    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
-    {
-        target.StatusEffects[Character_Trigger_Enum.TURN_START].Add(wrapper);
-    }
-
-    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
-    {
-        target.StatusEffects[Character_Trigger_Enum.TURN_START].Remove(wrapper);
-    }
-
-    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
-    {
-        End(target, owner, wrapper);
     }
 }

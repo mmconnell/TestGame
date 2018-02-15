@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Enums;
 using Enums.CharacterStat;
@@ -7,10 +8,11 @@ using Enums.Damage;
 using Enums.Trigger;
 using UnityEngine;
 
-public class CharacterManager : MonoBehaviour {
+public class CharacterManager : MonoBehaviour, I_EntityManager {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int Level { get; set; }
+    private BattleManager bm;
 
     public MonoBehaviour Parent { get; set; }
 
@@ -25,8 +27,8 @@ public class CharacterManager : MonoBehaviour {
 
     public List<DamageType> DamageTypesTaken { get; set; }
 
-    public HashSet<DerivedStatusEffect> BuffAndDebuffList { get; set; }
-    public HashSet<DerivedStatusEffect2> StatusEffectList { get; set; }
+    public HashSet<DerivedStatusEffectOld> BuffAndDebuffList { get; set; }
+    public HashSet<DerivedStatusEffect> StatusEffectList { get; set; }
     public Dictionary<string, int> StringStatusEffectList { get; set; }
 
     public System.Random RandomGenerator { get; set; }
@@ -46,11 +48,11 @@ public class CharacterManager : MonoBehaviour {
         Auras = new Dictionary<I_StatusEffectWrapper, List<I_StatusEffectWrapper>>();
 
         DamageTypesTaken = new List<DamageType>();
-        BuffAndDebuffList = new HashSet<DerivedStatusEffect>();
-        StatusEffectList = new HashSet<DerivedStatusEffect2>();
+        BuffAndDebuffList = new HashSet<DerivedStatusEffectOld>();
+        StatusEffectList = new HashSet<DerivedStatusEffect>();
         StringStatusEffectList = new Dictionary<string, int>();
 
-        RandomGenerator = new System.Random();
+        RandomGenerator = new System.Random(10);
 
         foreach (Character_Action_Enum a in Enum.GetValues(typeof(Character_Action_Enum)))
         {
@@ -230,5 +232,45 @@ public class CharacterManager : MonoBehaviour {
             // }
         }
         return (int)amount;
+    }
+
+    public bool CanTakeTurn()
+    {
+        return true;
+    }
+
+    public bool CanRecieveStatus()
+    {
+        return true;
+    }
+
+    public bool CanRecieveDamage()
+    {
+        return true;
+    }
+
+    public IEnumerator TakeTurn()
+    {
+        yield return new WaitForSeconds(.1f);
+    }
+
+    public int GetInitiative()
+    {
+        return RandomGenerator.Next();
+    }
+
+    public void CalculateInitiative()
+    {
+        
+    }
+
+    public void SetBattleManager(BattleManager bm)
+    {
+        this.bm = bm;
+    }
+
+    public BattleManager GetBattleManager()
+    {
+        return bm;
     }
 }

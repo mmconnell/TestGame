@@ -60,18 +60,19 @@ public class FireTotem : MonoBehaviour
         Chilled c = go.AddComponent<Chilled>();
         c.duration = 10;
         c.owner = CharacterManager;
-        AuraStatusEffect2 aura1 = gameObject.AddComponent<AuraStatusEffect2>();
+        AuraStatusEffect aura1 = gameObject.AddComponent<AuraStatusEffect>();
         aura1.auraEffect = typeof(Chilled);
         aura1.radius = 1;
         aura1.owner = CharacterManager;
-        AuraStatusEffect2 aura2 = gameObject.AddComponent<AuraStatusEffect2>();
+        AuraStatusEffect aura2 = gameObject.AddComponent<AuraStatusEffect>();
         aura2.auraEffect = typeof(OnFire2);
         aura2.radius = 1;
         aura2.owner = CharacterManager;
         TimedBomb tb = gameObject.AddComponent<TimedBomb>();
         tb.duration = 5;
         tb.owner = CharacterManager;
-        InvokeRepeating("TriggerTime", 1, 1);
+        EventManager.StartListening("TIME_INSTANCE", TriggerTime);
+//        InvokeRepeating("TriggerTime", 1, 1);
     }
 
     // Update is called once per frame

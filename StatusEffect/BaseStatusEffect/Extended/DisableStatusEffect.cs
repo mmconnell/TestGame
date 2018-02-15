@@ -1,30 +1,30 @@
-﻿using Enums;
+﻿using UnityEngine;
+using System.Collections;
 using Enums.CombatAction;
-using Enums.Trigger;
 
 public class DisableStatusEffect : I_BaseStatusEffect
 {
     private CombatAction CombatAction { get; set; }
+    private DerivedStatusEffect DerivedStatusEffect { get; set; }
 
-    public DisableStatusEffect(CombatAction combatAction)
+    public DisableStatusEffect(DerivedStatusEffect derivedStatusEffect, CombatAction combatAction)
     {
+        DerivedStatusEffect = derivedStatusEffect;
         CombatAction = combatAction;
     }
 
-    public void Trigger(CharacterTrigger effect, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper){}
-
-    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Apply()
     {
-        target.DisableCount[CombatAction.ActionValue]++;
+        DerivedStatusEffect.target.DisableCount[CombatAction.ActionValue]++;
     }
 
-    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void End()
     {
-        target.DisableCount[CombatAction.ActionValue]--;
+        Remove();
     }
 
-    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Remove()
     {
-        End(target, owner, wrapper);
+        DerivedStatusEffect.target.DisableCount[CombatAction.ActionValue]--;
     }
 }

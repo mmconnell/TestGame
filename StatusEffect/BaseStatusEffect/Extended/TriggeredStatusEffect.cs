@@ -3,35 +3,34 @@ using Enums.Trigger;
 
 public class TriggeredStatusEffect : I_BaseStatusEffect
 {
+    private DerivedStatusEffect DerivedStatusEffect { get; set; }
     public CharacterTrigger CharacterTrigger { get; set; }
     public DeliveryPack DeliveryPack { get; set; }
 
-    public TriggeredStatusEffect(CharacterTrigger statusTrigger, DeliveryPack deliveryPack)
+    public TriggeredStatusEffect(DerivedStatusEffect derivedStatusEffect, CharacterTrigger statusTrigger, DeliveryPack deliveryPack)
     {
+        DerivedStatusEffect = derivedStatusEffect;
         CharacterTrigger = statusTrigger;
         DeliveryPack = deliveryPack;
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Apply()
     {
-        target.StatusEffects[CharacterTrigger.TriggerValue].Add(wrapper);
+        EventManager.StartListening(DerivedStatusEffect.target, CharacterTrigger.ToString(), Trigger);
     }
 
-    public void Trigger(CharacterTrigger characterTrigger, CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void Remove()
     {
-        if(characterTrigger.Equals(CharacterTrigger))
-        {
-            target.Apply(DeliveryPack, owner);
-        }
+        EventManager.StopListening(DerivedStatusEffect.target, CharacterTrigger.ToString(), Trigger);
     }
 
-    public void End(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    public void End()
     {
-        target.StatusEffects[CharacterTrigger.TriggerValue].Remove(wrapper);
+        Remove();
     }
 
-    public void Remove(CharacterManager target, CharacterManager owner, I_StatusEffectWrapper wrapper)
+    private void Trigger()
     {
-        End(target, owner, wrapper);
+        DerivedStatusEffect.target.Apply(DeliveryPack, DerivedStatusEffect.owner);
     }
 }

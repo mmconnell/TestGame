@@ -1,13 +1,40 @@
-﻿using Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class DerivedStatusEffect
+public abstract class DerivedStatusEffect : MonoBehaviour
 {
-    public List<I_BaseStatusEffect> BaseStatusEffects { get; set; }
+    protected List<I_BaseStatusEffect> BaseStatusEffects { get; set; }
 
-    public DerivedStatusEffect()
+    public int? duration;
+    public CharacterManager owner;
+    public CharacterManager target;
+
+    public virtual void Awake()
     {
+        target = gameObject.GetComponent<CharacterManager>();
         BaseStatusEffects = new List<I_BaseStatusEffect>();
+    }
+
+    public virtual void Start()
+    {
+        // bool applied = target.StringStatusEffectList.ContainsKey(GetName()) && target.StringStatusEffectList[GetName()] > 0;
+        // if (canStack || !applied)
+        // {
+        //    if(!applied)
+        //     {
+        //        target.StringStatusEffectList.Add(GetName(), 0);
+        //     }
+        //    target.StringStatusEffectList[GetName()]++;
+        //    target.StatusEffectList.Add(this);
+            if (duration != null)
+            {
+                EventManager.StartListening(target, "TURN_END", TurnEnd);
+            }
+            foreach (I_BaseStatusEffect bse in BaseStatusEffects)
+            {
+                bse.Apply();
+            }
+        // }
     }
 
     public void AddBaseStatusEffect(I_BaseStatusEffect baseStatusEffect)
@@ -15,16 +42,50 @@ public abstract class DerivedStatusEffect
         BaseStatusEffects.Add(baseStatusEffect);
     }
 
-    public void Apply(CharacterManager target, CharacterManager owner, Persistance persistance, int duration)
+    protected void TurnEnd()
     {
-        if (target.BuffAndDebuffList.Contains(this))
+        duration -= 1;
+        if (duration == 0)
         {
-            return;
-        }
-        foreach (I_BaseStatusEffect bse in BaseStatusEffects)
-        {
-            I_StatusEffectWrapper statusEffectWrapper = new StatusEffectWrapper(bse, owner, persistance, duration);
-            statusEffectWrapper.Apply(target);
+            Destroy(this);
         }
     }
+
+    public virtual void OnDisable()
+    {
+    //    target.StringStatusEffectList[GetName()]--;
+    //    target.StatusEffectList.Remove(this);
+        foreach(I_BaseStatusEffect bse in BaseStatusEffects)
+        {
+            bse.End();
+        }
+    }
+
+    public void Remove()
+    {
+        foreach (I_BaseStatusEffect bse in BaseStatusEffects)
+        {
+            bse.Remove();
+        }
+        BaseStatusEffects.Clear();
+        Destroy(this);
+    }
+
+    public virtual string GetName()
+    {
+        return GetType().Name;
+    }
+    /*
+    public override bool Equals(object other)
+    {
+        if (other is DerivedStatusEffect2)
+        {
+            DerivedStatusEffect2 d2 = (DerivedStatusEffect2)other;
+            return d2.GetName().Equals(GetName());
+        }
+        else
+        {
+            return base.Equals(other);
+        }
+    }*/
 }
