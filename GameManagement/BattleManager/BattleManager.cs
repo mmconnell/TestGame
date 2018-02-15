@@ -69,22 +69,26 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(MergeBattleHelper(bm));
     }
 
-    public void WaitForMerge(BattleManager bm)
-    {
-        StartCoroutine(WaitForMergeHelper(bm));
-    }
+    // public void WaitForMerge(BattleManager bm)
+    // {
+    //     StartCoroutine(WaitForMergeHelper(bm));
+    // }
 
-    private IEnumerator WaitForMergeHelper(BattleManager bm)
-    {
-        yield return new WaitUntil(() => !bm.merging);
-    }
+    // private IEnumerator WaitForMergeHelper(BattleManager bm)
+    // {
+    //     yield return new WaitUntil(() => !bm.merging);
+    // }
 
     private IEnumerator MergeBattleHelper(BattleManager bm)
     {
-        if(merging)
+        while(merging) 
         {
-            bm.WaitForMerge(this);
+            yield return null;
         }
+        // if(merging)
+        // {
+        //     bm.WaitForMerge(this);
+        // }
         merging = true;
         bm.merging = true;
         requestInturrupt = true;
