@@ -31,8 +31,8 @@ public class PoorGuy : MonoBehaviour
 
     void TriggerTime()
     {
-        EventManager.TriggerEvent(CharacterManager, "TURN_START");
-        EventManager.TriggerEvent(CharacterManager, "TURN_END");
+        EventManager.TriggerEvent(gameObject, "TURN_START");
+        EventManager.TriggerEvent(gameObject, "TURN_END");
         CharacterManager.Trigger(CharacterTriggers.TURN_START);
         CharacterManager.Trigger(CharacterTriggers.TURN_END);
     }

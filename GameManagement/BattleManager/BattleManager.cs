@@ -81,10 +81,7 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator MergeBattleHelper(BattleManager bm)
     {
-        while(merging) 
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => !merging);
         // if(merging)
         // {
         //     bm.WaitForMerge(this);
@@ -93,11 +90,11 @@ public class BattleManager : MonoBehaviour
         bm.merging = true;
         requestInturrupt = true;
         bm.requestInturrupt = true;
-        while(!bm.Inturruptable || !Inturruptable)
-        {
-            yield return null;
-        }
-//      yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
+        //while(!bm.Inturruptable || !Inturruptable)
+        //{
+        //    yield return null;
+        //}
+      yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
 //      yield return new WaitWhile(() => { return !bm.Inturruptable || !Inturruptable; });
         if(!bm.Inturruptable)
         {
@@ -108,6 +105,7 @@ public class BattleManager : MonoBehaviour
             Debug.Log("this " + name);
         }
         //Debug.Log(bm.Inturruptable && Inturruptable);
+        yield return new WaitForSeconds(2);
         MergeInitiative(TurnOrder, bm.TurnOrder);
         MergeInitiative(NextTurnOrder, bm.NextTurnOrder);
         MergeEntities(Entities, bm.Entities);

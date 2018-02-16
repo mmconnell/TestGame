@@ -43,6 +43,9 @@ public class TestBattleManager : MonoBehaviour
                 if(bms.Count > 1)
                 {
                     bm2 = bms[1];
+                } else
+                {
+                    bm2 = null;
                 }
                 count = 0;
             }

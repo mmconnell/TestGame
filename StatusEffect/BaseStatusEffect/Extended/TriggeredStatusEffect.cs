@@ -16,12 +16,12 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
 
     public void Apply()
     {
-        EventManager.StartListening(DerivedStatusEffect.target, CharacterTrigger.ToString(), Trigger);
+        EventManager.StartListening(DerivedStatusEffect.target.gameObject, CharacterTrigger.ToString(), Trigger);
     }
 
     public void Remove()
     {
-        EventManager.StopListening(DerivedStatusEffect.target, CharacterTrigger.ToString(), Trigger);
+        EventManager.StopListening(DerivedStatusEffect.target.gameObject, CharacterTrigger.ToString(), Trigger);
     }
 
     public void End()

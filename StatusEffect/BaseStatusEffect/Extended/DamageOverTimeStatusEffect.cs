@@ -14,12 +14,12 @@ public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 
     public void Apply()
     {
-        EventManager.StartListening(DerivedStatusEffect.target, "TURN_START", TurnStart);
+        EventManager.StartListening(DerivedStatusEffect.target.gameObject, "TURN_START", TurnStart);
     }
 
     public void Remove()
     {
-        EventManager.StopListening(DerivedStatusEffect.target, "TURN_START", TurnStart);
+        EventManager.StopListening(DerivedStatusEffect.target.gameObject, "TURN_START", TurnStart);
     }
 
     public void End()

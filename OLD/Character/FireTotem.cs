@@ -96,7 +96,7 @@ public class FireTotem : MonoBehaviour
 
     void TriggerTime()
     {
-        EventManager.TriggerEvent(CharacterManager, "TURN_START");
-        EventManager.TriggerEvent(CharacterManager, "TURN_END");
+        EventManager.TriggerEvent(gameObject, "TURN_START");
+        EventManager.TriggerEvent(gameObject, "TURN_END");
     }
 }

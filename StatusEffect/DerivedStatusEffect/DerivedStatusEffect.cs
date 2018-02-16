@@ -28,7 +28,7 @@ public abstract class DerivedStatusEffect : MonoBehaviour
         //    target.StatusEffectList.Add(this);
             if (duration != null)
             {
-                EventManager.StartListening(target, "TURN_END", TurnEnd);
+                EventManager.StartListening(gameObject, "TURN_END", TurnEnd);
             }
             foreach (I_BaseStatusEffect bse in BaseStatusEffects)
             {

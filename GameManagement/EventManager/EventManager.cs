@@ -6,7 +6,7 @@ public class EventManager : MonoBehaviour
 {
 
     private Dictionary<string, UnityEvent> GlobalEvents;
-    private Dictionary<CharacterManager, Dictionary<string, UnityEvent>> StatusEvents;
+    private Dictionary<GameObject, Dictionary<string, UnityEvent>> StatusEvents;
 
     private static EventManager eventManager;
 
@@ -37,15 +37,15 @@ public class EventManager : MonoBehaviour
         if (GlobalEvents == null)
         {
             GlobalEvents = new Dictionary<string, UnityEvent>();
-            StatusEvents = new Dictionary<CharacterManager, Dictionary<string, UnityEvent>>();
+            StatusEvents = new Dictionary<GameObject, Dictionary<string, UnityEvent>>();
         }
     }
 
-    public static void StartListening(CharacterManager characterManager, string eventName, UnityAction listener)
+    public static void StartListening(GameObject gameObject, string eventName, UnityAction listener)
     {
         Dictionary<string, UnityEvent> dictionary;
         UnityEvent thisEvent;
-        if(Instance.StatusEvents.TryGetValue(characterManager, out dictionary))
+        if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
         {
             if(dictionary.TryGetValue(eventName, out thisEvent))
             {
@@ -64,7 +64,7 @@ public class EventManager : MonoBehaviour
             thisEvent.AddListener(listener);
             dictionary = new Dictionary<string, UnityEvent>();
             dictionary[eventName] = thisEvent;
-            Instance.StatusEvents[characterManager] = dictionary;
+            Instance.StatusEvents[gameObject] = dictionary;
         }
     }
 
@@ -83,12 +83,12 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public static void StopListening(CharacterManager characterManager, string eventName, UnityAction listener)
+    public static void StopListening(GameObject gameObject, string eventName, UnityAction listener)
     {
         if (eventManager == null) return;
         UnityEvent thisEvent;
         Dictionary<string, UnityEvent> dictionary;
-        if(Instance.StatusEvents.TryGetValue(characterManager, out dictionary))
+        if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
         {
             if(dictionary.TryGetValue(eventName, out thisEvent))
             {
@@ -116,11 +116,11 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public static void TriggerEvent(CharacterManager characterManager, string eventName)
+    public static void TriggerEvent(GameObject gameObject, string eventName)
     {
         Dictionary<string, UnityEvent> dictionary;
         UnityEvent thisEvent;
-        if(Instance.StatusEvents.TryGetValue(characterManager, out dictionary))
+        if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
         {
             if(dictionary.TryGetValue(eventName, out thisEvent))
             {
