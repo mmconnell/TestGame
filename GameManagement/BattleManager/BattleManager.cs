@@ -12,7 +12,6 @@ public class BattleManager : MonoBehaviour
     public bool requestInturrupt = false;
     public bool endBattle = false;
     public bool merging = false;
-    public int count = 0;
 
     private void Awake()
     {
@@ -29,7 +28,7 @@ public class BattleManager : MonoBehaviour
             if (!InformationManager.IsTemporaryTag(go.tag)) 
             {
                 I_EntityManager manager = InformationManager.GetManager(go);
-                if (manager.CanTakeTurn())
+                if (manager != null && manager.CanTakeTurn())
                 {
                     manager.CalculateInitiative();
                     AddOrdered(TurnOrder, manager, 0);
@@ -69,42 +68,18 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(MergeBattleHelper(bm));
     }
 
-    // public void WaitForMerge(BattleManager bm)
-    // {
-    //     StartCoroutine(WaitForMergeHelper(bm));
-    // }
-
-    // private IEnumerator WaitForMergeHelper(BattleManager bm)
-    // {
-    //     yield return new WaitUntil(() => !bm.merging);
-    // }
-
     private IEnumerator MergeBattleHelper(BattleManager bm)
     {
+        if(bm.endBattle) 
+        {
+            return;
+        }
         yield return new WaitUntil(() => !merging);
-        // if(merging)
-        // {
-        //     bm.WaitForMerge(this);
-        // }
         merging = true;
         bm.merging = true;
         requestInturrupt = true;
         bm.requestInturrupt = true;
-        //while(!bm.Inturruptable || !Inturruptable)
-        //{
-        //    yield return null;
-        //}
-      yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
-//      yield return new WaitWhile(() => { return !bm.Inturruptable || !Inturruptable; });
-        if(!bm.Inturruptable)
-        {
-            Debug.Log("bm " + bm.name);
-        }
-        if(!Inturruptable)
-        {
-            Debug.Log("this " + name);
-        }
-        //Debug.Log(bm.Inturruptable && Inturruptable);
+        yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
         yield return new WaitForSeconds(2);
         MergeInitiative(TurnOrder, bm.TurnOrder);
         MergeInitiative(NextTurnOrder, bm.NextTurnOrder);
@@ -116,6 +91,7 @@ public class BattleManager : MonoBehaviour
         bm.requestInturrupt = false;
         requestInturrupt = false;
         merging = false;
+        bm.merging = false;
     }
 
     private void MergeInitiative(List<I_EntityManager> main, List<I_EntityManager> other)
@@ -158,11 +134,11 @@ public class BattleManager : MonoBehaviour
         {
             Inturruptable = true;
             yield return CoroutineManager.WaitForSeconds(.1f);
-            while(requestInturrupt)
-            {
-                yield return null;
-            }
-//            yield return new WaitUntil(() => !requestInturrupt);
+            // while(requestInturrupt)
+            // {
+            //     yield return null;
+            // }
+            yield return new WaitUntil(() => !requestInturrupt);
             Inturruptable = false;
             if (!endBattle)
             {
@@ -172,16 +148,17 @@ public class BattleManager : MonoBehaviour
                     TurnOrder = NextTurnOrder;
                     NextTurnOrder = Swap;
                 }
-                //Debug.Log(gameObject.name + ": " + TurnOrder.Count + " left");
                 I_EntityManager entityManager = TurnOrder[0];
                 
                 TurnOrder.RemoveAt(0);
                 int count = TurnOrder.Count;
                 yield return StartCoroutine(entityManager.TakeTurn());
+
                 if(TurnOrder.Count != count)
                 {
                     Debug.Log(TurnOrder.Count - count);
                 }
+
                 entityManager.CalculateInitiative();
                 AddOrdered(NextTurnOrder, entityManager, 0);
                 yield return null;
@@ -192,7 +169,6 @@ public class BattleManager : MonoBehaviour
 
     private bool BattleComplete()
     {
-        count++;
         return ((false && !requestInturrupt) || (endBattle));
     }
 
