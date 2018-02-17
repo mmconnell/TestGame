@@ -1,11 +1,9 @@
-﻿namespace Enums
+﻿namespace EnumsOld
 {
     public enum Character_Trigger_Enum
     {
-        //No Children
         TURN_START, TURN_END, DEFEND, RUN_AWAY, ATTACK, USE_ABILITY, ATTACKED, FRAME,
 
-        //Combat
         DEAL_DAMAGE,
             DEAL_PHYSICAL,
                 DEAL_PIERCING,

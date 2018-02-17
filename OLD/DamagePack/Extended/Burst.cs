@@ -6,9 +6,9 @@ public class Burst : DamagePack
 {
     public DamagePack DamagePack { get; set; }
     public double Radius { get; set; }
-    public TeamTarget TeamTarget { get; set; }
+    public Team_Target TeamTarget { get; set; }
 
-    public Burst(DamageType damageType, DamagePack damagePack, double radius, TeamTarget teamTarget) : base(damageType)
+    public Burst(DamageType damageType, DamagePack damagePack, double radius, Team_Target teamTarget) : base(damageType)
     {
         if (damagePack.Contains(DamagePackType()))
         {

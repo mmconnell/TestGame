@@ -7,9 +7,9 @@ public class AuraStatusEffectOld : I_BaseStatusEffectOld
 {
     public EffectPack StatusEffect { get; set; }
     public double Meters { get; set; }
-    public TeamTarget TeamToTarget { get; set; }
+    public Team_Target TeamToTarget { get; set; }
 
-    public AuraStatusEffectOld(EffectPack statusEffect, TeamTarget teamTarget ,double meters)
+    public AuraStatusEffectOld(EffectPack statusEffect, Team_Target teamTarget ,double meters)
     {
         StatusEffect = statusEffect;
         Meters = meters;

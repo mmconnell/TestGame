@@ -46,7 +46,7 @@ public class BattleManager : MonoBehaviour
             I_EntityManager manager = InformationManager.GetManager(go);
             if(manager != null) {
                 BattleManager bm = manager.GetBattleManager();
-                if (bm != null)
+                if (bm != null && !bm.endBattle)
                 {
                     MergeBattles(bm);
                 }
@@ -70,28 +70,27 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator MergeBattleHelper(BattleManager bm)
     {
-        if(bm.endBattle) 
+        if (!bm.endBattle)
         {
-            return;
+            yield return new WaitUntil(() => !merging);
+            merging = true;
+            bm.merging = true;
+            requestInturrupt = true;
+            bm.requestInturrupt = true;
+            yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
+            yield return new WaitForSeconds(2);
+            MergeInitiative(TurnOrder, bm.TurnOrder);
+            MergeInitiative(NextTurnOrder, bm.NextTurnOrder);
+            MergeEntities(Entities, bm.Entities);
+            bm.TurnOrder.Clear();
+            bm.NextTurnOrder.Clear();
+            bm.Entities.Clear();
+            bm.endBattle = true;
+            bm.requestInturrupt = false;
+            requestInturrupt = false;
+            merging = false;
+            bm.merging = false;
         }
-        yield return new WaitUntil(() => !merging);
-        merging = true;
-        bm.merging = true;
-        requestInturrupt = true;
-        bm.requestInturrupt = true;
-        yield return (new WaitUntil(() => bm.Inturruptable && Inturruptable));
-        yield return new WaitForSeconds(2);
-        MergeInitiative(TurnOrder, bm.TurnOrder);
-        MergeInitiative(NextTurnOrder, bm.NextTurnOrder);
-        MergeEntities(Entities, bm.Entities);
-        bm.TurnOrder.Clear();
-        bm.NextTurnOrder.Clear();
-        bm.Entities.Clear();
-        bm.endBattle = true;
-        bm.requestInturrupt = false;
-        requestInturrupt = false;
-        merging = false;
-        bm.merging = false;
     }
 
     private void MergeInitiative(List<I_EntityManager> main, List<I_EntityManager> other)
@@ -129,7 +128,6 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator RunBattle()
     {
-        yield return null;
         while (!BattleComplete())
         {
             Inturruptable = true;
@@ -151,13 +149,13 @@ public class BattleManager : MonoBehaviour
                 I_EntityManager entityManager = TurnOrder[0];
                 
                 TurnOrder.RemoveAt(0);
-                int count = TurnOrder.Count;
+                //int count = TurnOrder.Count;
                 yield return StartCoroutine(entityManager.TakeTurn());
 
-                if(TurnOrder.Count != count)
-                {
-                    Debug.Log(TurnOrder.Count - count);
-                }
+                //if(TurnOrder.Count != count)
+                //{
+                //    Debug.Log(TurnOrder.Count - count);
+                //}
 
                 entityManager.CalculateInitiative();
                 AddOrdered(NextTurnOrder, entityManager, 0);
@@ -169,7 +167,7 @@ public class BattleManager : MonoBehaviour
 
     private bool BattleComplete()
     {
-        return ((false && !requestInturrupt) || (endBattle));
+        return ((false /*&& !requestInturrupt*/) || (endBattle));
     }
 
     private bool AddOrdered(List<I_EntityManager> list, I_EntityManager unit, int start)

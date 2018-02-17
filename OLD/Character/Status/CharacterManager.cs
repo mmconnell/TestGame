@@ -107,7 +107,7 @@ public class CharacterManager : MonoBehaviour, I_EntityManager {
 
     public void Apply(DamagePack damagePack, CharacterManager owner)
     {
-        int damageDone = damagePack.GetAmount(this, owner);
+        //int damageDone = damagePack.GetAmount(this, owner);
         //....Do stuff
         //Debug.Log(damageDone + "");
         damagePack.Apply(this, owner);
