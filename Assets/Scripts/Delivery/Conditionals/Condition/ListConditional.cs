@@ -4,7 +4,7 @@ using EnumsNew;
 
 namespace Delivery
 {
-    public class ListConditional : Condition
+    public class ListConditional : Conditional
     {
         private List<Conditional> conditionals;
 
@@ -22,6 +22,10 @@ namespace Delivery
                     conditional.Apply(owner, target, pack, results, shifts);
                 }
             }
+        }
+
+        public override bool IsCondition() {
+            return true;
         }
     }
 }

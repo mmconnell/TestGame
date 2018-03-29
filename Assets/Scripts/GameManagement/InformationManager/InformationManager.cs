@@ -62,7 +62,7 @@ public class InformationManager : MonoBehaviour
         }
         Instance.Managers.Add(go, null);
         return entityManager;
-    } 
+    }
 
     public static bool IsTemporaryTag(string tag)
     {

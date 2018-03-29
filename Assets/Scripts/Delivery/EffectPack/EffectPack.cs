@@ -44,14 +44,20 @@ namespace Delivery
 
         public void Apply(GameObject owner, GameObject target)
         {
-            if(InformationManager.GetManager(target) != null)
+            I_EntityManager entityOwner = InformationManager.GetManager(owner), entityTarget = InformationManager.GetManager(target);
+            Apply(entityOwner, entityTarget);
+            
+        }
+
+        public void Apply(I_EntityManager owner, I_EntityManager target) {
+            if(target != null)
             {
                 bool success = ChanceToSucceed != null ? ChanceToSucceed <= InformationManager.RandomPercent() : true;
                 if (success)
                 {
-                    DerivedStatusEffect statusEffect = (DerivedStatusEffect)target.AddComponent(StatusEffect.type);
+                    DerivedStatusEffect statusEffect = (DerivedStatusEffect)target.GameObject().AddComponent(StatusEffect.type);
                     statusEffect.duration = Duration;
-                    statusEffect.owner = owner;
+                    statusEffect.owner = owner.GameObject();
                 }
             }
         }

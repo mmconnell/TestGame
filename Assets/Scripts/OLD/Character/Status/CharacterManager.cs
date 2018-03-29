@@ -277,4 +277,12 @@ public class CharacterManager : MonoBehaviour, I_EntityManager {
     {
         return bm;
     }
+
+    public void Apply(DeliveryPack deliveryPack) {
+
+    }
+
+    public GameObject GameObject() {
+        return gameObject;
+    }
 }

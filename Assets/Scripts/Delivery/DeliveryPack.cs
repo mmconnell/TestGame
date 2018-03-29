@@ -70,6 +70,10 @@ namespace Delivery
         public void Apply(GameObject owner, GameObject target)
         {
             I_EntityManager entityOwner = InformationManager.GetManager(owner), entityTarget = InformationManager.GetManager(target);
+            Apply(entityOwner, entityTarget);
+        }
+
+        public void Apply(I_EntityManager owner, I_EntityManager target) {
             List<Result> results = new List<Result>();
             Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts = new Dictionary<Delivery_Pack_Shifts, AttributeShift>();
             Dictionary<Damage_Type_Enum, int> damageDone = new Dictionary<Damage_Type_Enum, int>();
@@ -80,7 +84,7 @@ namespace Delivery
                 {
                     damageDone.Add(dp.DamageType, 0);
                 }
-                damageDone[dp.DamageType] += dp.GetAmount(entityOwner, entityTarget);
+                damageDone[dp.DamageType] += dp.GetAmount(owner, target);
             }
             foreach(EffectPack ep in Effects)
             {
@@ -89,7 +93,7 @@ namespace Delivery
             //PostConditions.Apply(entityOwner, entityTarget, this, results, shifts);
             foreach(Damage_Type_Enum damage in damageDone.Keys)
             {
-                ((CharacterManager)entityTarget).TakeDamage(damageDone[damage], damage, (CharacterManager)entityTarget);
+                ((CharacterManager)target).TakeDamage(damageDone[damage], damage, (CharacterManager)target);
             }
         }
     }
