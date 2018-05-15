@@ -6,65 +6,60 @@ namespace Delivery
 {
     public class DeliveryPack
     {
-        public Conditional PreConditions { get; private set; }
-        public Conditional PostConditions { get; private set; }
-        public List<EffectPack> Effects { get; private set; }
-        public List<DamagePack> Damages { get; private set; }
+        public List<EffectPack> PrimaryEffects { get; private set; }
+        public List<EffectPack> SecondaryEffects { get; private set; }
 
-        public DeliveryPack(Conditional preConditions, Conditional postConditions, List<EffectPack> effects, List<DamagePack> damages)
+        public DeliveryPack(List<EffectPack> primaryEffects, List<EffectPack> effects)
         {
-            PreConditions = preConditions;
-            PostConditions = postConditions;
-            Effects = effects ?? new List<EffectPack>();
-            Damages = damages ?? new List<DamagePack>();
+            PrimaryEffects = primaryEffects ?? new List<EffectPack>();
+            SecondaryEffects = effects ?? new List<EffectPack>();
         }
 
         public DeliveryPack()
         {
-            Effects = new List<EffectPack>();
-            Damages = new List<DamagePack>();
+            SecondaryEffects = new List<EffectPack>();
         }
 
-        public void SetPostCondtion(Conditional conditional)
-        {
-            PostConditions = conditional;
-        }
-
-        public void SetPreCondition(Conditional conditionals)
-        {
-            PreConditions = conditionals;
-        }
-
-        public void AddDamage(DamagePack damagePack)
-        {
-            if (damagePack != null)
-            {
-                Damages.Add(damagePack);
-            }
-        }
-
-        public void AddDamage(List<DamagePack> damagePacks)
-        {
-            if (damagePacks != null)
-            {
-                Damages.AddRange(damagePacks);
-            }
-        }
-
-        public void AddEffect(EffectPack effectPack)
+        public void AddPrimaryEffect(EffectPack effectPack)
         {
             if(effectPack != null)
             {
-                Effects.Add(effectPack);
+                PrimaryEffects.Add(effectPack);
             }
         }
 
-        public void AddEffect(List<EffectPack> effectPacks)
+        public void AddPrimaryEffect(List<EffectPack> effectPacks)
         {
             if(effectPacks != null)
             {
-                Effects.AddRange(effectPacks);
+                PrimaryEffects.AddRange(effectPacks);
             }
+        }
+
+        public void AddSecondaryEffect(EffectPack effectPack)
+        {
+            if (effectPack != null)
+            {
+                SecondaryEffects.Add(effectPack);
+            }
+        }
+
+        public void AddSecondaryEffect(List<EffectPack> effectPacks)
+        {
+            if (effectPacks != null)
+            {
+                SecondaryEffects.AddRange(effectPacks);
+            }
+        }
+
+        public DeliveryPack CopyDeliveryPack()
+        {
+            DeliveryPack newDeliveryPack = new DeliveryPack();
+            List<EffectPack> effectPack = new List<EffectPack>();
+            //List<DamagePack> damagePack = new List<DamagePack>();
+            effectPack.AddRange(SecondaryEffects);
+            newDeliveryPack.SecondaryEffects = effectPack;
+            return newDeliveryPack;
         }
 
         public void Apply(GameObject owner, GameObject target)
@@ -74,26 +69,13 @@ namespace Delivery
         }
 
         public void Apply(I_EntityManager owner, I_EntityManager target) {
-            List<Result> results = new List<Result>();
-            Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts = new Dictionary<Delivery_Pack_Shifts, AttributeShift>();
-            Dictionary<Damage_Type_Enum, int> damageDone = new Dictionary<Damage_Type_Enum, int>();
-            //PreConditions.Apply(entityOwner, entityTarget, this, results, shifts);
-            foreach(DamagePack dp in Damages)
-            {
-                if(!damageDone.ContainsKey(dp.DamageType))
-                {
-                    damageDone.Add(dp.DamageType, 0);
-                }
-                damageDone[dp.DamageType] += dp.GetAmount(owner, target);
-            }
-            foreach(EffectPack ep in Effects)
+            //List<Result> results = new List<Result>();
+            //Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts = new Dictionary<Delivery_Pack_Shifts, AttributeShift>();
+            //Dictionary<Damage_Type_Enum, int> damageDone = new Dictionary<Damage_Type_Enum, int>();
+            //DeliveryPack newDeliveryPack = CopyDeliveryPack();
+            foreach(EffectPack ep in SecondaryEffects)
             {
                 ep.Apply(owner, target);
-            }
-            //PostConditions.Apply(entityOwner, entityTarget, this, results, shifts);
-            foreach(Damage_Type_Enum damage in damageDone.Keys)
-            {
-                ((CharacterManager)target).TakeDamage(damageDone[damage], damage, (CharacterManager)target);
             }
         }
     }

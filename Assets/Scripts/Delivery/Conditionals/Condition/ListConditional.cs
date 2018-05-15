@@ -13,13 +13,13 @@ namespace Delivery
             this.conditionals = conditionals;
         }
 
-        public override void Apply(I_EntityManager owner, I_EntityManager target, DeliveryPack pack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts)
+        public override void Apply(I_EntityManager owner, I_EntityManager target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts)
         {
             foreach (Conditional conditional in conditionals)
             {
                 if (conditional.IsCondition())
                 {
-                    conditional.Apply(owner, target, pack, results, shifts);
+                    conditional.Apply(owner, target, pack, newPack, results, shifts);
                 }
             }
         }

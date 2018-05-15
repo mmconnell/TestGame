@@ -1,6 +1,4 @@
 ﻿using Delivery;
-using Enums;
-using Enums.Trigger;
 
 public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 {

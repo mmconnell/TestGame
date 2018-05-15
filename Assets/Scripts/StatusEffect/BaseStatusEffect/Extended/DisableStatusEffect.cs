@@ -1,11 +1,11 @@
 ﻿using Enums.CombatAction;
 
-public class DisableStatusEffect : I_BaseStatusEffect
+public abstract class DisableStatusEffect : I_BaseStatusEffect
 {
     private CombatAction CombatAction { get; set; }
     private DerivedStatusEffect DerivedStatusEffect { get; set; }
 
-    public DisableStatusEffect(DerivedStatusEffect derivedStatusEffect, CombatAction combatAction)
+    public DisableStatusEffect()
     {
         DerivedStatusEffect = derivedStatusEffect;
         CombatAction = combatAction;
@@ -13,7 +13,7 @@ public class DisableStatusEffect : I_BaseStatusEffect
 
     public void Apply()
     {
-       // ((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.target)).DisableCount[CombatAction.ActionValue]++;
+        ApplyEffect();
     }
 
     public void End()
@@ -23,6 +23,9 @@ public class DisableStatusEffect : I_BaseStatusEffect
 
     public void Remove()
     {
-        //((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.target)).DisableCount[CombatAction.ActionValue]--;
+        RemoveEffect();
     }
+
+    public abstract void ApplyEffect();
+    public abstract void RemoveEffect();
 }

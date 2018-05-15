@@ -17,7 +17,7 @@ namespace Delivery
 
         public override int GetAmount(I_EntityManager target, I_EntityManager owner)
         {
-            I_EntityManager source = SourceIsOwner ? owner : target;
+            //I_EntityManager source = SourceIsOwner ? owner : target;
             double health = 0;
             switch (TypeOfPercent)
             {

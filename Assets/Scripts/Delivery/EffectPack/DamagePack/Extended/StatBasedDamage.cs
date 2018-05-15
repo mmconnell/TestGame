@@ -22,7 +22,7 @@ namespace Delivery
 
         public override int GetAmount(I_EntityManager target, I_EntityManager owner)
         {
-            I_EntityManager source = SourceIsOwner ? owner : target;
+            //I_EntityManager source = SourceIsOwner ? owner : target;
             double value = DamagePack.GetAmount(target, owner);
             //value *= source.GetStatBonus(CharacterStat);
             return (int)value;

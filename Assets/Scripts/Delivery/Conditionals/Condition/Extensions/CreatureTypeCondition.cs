@@ -8,8 +8,10 @@ namespace Delivery
         public List<Character_Type> CharacterTypes {get; set;}
 
         public CreatureTypeCondition(Conditional conditional, Character_Type characterType) : base(conditional) {
-            CharacterTypes = new List<Character_Type>();
-            CharacterTypes.Add(characterType);
+            CharacterTypes = new List<Character_Type>
+            {
+                characterType
+            };
         }
 
         public void Add(Character_Type character_Type) {
@@ -20,10 +22,10 @@ namespace Delivery
             CharacterTypes.AddRange(characterTypes);
         }
 
-        public override void Apply(I_EntityManager owner, I_EntityManager target, DeliveryPack pack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts) {
+        public override void Apply(I_EntityManager owner, I_EntityManager target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts) {
             foreach(Character_Type characterType in CharacterTypes) {
                 if(target.Equals(characterType)) {
-                    Conditional.Apply(owner, target, pack, results, shifts);
+                    Conditional.Apply(owner, target, pack, newPack, results, shifts);
                     break;
                 }
             }

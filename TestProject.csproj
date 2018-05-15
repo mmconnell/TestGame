@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.2.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -220,18 +222,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AbilityCaster.cs" />
+    <Compile Include="Assets\Scripts\Ability\AbilityTargeter\A_AbilityTargeter.cs" />
+    <Compile Include="Assets\Scripts\Ability\A_Ability.cs" />
     <Compile Include="Assets\Scripts\Delivery\Conditionals\Condition\Condition.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Conditionals\Condition\Extensions\CreatureTypeCondition.cs" />
     <Compile Include="Assets\Scripts\Delivery\Conditionals\Condition\ListConditional.cs" />
     <Compile Include="Assets\Scripts\Delivery\Conditionals\Conditional.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Conditionals\Result\Extensions\DamageResult.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Conditionals\Result\Extensions\EffectResult.cs" />
     <Compile Include="Assets\Scripts\Delivery\Conditionals\Result\Result.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\DamagePack.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\Extended\Burst.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\Extended\FlatDamage.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\Extended\LevelBasedDamage.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\Extended\PercentBasedDamage.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DamagePack\Extended\StatBasedDamage.cs" />
     <Compile Include="Assets\Scripts\Delivery\DeliveryPack.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\AreaEffect\Extended\SimpleAreaCircle.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\AreaEffect\Extended\SingleTarget.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\AreaEffect\I_AreaEffect.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\DamagePack.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\Extended\Burst.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\Extended\FlatDamage.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\Extended\LevelBasedDamage.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\Extended\PercentBasedDamage.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\DamagePack\Extended\StatBasedDamage.cs" />
     <Compile Include="Assets\Scripts\Delivery\EffectPack\EffectPack.cs" />
+    <Compile Include="Assets\Scripts\Delivery\EffectPack\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Enum\Enum.cs" />
     <Compile Include="Assets\Scripts\GameManagement\BattleManager\BattleManager.cs" />
     <Compile Include="Assets\Scripts\GameManagement\CoroutineManager\CoroutineManager.cs" />
@@ -306,6 +317,7 @@
     <Compile Include="Assets\Scripts\StatusManager\StatusManager.cs" />
     <Compile Include="Assets\Scripts\TypeWrapper\TypeWrapper.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>

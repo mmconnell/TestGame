@@ -20,7 +20,7 @@ public class StatBasedDamageOld : DamagePackOld
 
     public override int GetAmount(CharacterManager target, CharacterManager owner)
     {
-        CharacterManager source = SourceIsOwner ? owner : target;
+        //CharacterManager source = SourceIsOwner ? owner : target;
         double value = DamagePack.GetAmount(target, owner);
        // value *= source.GetStatBonus(CharacterStat);
         return (int)value;
