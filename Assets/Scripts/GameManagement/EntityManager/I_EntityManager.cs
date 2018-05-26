@@ -2,7 +2,7 @@
 using System.Collections;
 using Delivery;
 
-public interface I_EntityManager
+public interface poop
 {
     bool CanTakeTurn();
     IEnumerator TakeTurn();

@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class InformationManager : MonoBehaviour
 {
-    private Dictionary<GameObject, I_EntityManager> Managers;
+    public bool isLogging = false;
+
+    private Dictionary<GameObject, Dictionary<Type, MonoBehaviour>> singletonRegisteredComponents;
     private static List<string> TemporaryTags = new List<string>
     {
         "spell",
@@ -36,32 +38,98 @@ public class InformationManager : MonoBehaviour
 
     void Init()
     {
-        if (Managers == null)
+        if (singletonRegisteredComponents == null)
         {
-            Managers = new Dictionary<GameObject, I_EntityManager>();
+            singletonRegisteredComponents = new Dictionary<GameObject, Dictionary<Type, MonoBehaviour>>();
         }
     }
 
-    public static I_EntityManager GetManager(GameObject go)
+    public static void RegisterComponent(GameObject go, Type type, MonoBehaviour monoBehaviour)
     {
-        if(go == null)
+        if (go == null || monoBehaviour == null)
+        {
+            return;
+        }
+        Dictionary<Type, MonoBehaviour> monoBehaviours;
+        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
+        {
+            if (monoBehaviours != null)
+            {
+                if (monoBehaviours.ContainsKey(type))
+                {
+                    monoBehaviours[type] = monoBehaviour;
+                }
+                else
+                {
+                    monoBehaviours.Add(type, monoBehaviour);
+                }
+            }
+            else
+            {
+                monoBehaviours = new Dictionary<Type, MonoBehaviour>
+                {
+                    { type, monoBehaviour }
+                };
+                Instance.singletonRegisteredComponents.Add(go, monoBehaviours);
+            }
+        }
+        else
+        {
+            monoBehaviours = new Dictionary<Type, MonoBehaviour>
+            {
+                { type, monoBehaviour }
+            };
+            Instance.singletonRegisteredComponents.Add(go, monoBehaviours);
+        }
+    }
+
+    public static void UnRegisterComponent(GameObject go, Type type)
+    {
+        if (go == null || !informationManager)
+        {
+            return;
+        }
+        Dictionary<Type, MonoBehaviour> monoBehaviours;
+        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
+        {
+            if (monoBehaviours != null)
+            {
+                if (monoBehaviours.ContainsKey(type))
+                {
+                    monoBehaviours.Remove(type);
+                    if (monoBehaviours.Keys.Count == 0)
+                    {
+                        Instance.singletonRegisteredComponents.Remove(go);
+                    }
+                }
+            }
+        }
+    }
+
+    public static MonoBehaviour GetRegisteredComponent(GameObject go, Type type)
+    {
+        if (go == null)
         {
             return null;
         }
-        I_EntityManager manager;
-        if(Instance.Managers.TryGetValue(go, out manager))
+        Dictionary<Type, MonoBehaviour> monoBehaviours;
+        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
         {
-            return manager;
+            if (monoBehaviours == null)
+            {
+                return null;
+            }
+            MonoBehaviour monoBehaviour;
+            if (monoBehaviours.TryGetValue(type, out monoBehaviour))
+            {
+                if (monoBehaviour.isActiveAndEnabled)
+                {
+                    return monoBehaviour;
+                }
+                return null;
+            }
         }
-        I_EntityManager entityManager;
-        entityManager = go.GetComponent<CharacterManager>();
-        if (entityManager != null)
-        {
-            Instance.Managers.Add(go, entityManager);
-            return entityManager;
-        }
-        Instance.Managers.Add(go, null);
-        return entityManager;
+        return null;
     }
 
     public static bool IsTemporaryTag(string tag)
@@ -71,6 +139,18 @@ public class InformationManager : MonoBehaviour
 
     public static int RandomPercent()
     {
-        return Random.Range(0, 101);
+        return UnityEngine.Random.Range(0, 101);
+    }
+
+    public static void Log(string info)
+    {
+        if (!informationManager)
+        {
+            return;
+        }
+        if (Instance.isLogging)
+        {
+            Debug.Log(info);
+        }
     }
 }

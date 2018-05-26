@@ -1,81 +1,61 @@
-﻿using EnumsNew;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Delivery
 {
     public class DeliveryPack
     {
-        public List<EffectPack> PrimaryEffects { get; private set; }
-        public List<EffectPack> SecondaryEffects { get; private set; }
+        public SortedDictionary<int, List<I_Effect>> EffectMap { get; private set; }
+        public I_AreaEffect AreaEffect { get; set; }
 
-        public DeliveryPack(List<EffectPack> primaryEffects, List<EffectPack> effects)
+        public DeliveryPack(SortedDictionary<int, List<I_Effect>> effectMap)
         {
-            PrimaryEffects = primaryEffects ?? new List<EffectPack>();
-            SecondaryEffects = effects ?? new List<EffectPack>();
+            EffectMap = effectMap ?? new SortedDictionary<int, List<I_Effect>>();
         }
 
         public DeliveryPack()
         {
-            SecondaryEffects = new List<EffectPack>();
+            EffectMap = new SortedDictionary<int, List<I_Effect>>();
         }
 
-        public void AddPrimaryEffect(EffectPack effectPack)
+        public void AddEffect(I_Effect effectPack, int priority)
         {
             if(effectPack != null)
             {
-                PrimaryEffects.Add(effectPack);
-            }
-        }
-
-        public void AddPrimaryEffect(List<EffectPack> effectPacks)
-        {
-            if(effectPacks != null)
-            {
-                PrimaryEffects.AddRange(effectPacks);
-            }
-        }
-
-        public void AddSecondaryEffect(EffectPack effectPack)
-        {
-            if (effectPack != null)
-            {
-                SecondaryEffects.Add(effectPack);
-            }
-        }
-
-        public void AddSecondaryEffect(List<EffectPack> effectPacks)
-        {
-            if (effectPacks != null)
-            {
-                SecondaryEffects.AddRange(effectPacks);
+                List<I_Effect> effectPackList = EffectMap[priority];
+                if (effectPackList == null)
+                {
+                    effectPackList = new List<I_Effect>();
+                    EffectMap.Add(priority, effectPackList);
+                }
+                effectPackList.Add(effectPack);
             }
         }
 
         public DeliveryPack CopyDeliveryPack()
         {
             DeliveryPack newDeliveryPack = new DeliveryPack();
-            List<EffectPack> effectPack = new List<EffectPack>();
-            //List<DamagePack> damagePack = new List<DamagePack>();
-            effectPack.AddRange(SecondaryEffects);
-            newDeliveryPack.SecondaryEffects = effectPack;
+            foreach(KeyValuePair<int, List<I_Effect>> pair in EffectMap)
+            {
+                List<I_Effect> effectPackList = new List<I_Effect>();
+                effectPackList.AddRange(pair.Value);
+                newDeliveryPack.EffectMap.Add(pair.Key, effectPackList);
+            }
             return newDeliveryPack;
         }
 
-        public void Apply(GameObject owner, GameObject target)
+        public void Apply(GameObject owner, I_Position position, DeliveryResult deliveryResult)
         {
-            I_EntityManager entityOwner = InformationManager.GetManager(owner), entityTarget = InformationManager.GetManager(target);
-            Apply(entityOwner, entityTarget);
-        }
-
-        public void Apply(I_EntityManager owner, I_EntityManager target) {
-            //List<Result> results = new List<Result>();
-            //Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts = new Dictionary<Delivery_Pack_Shifts, AttributeShift>();
-            //Dictionary<Damage_Type_Enum, int> damageDone = new Dictionary<Damage_Type_Enum, int>();
-            //DeliveryPack newDeliveryPack = CopyDeliveryPack();
-            foreach(EffectPack ep in SecondaryEffects)
+            List<GameObject> targets = AreaEffect.GatherTargets(position);
+            foreach (KeyValuePair<int, List<I_Effect>> pair in EffectMap)
             {
-                ep.Apply(owner, target);
+                foreach (I_Effect effectPack in pair.Value)
+                {
+                    foreach (GameObject target in targets)
+                    {
+                        effectPack.Apply(owner, target, deliveryResult);
+                    }
+                }
             }
         }
     }

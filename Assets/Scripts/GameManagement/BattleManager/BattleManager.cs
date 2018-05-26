@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    public List<I_EntityManager> TurnOrder;
-    public List<I_EntityManager> NextTurnOrder;
-    public List<I_EntityManager> Swap;
+    public List<TurnTool> TurnOrder;
+    public List<TurnTool> NextTurnOrder;
+    public List<TurnTool> Swap;
     public List<GameObject> Entities;
     public bool Inturruptable { get; private set; }
     public bool requestInturrupt = false;
@@ -16,8 +16,8 @@ public class BattleManager : MonoBehaviour
     private void Awake()
     {
         Entities = new List<GameObject>();
-        TurnOrder = new List<I_EntityManager>();
-        NextTurnOrder = new List<I_EntityManager>();
+        TurnOrder = new List<TurnTool>();
+        NextTurnOrder = new List<TurnTool>();
         Inturruptable = false;
     }
 
@@ -27,8 +27,8 @@ public class BattleManager : MonoBehaviour
         {
             if (!InformationManager.IsTemporaryTag(go.tag)) 
             {
-                I_EntityManager manager = InformationManager.GetManager(go);
-                if (manager != null && manager.CanTakeTurn())
+                TurnTool manager = InformationManager.GetRegisteredComponent(go, typeof(TurnTool)) as TurnTool;
+                if (manager != null)
                 {
                     manager.CalculateInitiative();
                     AddOrdered(TurnOrder, manager, 0);
@@ -43,7 +43,7 @@ public class BattleManager : MonoBehaviour
     {
         if (!InformationManager.IsTemporaryTag(go.tag))
         {
-            I_EntityManager manager = InformationManager.GetManager(go);
+            TurnTool manager = InformationManager.GetRegisteredComponent(go, typeof(TurnTool)) as TurnTool;
             if(manager != null) {
                 BattleManager bm = manager.GetBattleManager();
                 if (bm != null && !bm.endBattle)
@@ -93,9 +93,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void MergeInitiative(List<I_EntityManager> main, List<I_EntityManager> other)
+    private void MergeInitiative(List<TurnTool> main, List<TurnTool> other)
     {
-        I_EntityManager em;
+        TurnTool em;
         if(other.Count == 0)
         {
             return;
@@ -141,7 +141,7 @@ public class BattleManager : MonoBehaviour
                     TurnOrder = NextTurnOrder;
                     NextTurnOrder = Swap;
                 }
-                I_EntityManager entityManager = TurnOrder[0];
+                TurnTool entityManager = TurnOrder[0];
                 
                 TurnOrder.RemoveAt(0);
                 //int count = TurnOrder.Count;
@@ -165,7 +165,7 @@ public class BattleManager : MonoBehaviour
         return ((false /*&& !requestInturrupt*/) || (endBattle));
     }
 
-    private bool AddOrdered(List<I_EntityManager> list, I_EntityManager unit, int start)
+    private bool AddOrdered(List<TurnTool> list, TurnTool unit, int start)
     {
         for(int x = start; x < list.Count; x++)
         {
