@@ -5,8 +5,10 @@ using System;
 public class InformationManager : MonoBehaviour
 {
     public bool isLogging = false;
+    private static bool endGame = false;
 
     private Dictionary<GameObject, Dictionary<Type, MonoBehaviour>> singletonRegisteredComponents;
+
     private static List<string> TemporaryTags = new List<string>
     {
         "spell",
@@ -46,7 +48,7 @@ public class InformationManager : MonoBehaviour
 
     public static void RegisterComponent(GameObject go, Type type, MonoBehaviour monoBehaviour)
     {
-        if (go == null || monoBehaviour == null)
+        if (go == null || endGame)
         {
             return;
         }
@@ -85,7 +87,7 @@ public class InformationManager : MonoBehaviour
 
     public static void UnRegisterComponent(GameObject go, Type type)
     {
-        if (go == null || !informationManager)
+        if (go == null || endGame)
         {
             return;
         }
@@ -108,14 +110,14 @@ public class InformationManager : MonoBehaviour
 
     public static MonoBehaviour GetRegisteredComponent(GameObject go, Type type)
     {
-        if (go == null)
+        if (go == null || endGame)
         {
             return null;
         }
         Dictionary<Type, MonoBehaviour> monoBehaviours;
         if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
         {
-            if (monoBehaviours == null)
+            if (monoBehaviours == null || endGame)
             {
                 return null;
             }
@@ -132,6 +134,11 @@ public class InformationManager : MonoBehaviour
         return null;
     }
 
+    public void OnDestroy()
+    {
+        endGame = true;
+    }
+
     public static bool IsTemporaryTag(string tag)
     {
         return TemporaryTags.Contains(tag);
@@ -144,10 +151,6 @@ public class InformationManager : MonoBehaviour
 
     public static void Log(string info)
     {
-        if (!informationManager)
-        {
-            return;
-        }
         if (Instance.isLogging)
         {
             Debug.Log(info);

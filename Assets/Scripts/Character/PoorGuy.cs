@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using EnumsNew;
+using Delivery;
+using Manager;
 
 public class PoorGuy : MonoBehaviour
 {
@@ -9,30 +10,17 @@ public class PoorGuy : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        CharacterManager = GetComponent<CharacterManager>();
-        EventManager.StartListening("TIME_INSTANCE", TriggerTime);
-    }
+        CreatureCreator.CreateHuman(gameObject, "Poor John");
+        /*DerivedStatusEffect dse = gameObject.AddComponent<OnFire>();
+        dse.duration = 5;*/
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        CharacterManager.Trigger(Character_Trigger_Enum.FRAME);
-        FrameCount++;
-        if (FrameCount%30 == 0)
-        {
-            
-            //CharacterManager.Trigger(CharacterTriggers.TURN_START);
-            //CharacterManager.Trigger(CharacterTriggers.TURN_END);
-            FrameCount = 0;
-        }
-
+        InvokeRepeating("TriggerTime", 1, 1f);
+        //EventManager.StartListening("TIME_INSTANCE", TriggerTime);
     }
 
     void TriggerTime()
     {
         EventManager.TriggerEvent(gameObject, "TURN_START");
         EventManager.TriggerEvent(gameObject, "TURN_END");
-        CharacterManager.Trigger(Character_Trigger_Enum.TURN_START);
-        CharacterManager.Trigger(Character_Trigger_Enum.TURN_END);
     }
 }

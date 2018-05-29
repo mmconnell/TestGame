@@ -12,7 +12,7 @@ namespace Delivery
             DamagePack = damagePack;
         }
 
-        public override void Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts) {
+        public override void Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts) {
             //newPack.AddDamage(DamagePack);
         }
     }

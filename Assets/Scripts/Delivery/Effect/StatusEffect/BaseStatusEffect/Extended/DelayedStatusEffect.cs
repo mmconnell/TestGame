@@ -15,7 +15,7 @@ public class DelayedStatusEffect : I_BaseStatusEffect
 
     public void End()
     {
-        //((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.target)).Apply(DeliveryPack, ((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.owner)));
+        DeliveryManager.Run(DerivedStatusEffect.owner, new ObjectPosition(DerivedStatusEffect.gameObject), DeliveryPack);
     }
 
     public void Remove(){}

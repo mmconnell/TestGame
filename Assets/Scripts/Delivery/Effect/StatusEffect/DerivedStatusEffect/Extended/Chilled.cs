@@ -1,13 +1,14 @@
 ﻿using Delivery;
 using EnumsNew;
+using Utility;
 
 public class Chilled : DerivedStatusEffect
 {
     public override void Start()
     {
-        BaseStatusEffects.Add(new DamageOverTimeStatusEffect(this, new FlatDamage(Damage_Type_Enum.COLD, 10)));
-        BaseStatusEffects.Add(new CharacterAttributeStatusEffect(this, Character_Attribute_Enum.COLD_RESISTANCE, 50, Character_Attribute_Shift_Type.DIVISOR));
-        BaseStatusEffects.Add(new CharacterAttributeStatusEffect(this, Character_Attribute_Enum.FIRE_RESISTANCE, 30, Character_Attribute_Shift_Type.MULTIPLIER));
+        BaseStatusEffects.Add(new DamageOverTimeStatusEffect(this, new DamagePack(new SimpleDamageType(Damage_Type_Enum.COLD), new FlatNumber(10))));
+        BaseStatusEffects.Add(new ResistanceStatusEffect(this, Damage_Type_Enum.COLD, -15));
+        BaseStatusEffects.Add(new ResistanceStatusEffect(this, Damage_Type_Enum.FIRE, 15));
         base.Start();
     }
 }

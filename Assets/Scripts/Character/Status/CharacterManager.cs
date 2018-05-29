@@ -15,7 +15,7 @@ public class CharacterManager : MonoBehaviour {
 
     //public Dictionary<Character_Trigger_Enum, List<I_StatusEffectWrapper>> StatusEffects { get; set; }
     public Dictionary<Character_Action_Enum, int> DisableCount { get; set; }
-    public Dictionary<Character_Attribute_Enum, List<AttributeShift>> CharacterAttributeAlteration { get; set; }
+    public Dictionary<Character_Attribute_Enum, List<NumberShift>> CharacterAttributeAlteration { get; set; }
     //public Dictionary<Persistance, List<I_StatusEffectWrapper>> PersistanceTracker { get; set; }
     public Dictionary<Damage_Type_Enum, int> DamageTaken { get; set; }
     //public Dictionary<I_StatusEffectWrapper, HashSet<CharacterManager>> AuraLastEffected { get; set; }
@@ -37,7 +37,7 @@ public class CharacterManager : MonoBehaviour {
         MaxHealth = 997;
         //StatusEffects = new Dictionary<Character_Trigger_Enum, List<I_StatusEffectWrapper>>();
         DisableCount = new Dictionary<Character_Action_Enum, int>();
-        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, List<AttributeShift>>();
+        CharacterAttributeAlteration = new Dictionary<Character_Attribute_Enum, List<NumberShift>>();
         //PersistanceTracker = new Dictionary<Persistance, List<I_StatusEffectWrapper>>();
         DamageTaken = new Dictionary<Damage_Type_Enum, int>();
         //AuraLastEffected = new Dictionary<I_StatusEffectWrapper, HashSet<CharacterManager>>();
@@ -61,7 +61,7 @@ public class CharacterManager : MonoBehaviour {
         }
         foreach (Character_Attribute_Enum cae in Enum.GetValues(typeof(Character_Attribute_Enum)))
         {
-            CharacterAttributeAlteration.Add(cae, new List<AttributeShift>());
+            CharacterAttributeAlteration.Add(cae, new List<NumberShift>());
         }
         foreach (Persistance p in Enum.GetValues(typeof(Persistance)))
         {

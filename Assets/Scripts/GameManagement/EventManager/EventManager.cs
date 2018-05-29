@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class EventManager : MonoBehaviour
 {
-
     private Dictionary<string, UnityEvent> GlobalEvents;
     private Dictionary<GameObject, Dictionary<string, UnityEvent>> StatusEvents;
 
     private static EventManager eventManager;
+    private static bool endGame = false;
 
     public static EventManager Instance
     {
@@ -43,6 +43,10 @@ public class EventManager : MonoBehaviour
 
     public static void StartListening(GameObject gameObject, string eventName, UnityAction listener)
     {
+        if (endGame)
+        {
+            return;
+        }
         Dictionary<string, UnityEvent> dictionary;
         UnityEvent thisEvent;
         if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
@@ -70,6 +74,10 @@ public class EventManager : MonoBehaviour
 
     public static void StartListening(string eventName, UnityAction listener)
     {
+        if (endGame)
+        {
+            return;
+        }
         UnityEvent thisEvent = null;
         if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
         {
@@ -85,7 +93,10 @@ public class EventManager : MonoBehaviour
 
     public static void StopListening(GameObject gameObject, string eventName, UnityAction listener)
     {
-        if (eventManager == null) return;
+        if (endGame)
+        {
+            return;
+        }
         UnityEvent thisEvent;
         Dictionary<string, UnityEvent> dictionary;
         if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
@@ -99,6 +110,10 @@ public class EventManager : MonoBehaviour
 
     public static void StopListening(string eventName, UnityAction listener)
     {
+        if (endGame)
+        {
+            return;
+        }
         if (eventManager == null) return;
         UnityEvent thisEvent = null;
         if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
@@ -109,6 +124,10 @@ public class EventManager : MonoBehaviour
 
     public static void TriggerEvent(string eventName)
     {
+        if (endGame)
+        {
+            return;
+        }
         UnityEvent thisEvent = null;
         if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
         {
@@ -118,6 +137,10 @@ public class EventManager : MonoBehaviour
 
     public static void TriggerEvent(GameObject gameObject, string eventName)
     {
+        if (endGame)
+        {
+            return;
+        }
         Dictionary<string, UnityEvent> dictionary;
         UnityEvent thisEvent;
         if(Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
@@ -127,5 +150,10 @@ public class EventManager : MonoBehaviour
                 thisEvent.Invoke();
             }
         }
+    }
+
+    public void OnDestroy()
+    {
+        endGame = true;
     }
 }

@@ -1,35 +1,43 @@
 ﻿using EnumsNew;
+using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 namespace Delivery
 {
-    public abstract class DamagePack : I_Effect
+    public class DamagePack : I_Effect
     {
-        public Damage_Type_Enum DamageType { get; set; }
+        public I_DynamicDamageType DamageTypes{ get; set; }
+        public DynamicNumber DynamicNumber { get; set; }
 
-        public DamagePack(Damage_Type_Enum damageType)
+        public DamagePack(I_DynamicDamageType damageTypes, DynamicNumber dynamicNumber)
         {
-            DamageType = damageType;
+            DamageTypes = damageTypes;
+            DynamicNumber = dynamicNumber;
         }
 
-        public abstract int GetAmount(GameObject owner, GameObject target);
-
-        public abstract string DamagePackType();
-
-        public virtual bool Contains(string type)
+        public int GetAmount(GameObject owner, GameObject target)
         {
-            return type.Equals(DamagePackType());
+            return DynamicNumber.GetIntAmount(owner, target);
         }
 
         public void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult)
         {
             int total = GetAmount(owner, target);
-            if (deliveryResult.Get(target).DamageDone.ContainsKey(DamageType))
+            List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
+            foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
             {
-                deliveryResult.Get(target).DamageDone[DamageType] += total;
-            } else
-            {
-                deliveryResult.Get(target).DamageDone.Add(DamageType, total);
+                Damage_Type_Enum damageType = pair.Key;
+                float percent = pair.Value;
+                int portion = (int)(total * percent);
+                if (deliveryResult.Get(target).DamageDone.ContainsKey(damageType))
+                {
+                    deliveryResult.Get(target).DamageDone[damageType] += portion;
+                }
+                else
+                {
+                    deliveryResult.Get(target).DamageDone.Add(damageType, portion);
+                }
             }
         }
     }

@@ -31,6 +31,6 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
 
     private void Trigger()
     {
-        //((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.target)).Apply(DeliveryPack, ((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.owner)));
+        DeliveryManager.Run(DerivedStatusEffect.owner, new ObjectPosition(DerivedStatusEffect.gameObject), DeliveryPack);
     }
 }

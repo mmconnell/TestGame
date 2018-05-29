@@ -23,7 +23,7 @@ namespace Delivery
             CharacterTypes.AddRange(characterTypes);
         }
 
-        public override bool Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, AttributeShift> shifts) {
+        public override bool Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts) {
             foreach(Character_Type characterType in CharacterTypes) {
                 //LOGIC
             }

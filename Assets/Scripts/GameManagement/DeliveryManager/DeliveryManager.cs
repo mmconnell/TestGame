@@ -1,13 +1,13 @@
 ﻿using Delivery;
-using System;
+using EnumsNew;
+using Manager;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 public class DeliveryManager : MonoBehaviour
 {
     private static DeliveryManager deliveryManager;
+    private static bool endGame = false;
 
     private static DeliveryManager Instance
     {
@@ -37,6 +37,10 @@ public class DeliveryManager : MonoBehaviour
 
     public static void Run(GameObject owner, I_Position position, DeliveryPack deliveryPack)
     {
+        if (endGame)
+        {
+            return;
+        }
         Instance.RunMethod(owner, position, deliveryPack);
     }
 
@@ -44,10 +48,15 @@ public class DeliveryManager : MonoBehaviour
     {
         DeliveryResult deliveryResult = new DeliveryResult();
         deliveryPack.Apply(owner, position, deliveryResult);
+        ApplyResultMethod(deliveryResult);
     }
 
     public static void ApplyResult(DeliveryResult deliveryResult)
     {
+        if (endGame)
+        {
+            return;
+        }
         Instance.ApplyResultMethod(deliveryResult);
     }
 
@@ -55,7 +64,19 @@ public class DeliveryManager : MonoBehaviour
     {
         foreach (KeyValuePair<GameObject, SubDeliveryResult> pair in deliveryResult.GetResults())
         {
-            
+            Damageable damageable = InformationManager.GetRegisteredComponent(pair.Key, typeof(Damageable)) as Damageable;
+            if (damageable)
+            {
+                foreach (KeyValuePair<Damage_Type_Enum, int> damage in pair.Value.DamageDone)
+                {
+                    damageable.TakeDamage(damage.Key, damage.Value);
+                }
+            }
         }
+    }
+
+    public void OnDestroy()
+    {
+        endGame = true;
     }
 }

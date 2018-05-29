@@ -1,27 +1,38 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 namespace Delivery
 {
     class SimpleAreaCircle2D : I_AreaEffect
     {
-        public float Radius { get; set; }
+        public DynamicNumber Radius { get; set; }
+        public bool ExcludeTarget { get; set; }
 
-        public SimpleAreaCircle2D(float radius)
+        public SimpleAreaCircle2D(DynamicNumber radius)
         {
             Radius = radius;
         }
 
-        public List<GameObject> GatherTargets(I_Position position)
+        public SimpleAreaCircle2D(DynamicNumber radius, bool excludeSource)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(position.GetSourceV2(new Vector3(1, 1)), Radius);
+            Radius = radius;
+            ExcludeTarget = excludeSource;
+        }
+
+        public List<GameObject> GatherTargets(I_Position position, GameObject source)
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(position.GetSourceV2(new Vector3(1, 1)), Radius.GetAmount(source));
             List<GameObject> hitTargets = new List<GameObject>();
             foreach (Collider2D col in colliders)
             {
                 GameObject go = col.gameObject;
-                if (go != null)
+                if (!ExcludeTarget || go != position.GetSourceObject())
                 {
-                    hitTargets.Add(go);
+                    if (go != null)
+                    {
+                        hitTargets.Add(go);
+                    }
                 }
             }
             return hitTargets;

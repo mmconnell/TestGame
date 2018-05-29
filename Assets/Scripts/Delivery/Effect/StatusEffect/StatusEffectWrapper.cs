@@ -50,7 +50,10 @@ namespace Delivery
                 if (success)
                 {
                     DerivedStatusEffect statusEffect = (DerivedStatusEffect)target.AddComponent(DerivedStatusEffect.type);
-                    statusEffect.duration = Duration;
+                    if (Duration != null)
+                    {
+                        statusEffect.duration = (int)Duration;
+                    }
                     statusEffect.owner = owner;
                     deliveryResult.Get(target).AppliedStatusEffects.Add(statusEffect);
                 }

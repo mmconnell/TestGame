@@ -43,7 +43,6 @@ public class TurnTool : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
-        InformationManager.Log("Taking Turn");
         yield return null;
     }
 }

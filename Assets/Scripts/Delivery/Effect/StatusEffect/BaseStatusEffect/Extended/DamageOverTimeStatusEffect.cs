@@ -1,14 +1,17 @@
 ﻿using Delivery;
+using Manager;
 
 public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 {
     public DamagePack DamagePack { get; set; }
     public DerivedStatusEffect DerivedStatusEffect { get; set; }
+    private DeliveryResult deliveryResult;
 
     public DamageOverTimeStatusEffect(DerivedStatusEffect derivedStatusEffect, DamagePack damagePack) : base()
     {
         DamagePack = damagePack;
         DerivedStatusEffect = derivedStatusEffect;
+        deliveryResult = new DeliveryResult();
     }
 
     public void Apply()
@@ -28,10 +31,8 @@ public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 
     public void TurnStart()
     {
-        //CharacterManager characterManager = ((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.target));
-        //if(characterManager != null)
-        //{
-        //    characterManager.Apply(DamagePack, ((CharacterManager)InformationManager.GetManager(DerivedStatusEffect.owner)));
-        //}
+        DamagePack.Apply(DerivedStatusEffect.owner, DerivedStatusEffect.target, deliveryResult);
+        DeliveryManager.ApplyResult(deliveryResult);
+        deliveryResult.Get(DerivedStatusEffect.target).DamageDone.Clear();
     }
 }

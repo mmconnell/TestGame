@@ -3,9 +3,9 @@ using UnityEngine;
 
 public abstract class DerivedStatusEffect : MonoBehaviour
 {
-    protected List<I_BaseStatusEffect> BaseStatusEffects { get; set; }
+    public List<I_BaseStatusEffect> BaseStatusEffects { get; set; }
 
-    public int? duration;
+    public int duration = -1;
     public GameObject owner;
     public GameObject target;
 
@@ -26,7 +26,7 @@ public abstract class DerivedStatusEffect : MonoBehaviour
         //     }
         //    target.StringStatusEffectList[GetName()]++;
         //    target.StatusEffectList.Add(this);
-            if (duration != null)
+            if (duration != -1)
             {
                 EventManager.StartListening(target, "TURN_END", TurnEnd);
             }
@@ -59,7 +59,7 @@ public abstract class DerivedStatusEffect : MonoBehaviour
         {
             bse.End();
         }
-        if (duration != null)
+        if (duration != -1)
         {
             EventManager.StopListening(target, "TURN_END", TurnEnd);
         }
