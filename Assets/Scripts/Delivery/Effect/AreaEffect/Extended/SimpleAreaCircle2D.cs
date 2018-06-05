@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
@@ -20,18 +21,19 @@ namespace Delivery
             ExcludeTarget = excludeSource;
         }
 
-        public List<GameObject> GatherTargets(I_Position position, GameObject source)
+        public List<ToolManager> GatherTargets(I_Position position, ToolManager source)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(position.GetSourceV2(new Vector3(1, 1)), Radius.GetAmount(source));
-            List<GameObject> hitTargets = new List<GameObject>();
+            List<ToolManager> hitTargets = new List<ToolManager>();
             foreach (Collider2D col in colliders)
             {
                 GameObject go = col.gameObject;
                 if (!ExcludeTarget || go != position.GetSourceObject())
                 {
-                    if (go != null)
+                    ToolManager toolManager = InformationManager.GetRegisteredToolManager(go);
+                    if (toolManager)
                     {
-                        hitTargets.Add(go);
+                        hitTargets.Add(toolManager);
                     }
                 }
             }

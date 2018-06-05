@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Manager;
+using System;
 using UnityEngine;
 
 namespace Delivery
 {
     public class ObjectPosition : I_Position
     {
-        private GameObject source;
+        private ToolManager source;
 
-        public ObjectPosition(GameObject source)
+        public ObjectPosition(ToolManager source)
         {
             if (source == null)
             {
@@ -16,7 +17,7 @@ namespace Delivery
             this.source = source;
         }
 
-        public GameObject GetSourceObject()
+        public ToolManager GetSourceObject()
         {
             return source;
         }

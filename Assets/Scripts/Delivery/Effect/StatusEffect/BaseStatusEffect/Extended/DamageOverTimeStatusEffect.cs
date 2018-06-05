@@ -4,35 +4,37 @@ using Manager;
 public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 {
     public DamagePack DamagePack { get; set; }
-    public DerivedStatusEffect DerivedStatusEffect { get; set; }
-    private DeliveryResult deliveryResult;
 
-    public DamageOverTimeStatusEffect(DerivedStatusEffect derivedStatusEffect, DamagePack damagePack) : base()
+    public DamageOverTimeStatusEffect(DamagePack damagePack)
     {
         DamagePack = damagePack;
-        DerivedStatusEffect = derivedStatusEffect;
-        deliveryResult = new DeliveryResult();
     }
 
-    public void Apply()
+    public void Apply(DerivedStatusEffect dse){}
+
+    public void Remove(DerivedStatusEffect dse){}
+
+    public void End(DerivedStatusEffect dse)
     {
-        EventManager.StartListening(DerivedStatusEffect.target.gameObject, "TURN_START", TurnStart);
+        Remove(dse);
     }
 
-    public void Remove()
+    private void TurnStart(DerivedStatusEffect dse)
     {
-        EventManager.StopListening(DerivedStatusEffect.target.gameObject, "TURN_START", TurnStart);
+        DamagePack.Apply(dse.owner, dse.target, false);
     }
 
-    public void End()
+    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
     {
-        Remove();
+        if (statusEnum.value.Equals(StatusTool.TURN_START_STRING))
+        {
+            TurnStart(dse);
+        }
     }
 
-    public void TurnStart()
+    private static StatusEnum[] statusEnums = new StatusEnum[] { StatusTool.TURN_START };
+    public StatusEnum[] GetStatusEnums()
     {
-        DamagePack.Apply(DerivedStatusEffect.owner, DerivedStatusEffect.target, deliveryResult);
-        DeliveryManager.ApplyResult(deliveryResult);
-        deliveryResult.Get(DerivedStatusEffect.target).DamageDone.Clear();
+        return statusEnums;
     }
 }

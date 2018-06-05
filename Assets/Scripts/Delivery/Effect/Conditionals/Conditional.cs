@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Delivery
@@ -14,7 +15,7 @@ namespace Delivery
             Result = result;
         }
 
-        public void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult)
+        public void Apply(ToolManager owner, ToolManager targets, bool ignoreOwner)
         {
             
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +16,11 @@ namespace Delivery
             DeliveryPack = deliveryPack;
         }
 
-        public void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult)
+        public void Apply(ToolManager owner, ToolManager target, bool ignoreOwner)
         {
             I_Position position = new ObjectPosition(target);
-            DeliveryPack.Apply(owner, position, deliveryResult);
+            DeliveryPack.ignoreOwner = ignoreOwner;
+            DeliveryPack.Apply(owner, position);
         }
     }
 }

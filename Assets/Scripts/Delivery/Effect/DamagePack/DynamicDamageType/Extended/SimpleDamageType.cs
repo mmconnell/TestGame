@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Delivery
             };
         }
 
-        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(GameObject target)
+        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(ToolManager target)
         {
             return damages;
         }

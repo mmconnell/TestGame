@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Delivery
 {
     class SingleTarget : I_AreaEffect
     {
-        public List<GameObject> GatherTargets(I_Position position, GameObject source)
+        public List<ToolManager> GatherTargets(I_Position position, ToolManager source)
         {
-            GameObject go = position.GetSourceObject();
+            ToolManager go = position.GetSourceObject();
             if (go == null)
             {
-                return new List<GameObject>();
+                return new List<ToolManager>();
             }
-            return new List<GameObject>(){go};
+            return new List<ToolManager>(){go};
         }
     }
 }

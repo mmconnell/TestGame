@@ -35,7 +35,7 @@ public class DeliveryManager : MonoBehaviour
     {
     }
 
-    public static void Run(GameObject owner, I_Position position, DeliveryPack deliveryPack)
+    public static void Run(ToolManager owner, I_Position position, DeliveryPack deliveryPack)
     {
         if (endGame)
         {
@@ -44,36 +44,36 @@ public class DeliveryManager : MonoBehaviour
         Instance.RunMethod(owner, position, deliveryPack);
     }
 
-    protected virtual void RunMethod(GameObject owner, I_Position position, DeliveryPack deliveryPack)
+    protected virtual void RunMethod(ToolManager owner, I_Position position, DeliveryPack deliveryPack)
     {
-        DeliveryResult deliveryResult = new DeliveryResult();
-        deliveryPack.Apply(owner, position, deliveryResult);
-        ApplyResultMethod(deliveryResult);
+        //DeliveryResult deliveryResult = new DeliveryResult();
+        deliveryPack.Apply(owner, position);
+        //ApplyResultMethod(deliveryResult);
     }
 
-    public static void ApplyResult(DeliveryResult deliveryResult)
-    {
-        if (endGame)
-        {
-            return;
-        }
-        Instance.ApplyResultMethod(deliveryResult);
-    }
+    //public static void ApplyResult(DeliveryResult deliveryResult)
+    //{
+    //    if (endGame)
+    //    {
+    //        return;
+    //    }
+   //     Instance.ApplyResultMethod(deliveryResult);
+    //}
 
-    protected virtual void ApplyResultMethod(DeliveryResult deliveryResult)
-    {
-        foreach (KeyValuePair<GameObject, SubDeliveryResult> pair in deliveryResult.GetResults())
-        {
-            Damageable damageable = InformationManager.GetRegisteredComponent(pair.Key, typeof(Damageable)) as Damageable;
-            if (damageable)
-            {
-                foreach (KeyValuePair<Damage_Type_Enum, int> damage in pair.Value.DamageDone)
-                {
-                    damageable.TakeDamage(damage.Key, damage.Value);
-                }
-            }
-        }
-    }
+   // protected virtual void ApplyResultMethod(DeliveryResult deliveryResult)
+    //{
+    //    foreach (KeyValuePair<ToolManager, SubDeliveryResult> pair in deliveryResult.GetResults())
+     //   {
+    //        Damageable damageable = pair.Key.Get(Damageable.toolEnum) as Damageable;
+    //        if (damageable)
+     //       {
+    //            foreach (KeyValuePair<Damage_Type_Enum, int> damage in pair.Value.DamageDone)
+    //            {
+    //                damageable.TakeDamage(damage.Key, damage.Value);
+    //            }
+    //        }
+    //    }
+   // }
 
     public void OnDestroy()
     {

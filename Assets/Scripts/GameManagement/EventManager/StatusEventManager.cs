@@ -1,0 +1,159 @@
+﻿using UnityEngine;
+using UnityEngine.Events;
+using System.Collections.Generic;
+
+public class StatusEventManager : MonoBehaviour
+{
+    private Dictionary<string, UnityEvent> GlobalEvents;
+    private Dictionary<GameObject, Dictionary<string, UnityEvent>> StatusEvents;
+
+    private static StatusEventManager eventManager;
+    private static bool endGame = false;
+
+    public static StatusEventManager Instance
+    {
+        get
+        {
+            if (!eventManager)
+            {
+                eventManager = FindObjectOfType(typeof(StatusEventManager)) as StatusEventManager;
+
+                if (!eventManager)
+                {
+                    Debug.LogError("There needs to be one active EventManger script on a GameObject in your scene.");
+                }
+                else
+                {
+                    eventManager.Init();
+                }
+            }
+
+            return eventManager;
+        }
+    }
+
+    void Init()
+    {
+        if (GlobalEvents == null)
+        {
+            GlobalEvents = new Dictionary<string, UnityEvent>();
+            StatusEvents = new Dictionary<GameObject, Dictionary<string, UnityEvent>>();
+        }
+    }
+
+    public static void StartListening(GameObject gameObject, string eventName, UnityAction listener)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        Dictionary<string, UnityEvent> dictionary;
+        UnityEvent thisEvent;
+        if (Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
+        {
+            if (dictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent.AddListener(listener);
+            }
+            else
+            {
+                thisEvent = new UnityEvent();
+                thisEvent.AddListener(listener);
+                dictionary.Add(eventName, thisEvent);
+            }
+        }
+        else
+        {
+            thisEvent = new UnityEvent();
+            thisEvent.AddListener(listener);
+            dictionary = new Dictionary<string, UnityEvent>();
+            dictionary[eventName] = thisEvent;
+            Instance.StatusEvents[gameObject] = dictionary;
+        }
+    }
+
+    public static void StartListening(string eventName, UnityAction listener)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        UnityEvent thisEvent = null;
+        if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
+        {
+            thisEvent.AddListener(listener);
+        }
+        else
+        {
+            thisEvent = new UnityEvent();
+            thisEvent.AddListener(listener);
+            Instance.GlobalEvents.Add(eventName, thisEvent);
+        }
+    }
+
+    public static void StopListening(GameObject gameObject, string eventName, UnityAction listener)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        UnityEvent thisEvent;
+        Dictionary<string, UnityEvent> dictionary;
+        if (Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
+        {
+            if (dictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent.RemoveListener(listener);
+            }
+        }
+    }
+
+    public static void StopListening(string eventName, UnityAction listener)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        if (eventManager == null) return;
+        UnityEvent thisEvent = null;
+        if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
+        {
+            thisEvent.RemoveListener(listener);
+        }
+    }
+
+    public static void TriggerEvent(string eventName)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        UnityEvent thisEvent = null;
+        if (Instance.GlobalEvents.TryGetValue(eventName, out thisEvent))
+        {
+            thisEvent.Invoke();
+        }
+    }
+
+    public static void TriggerEvent(GameObject gameObject, string eventName)
+    {
+        if (endGame)
+        {
+            return;
+        }
+        Dictionary<string, UnityEvent> dictionary;
+        UnityEvent thisEvent;
+        if (Instance.StatusEvents.TryGetValue(gameObject, out dictionary))
+        {
+            if (dictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent.Invoke();
+            }
+        }
+    }
+
+    public void OnDestroy()
+    {
+        endGame = true;
+    }
+}

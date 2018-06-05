@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
@@ -16,27 +17,29 @@ namespace Delivery
             DynamicNumber = dynamicNumber;
         }
 
-        public int GetAmount(GameObject owner, GameObject target)
+        public int GetAmount(ToolManager owner, ToolManager target)
         {
             return DynamicNumber.GetIntAmount(owner, target);
         }
 
-        public void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult)
+        public void Apply(ToolManager owner, ToolManager target, bool ignoreOwner)
         {
-            int total = GetAmount(owner, target);
-            List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
-            foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
+            if (!ignoreOwner || target != owner)
             {
-                Damage_Type_Enum damageType = pair.Key;
-                float percent = pair.Value;
-                int portion = (int)(total * percent);
-                if (deliveryResult.Get(target).DamageDone.ContainsKey(damageType))
+                int total = GetAmount(owner, target);
+                List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
+                foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
                 {
-                    deliveryResult.Get(target).DamageDone[damageType] += portion;
-                }
-                else
-                {
-                    deliveryResult.Get(target).DamageDone.Add(damageType, portion);
+                    Damage_Type_Enum damageType = pair.Key;
+                    float percent = pair.Value;
+                    int portion = (int)(total * percent);
+                    DeliveryTool deliveryTool = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
+                    if (deliveryTool)
+                    {
+                        DeliveryResult deliveryResult = deliveryTool.GetCurrent();
+                        deliveryResult.DamageDone[(int)damageType] += portion;
+                        deliveryTool.update = true;
+                    }
                 }
             }
         }

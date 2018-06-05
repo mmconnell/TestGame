@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Delivery
 {
     public class DeliveryPack
     {
-        public SortedDictionary<int, List<I_Effect>> EffectMap { get; private set; }
+        public SortedDictionary<int, List<I_Effect>> EffectMap { get; set; }
         public I_AreaEffect AreaEffect { get; set; }
+        public bool ignoreOwner { get; set; }
 
         public DeliveryPack(SortedDictionary<int, List<I_Effect>> effectMap, I_AreaEffect areaEffect)
         {
@@ -50,16 +52,16 @@ namespace Delivery
             return newDeliveryPack;
         }
 
-        public void Apply(GameObject owner, I_Position position, DeliveryResult deliveryResult)
+        public void Apply(ToolManager owner, I_Position position)
         {
-            List<GameObject> targets = AreaEffect.GatherTargets(position, owner);
+            List<ToolManager> targets = AreaEffect.GatherTargets(position, owner);
             foreach (KeyValuePair<int, List<I_Effect>> pair in EffectMap)
             {
                 foreach (I_Effect effectPack in pair.Value)
                 {
-                    foreach (GameObject target in targets)
+                    foreach (ToolManager target in targets)
                     {
-                        effectPack.Apply(owner, target, deliveryResult);
+                        effectPack.Apply(owner, target, ignoreOwner);
                     }
                 }
             }

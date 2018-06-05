@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EnumsNew;
+using Manager;
 using UnityEngine;
 
 namespace Delivery
@@ -23,7 +24,7 @@ namespace Delivery
             }
         }
 
-        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(GameObject target)
+        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(ToolManager target)
         {
             return damageRatios;
         }

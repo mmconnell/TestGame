@@ -14,9 +14,9 @@ namespace Delivery
             this.damageTypes = damageTypes;
         }
 
-        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(GameObject target)
+        public List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(ToolManager target)
         {
-            ResistanceTool resistanceTool = InformationManager.GetRegisteredComponent(target, typeof(ResistanceTool)) as ResistanceTool;
+            ResistanceTool resistanceTool = target.Get(ResistanceTool.toolEnum) as ResistanceTool;
             if (!resistanceTool || damageTypes == null || damageTypes.Count == 0)
             {
                 return new List<KeyValuePair<Damage_Type_Enum, float>>();

@@ -1,36 +1,41 @@
 ﻿using Delivery;
 using EnumsNew;
+using Manager;
 
 public class TriggeredStatusEffect : I_BaseStatusEffect
 {
-    private DerivedStatusEffect DerivedStatusEffect { get; set; }
     public Character_Trigger_Enum CharacterTrigger { get; set; }
     public DeliveryPack DeliveryPack { get; set; }
 
-    public TriggeredStatusEffect(DerivedStatusEffect derivedStatusEffect, Character_Trigger_Enum statusTrigger, DeliveryPack deliveryPack)
+    public TriggeredStatusEffect(Character_Trigger_Enum statusTrigger, DeliveryPack deliveryPack)
     {
-        DerivedStatusEffect = derivedStatusEffect;
         CharacterTrigger = statusTrigger;
         DeliveryPack = deliveryPack;
     }
 
-    public void Apply()
+    public void Apply(DerivedStatusEffect dse)
     {
-        EventManager.StartListening(DerivedStatusEffect.target.gameObject, CharacterTrigger.ToString(), Trigger);
+        //EventManager.StartListening(dse.target.gameObject, CharacterTrigger.ToString(), Trigger);
     }
 
-    public void Remove()
+    public void Remove(DerivedStatusEffect dse)
     {
-        EventManager.StopListening(DerivedStatusEffect.target.gameObject, CharacterTrigger.ToString(), Trigger);
+        //EventManager.StopListening(dse.target.gameObject, CharacterTrigger.ToString(), Trigger);
     }
 
-    public void End()
+    public void End(DerivedStatusEffect dse)
     {
-        Remove();
+        Remove(dse);
     }
 
-    private void Trigger()
+    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
     {
-        DeliveryManager.Run(DerivedStatusEffect.owner, new ObjectPosition(DerivedStatusEffect.gameObject), DeliveryPack);
+        DeliveryManager.Run(dse.owner, new ObjectPosition(dse.target), DeliveryPack);
+    }
+
+    public static StatusEnum[] statusEnums = new StatusEnum[] {  };
+    public StatusEnum[] GetStatusEnums()
+    {
+        return statusEnums;
     }
 }

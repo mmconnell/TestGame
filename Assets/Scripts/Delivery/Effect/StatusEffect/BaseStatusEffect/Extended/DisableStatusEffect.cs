@@ -1,9 +1,9 @@
 ﻿using EnumsNew;
+using Manager;
 
 public abstract class DisableStatusEffect : I_BaseStatusEffect
 {
     private Character_Action_Enum CombatAction { get; set; }
-    private DerivedStatusEffect DerivedStatusEffect { get; set; }
 
     public DisableStatusEffect()
     {
@@ -11,21 +11,32 @@ public abstract class DisableStatusEffect : I_BaseStatusEffect
         //CombatAction = combatAction;
     }
 
-    public void Apply()
+    public void Apply(DerivedStatusEffect dse)
     {
-        ApplyEffect();
+        ApplyEffect(dse);
     }
 
-    public void End()
+    public void End(DerivedStatusEffect dse)
     {
-        Remove();
+        Remove(dse);
     }
 
-    public void Remove()
+    public void Remove(DerivedStatusEffect dse)
     {
-        RemoveEffect();
+        RemoveEffect(dse);
     }
 
-    public abstract void ApplyEffect();
-    public abstract void RemoveEffect();
+    public abstract void ApplyEffect(DerivedStatusEffect dse);
+    public abstract void RemoveEffect(DerivedStatusEffect dse);
+
+    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
+    {
+        
+    }
+
+    public static StatusEnum[] statusEnums = new StatusEnum[] { };
+    public StatusEnum[] GetStatusEnums()
+    {
+        return statusEnums;
+    }
 }

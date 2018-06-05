@@ -1,10 +1,11 @@
 ﻿
+using Manager;
 using UnityEngine;
 
 namespace Delivery
 {
     public interface I_Effect
     {
-        void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult);
+        void Apply(ToolManager owner, ToolManager target, bool ignoreOwner);
     }
 }

@@ -8,7 +8,8 @@ namespace Delivery
     public class AuraColliderChecker : AuraSelector
     {
         public float radius;
-        private Dictionary<GameObject, Component> attached;
+        private Dictionary<GameObject, DerivedStatusEffect> attached;
+        public DerivedStatusEffect AuraEffect;
         public Material material;
 
         public override void Initiate()
@@ -19,19 +20,22 @@ namespace Delivery
             mf.mesh = Tools.MeshCreator.MakeCircle(20, radius, gameObject.transform.position);
             MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
             mr.material = material;
-            attached = new Dictionary<GameObject, Component>();
+            attached = new Dictionary<GameObject, DerivedStatusEffect>();
             circleCollider.isTrigger = true;
             Collider2D[] colliders = Physics2D.OverlapCircleAll(gameObject.transform.position, circleCollider.radius);
             foreach (Collider2D collider in colliders)
             {
-                if (collider.gameObject != parent.owner)
+                if (collider.gameObject != parent.owner.gameObject)
                 {
-                    MonoBehaviour buffable = InformationManager.GetRegisteredComponent(collider.gameObject, typeof(Buffable));
-                    if (buffable)
+                    ToolManager tm = InformationManager.GetRegisteredToolManager(collider.gameObject);
+                    if (tm)
                     {
-                        DerivedStatusEffect comp = collider.gameObject.AddComponent(AuraEffect) as DerivedStatusEffect;
-                        comp.owner = parent.owner;
-                        attached.Add(collider.gameObject, comp);
+                        MonoBehaviour buffable = tm.Get(BuffTool.toolEnum);
+                        if (buffable)
+                        {
+                            DerivedStatusEffect dse = AuraEffect.Clone(parent.owner, tm, -1);
+                            attached.Add(collider.gameObject, dse);
+                        }
                     }
                 }
             }
@@ -42,12 +46,24 @@ namespace Delivery
             GameObject go = collider.gameObject;
             if (!attached.ContainsKey(go))
             {
-                MonoBehaviour buffable = InformationManager.GetRegisteredComponent(collider.gameObject, typeof(Buffable));
-                if (buffable)
+                ToolManager tm = InformationManager.GetRegisteredToolManager(go);
+                if (tm)
                 {
-                    DerivedStatusEffect comp = go.AddComponent(AuraEffect) as DerivedStatusEffect;
-                    comp.owner = parent.owner;
-                    attached.Add(go, comp);
+                    MonoBehaviour buffable = tm.Get(BuffTool.toolEnum);
+                    StatusTool statusTool = tm.Get(StatusTool.toolEnum) as StatusTool;
+                    if (buffable)
+                    {
+                        DerivedStatusEffect comp = AuraEffect.Clone(parent.owner, tm, -1);
+                        comp.owner = parent.owner;
+                        attached.Add(go, comp);
+                    }
+                }
+            } else
+            {
+                DerivedStatusEffect statusEffect = attached[go];
+                if (statusEffect.ended)
+                {
+                    statusEffect.Enable();
                 }
             }
         }
@@ -57,17 +73,17 @@ namespace Delivery
             GameObject go = collision.gameObject;
             if (attached.ContainsKey(go))
             {
-                Component comp = attached[go];
-                Destroy(comp);
-                attached.Remove(go);
+                DerivedStatusEffect statusEffect = attached[go];
+                statusEffect.Disable();
             }
+
         }
 
         void OnDisable()
         {
-            foreach (Component comp in attached.Values)
+            foreach (DerivedStatusEffect dse in attached.Values)
             {
-                Destroy(comp);
+                dse.Disable();
             }
         }
     }

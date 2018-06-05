@@ -221,27 +221,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="TestProject.Plugins.csproj">
-      <Project>{26944574-760B-1A7E-D25A-8575836150C9}</Project>
-      <Name>TestProject.Plugins</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Scripts\Ability\A_Ability.cs" />
     <Compile Include="Assets\Scripts\Ability\AbilityTargeter\A_AbilityTargeter.cs" />
     <Compile Include="Assets\Scripts\AbilityCaster.cs" />
-    <Compile Include="Assets\Scripts\Character\BaseCharacter.cs" />
     <Compile Include="Assets\Scripts\Character\FireTotem.cs" />
     <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Character\PoisonCloud.cs" />
     <Compile Include="Assets\Scripts\Character\PoorGuy.cs" />
-    <Compile Include="Assets\Scripts\Character\Status\CharacterManager.cs" />
     <Compile Include="Assets\Scripts\Character\TestBattleManager.cs" />
-    <Compile Include="Assets\Scripts\Character\TestScript.cs" />
     <Compile Include="Assets\Scripts\Circle.cs" />
     <Compile Include="Assets\Scripts\Delivery\DeliveryPack.cs" />
     <Compile Include="Assets\Scripts\Delivery\DeliveryResult\DeliveryResult.cs" />
-    <Compile Include="Assets\Scripts\Delivery\DeliveryResult\SubDeliveryResult.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\AreaEffect\Extended\SimpleAreaCircle2D.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\AreaEffect\Extended\SingleTarget.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\AreaEffect\I_AreaEffect.cs" />
@@ -262,6 +251,7 @@
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\DamageOverTimeStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\DelayedStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\DisableStatusEffect.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\EffectOverTime.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\ResistanceStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\TriggeredStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\I_BaseStatusEffect.cs" />
@@ -270,50 +260,46 @@
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Aura\AuraStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\DerivedStatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Extended\Chilled.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Extended\EarthQuake.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Extended\FirePulse.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Extended\OnFire.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\DerivedStatusEffect\Extended\TimedBomb.cs" />
-    <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\StatusEffectWrapper.cs" />
+    <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Delivery\Effect\SubDeliveryPack.cs" />
     <Compile Include="Assets\Scripts\Delivery\Position\Extended\GeneralPosition.cs" />
     <Compile Include="Assets\Scripts\Delivery\Position\Extended\ObjectPosition.cs" />
     <Compile Include="Assets\Scripts\Delivery\Position\I_Position.cs" />
     <Compile Include="Assets\Scripts\Enum\Enum.cs" />
     <Compile Include="Assets\Scripts\GameManagement\BattleManager\BattleManager.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\BattleManager\TurnTool.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\BuffManager\Buffable.cs" />
     <Compile Include="Assets\Scripts\GameManagement\CoroutineManager\CoroutineManager.cs" />
     <Compile Include="Assets\Scripts\GameManagement\CreationUtility\CreatureCreator\CreatureCreator.cs" />
     <Compile Include="Assets\Scripts\GameManagement\CreationUtility\StatusCreator\AuraCreator.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\DamageManager\Damageable.cs" />
     <Compile Include="Assets\Scripts\GameManagement\DeliveryManager\DeliveryManager.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\EntityManager\I_EntityManager.cs" />
     <Compile Include="Assets\Scripts\GameManagement\EventManager\EventManager.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\EventManager\StatusEventManager.cs" />
     <Compile Include="Assets\Scripts\GameManagement\InformationManager\InformationManager.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\ResistanceManager\ResistanceTool.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\TurnManagement\Initiative.cs" />
-    <Compile Include="Assets\Scripts\GameManagement\TurnManagement\TakeTurn.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\BuffTool\BuffTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\DamageTool\DamageTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\DeliveryTool\DeliveryTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\ResistanceTool\ResistanceTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\StatusTool\StatusEnum.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\StatusTool\StatusTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\ToolManager\AbstractTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\ToolManager\ToolEnum.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\ToolManager\ToolEnumList.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\ToolManager\ToolManager.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\TurnTool\InitiativeTool.cs" />
+    <Compile Include="Assets\Scripts\GameManagement\Tools\TurnTool\TurnTool.cs" />
     <Compile Include="Assets\Scripts\GameManagement\WorldManager\WorldManager.cs" />
-    <Compile Include="Assets\Scripts\StatusManager\StatusManager.cs" />
     <Compile Include="Assets\Scripts\Tools\MeshCreator.cs" />
     <Compile Include="Assets\Scripts\TypeWrapper\TypeWrapper.cs" />
     <Compile Include="Assets\Scripts\Utility\DynamicNumber\DynamicNumber.cs" />
     <Compile Include="Assets\Scripts\Utility\DynamicNumber\Extended\FlatNumber.cs" />
     <Compile Include="Assets\Scripts\Utility\DynamicNumber\Extended\LevelBasedNumber.cs" />
     <Compile Include="Assets\Scripts\Utility\DynamicNumber\Extended\PercentBasedNumber.cs" />
+    <Compile Include="Assets\Scripts\Utility\DynamicNumber\Extended\RangeNumber.cs" />
     <Compile Include="Assets\Scripts\Utility\DynamicNumber\Extended\StatBasedNumber.cs" />
     <Compile Include="Assets\Scripts\Utility\NumberShift\NumberShift.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Scripts\Delivery\Effect\StatusEffect\BaseStatusEffect\Extended\EffectOverTime.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

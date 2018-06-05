@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager;
+using System;
 using UnityEngine;
 using Utility;
 
@@ -27,7 +28,7 @@ namespace Delivery
             this.targetOwner = targetOwner;
         }
 
-        public void Apply(GameObject owner, GameObject target, DeliveryResult deliveryResult)
+        public void Apply(ToolManager owner, ToolManager target, bool ignoreOwner)
         {
             GameObject go = new GameObject();
             
@@ -42,7 +43,6 @@ namespace Delivery
             pc.effect = effect;
             pc.material = material;
             pc.isNotTargetingOwner = !targetOwner;
-            pc.deliveryResult = deliveryResult;
             pc.owner = target;
         }
     }

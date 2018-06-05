@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Manager;
+using UnityEngine;
 
 namespace Delivery
 {
@@ -11,7 +12,7 @@ namespace Delivery
             this.generalPosition = generalPosition;
         }
 
-        public GameObject GetSourceObject()
+        public ToolManager GetSourceObject()
         {
             return null;
         }

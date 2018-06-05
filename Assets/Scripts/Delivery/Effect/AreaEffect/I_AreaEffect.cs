@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Delivery
 {
     public interface I_AreaEffect
     {
-        List<GameObject> GatherTargets(I_Position position, GameObject source);
+        List<ToolManager> GatherTargets(I_Position position, ToolManager source);
     }
 }

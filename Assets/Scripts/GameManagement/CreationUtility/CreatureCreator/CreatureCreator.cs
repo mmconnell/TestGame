@@ -10,18 +10,29 @@ namespace Manager
     {
         public static void CreateCreature(GameObject go)
         {
+            go.AddComponent<StatusTool>();
             go.AddComponent<TurnTool>();
-            go.AddComponent<Damageable>();
+            go.AddComponent<DamageTool>();
             go.AddComponent<ResistanceTool>();
-            go.AddComponent<Buffable>();
-            go.AddComponent<TakeTurn>();
-            go.AddComponent<Initiative>();
+            go.AddComponent<BuffTool>();
+            go.AddComponent<InitiativeTool>();
+            go.AddComponent<DeliveryTool>();
+        }
+
+        public static void CreateInatimate(GameObject go)
+        {
+
         }
 
         public static void CreateHuman(GameObject go, string name)
         {
             CreateCreature(go);
             //go.name = name;
+        }
+
+        public static void CreateTotem(GameObject go, string name)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using UnityEngine;
 
 namespace Utility
@@ -17,13 +18,13 @@ namespace Utility
             SourceIsOwner = sourceIsOwner;
         }
 
-        public override float GetAmount(GameObject owner, GameObject target)
+        public override float GetAmount(ToolManager owner, ToolManager target)
         {
-            GameObject source = SourceIsOwner ? owner : target;
+            ToolManager source = SourceIsOwner ? owner : target;
             return  GetAmount(source);
         }
 
-        public override float GetAmount(GameObject source)
+        public override float GetAmount(ToolManager source)
         {
             float health = 0;
             switch (TypeOfPercent)

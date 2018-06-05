@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using UnityEngine;
 
 namespace Utility
@@ -14,9 +15,9 @@ namespace Utility
             SourceIsOwner = sourceIsOwner;
         }
 
-        public override float GetAmount(GameObject owner, GameObject target)
+        public override float GetAmount(ToolManager owner, ToolManager target)
         {
-            GameObject source = SourceIsOwner ? owner : target;
+            ToolManager source = SourceIsOwner ? owner : target;
             if (source == null)
             {
                 return 0;
@@ -25,7 +26,7 @@ namespace Utility
             return DynamicNumber.GetAmount(owner, target);
         }
 
-        public override float GetAmount(GameObject source)
+        public override float GetAmount(ToolManager source)
         {
             if (source == null)
             {

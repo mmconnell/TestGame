@@ -1,22 +1,29 @@
 ﻿using Delivery;
+using Manager;
 
 public class DelayedStatusEffect : I_BaseStatusEffect
 {
     public DeliveryPack DeliveryPack { get; set; }
-    public DerivedStatusEffect DerivedStatusEffect { get; set; }
 
-    public DelayedStatusEffect(DerivedStatusEffect derivedStatusEffect, DeliveryPack deliveryPack)
+    public DelayedStatusEffect(DeliveryPack deliveryPack)
     {
         DeliveryPack = deliveryPack;
-        DerivedStatusEffect = derivedStatusEffect;
     }
 
-    public void Apply(){}
+    public void Apply(DerivedStatusEffect dse){}
 
-    public void End()
+    public void End(DerivedStatusEffect dse)
     {
-        DeliveryManager.Run(DerivedStatusEffect.owner, new ObjectPosition(DerivedStatusEffect.gameObject), DeliveryPack);
+        DeliveryManager.Run(dse.owner, new ObjectPosition(dse.target), DeliveryPack);
     }
 
-    public void Remove(){}
+    public void Remove(DerivedStatusEffect dse){}
+
+    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum){}
+
+    private StatusEnum[] statusEnums = new StatusEnum[] {};
+    public StatusEnum[] GetStatusEnums()
+    {
+        return statusEnums;
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Manager;
 
 public class TestBattleManager : MonoBehaviour
 {
@@ -12,23 +13,58 @@ public class TestBattleManager : MonoBehaviour
     private List<BattleManager> bms;
     public GameObject Players;
     public int[] test = new int[3];
+    public GameObject player;
+    private int numPlayers = 1;
+    private int battlesBuilt = 0;
     // Use this for initialization
     void Start()
     {
-        bms = new List<BattleManager>();
-        for(int i = 0; i < test.Length; i++)
+        StartCoroutine(Initialize());
+    }
+
+    IEnumerator Initialize()
+    {
+        yield return StartCoroutine(BuildBattles());
+        if (bms.Count > 0)
         {
-            List<GameObject> go = new List<GameObject>(test[i]);
-            for(int x = 0; x < test[i]; x++)
-            {
-                go.Add(CreatePlayer());
-            }
-            GameObject bm = CreateBattle(go);
-            bm.name = "BATTLE " + i;
-            bms.Add(bm.GetComponent<BattleManager>());
+            bm1 = bms[0];
         }
-        bm1 = bms[0];
-        bm2 = bms[1];
+        if (bms.Count > 1)
+        {
+            bm2 = bms[1];
+        }
+    }
+
+    IEnumerator BuildBattles()
+    {
+        while (!BattleDone())
+        {
+            bms = new List<BattleManager>();
+            for (int i = 0; i < test.Length; i++)
+            {
+                StartCoroutine(BuildBattle(i));
+            }
+            yield return null;
+        }
+    }
+
+    bool BattleDone()
+    {
+        return battlesBuilt == test.Length;
+    }
+
+    IEnumerator BuildBattle(int index)
+    {
+        List<GameObject> go = new List<GameObject>(test[index]);
+        for (int x = 0; x < test[index]; x++)
+        {
+            go.Add(CreatePlayer());
+        }
+        GameObject bm = CreateBattle(go);
+        bm.name = "BATTLE " + index;
+        bms.Add(bm.GetComponent<BattleManager>());
+        battlesBuilt++;
+        yield return null;
     }
 
     // Update is called once per frame
@@ -55,9 +91,11 @@ public class TestBattleManager : MonoBehaviour
 
     private GameObject CreatePlayer()
     {
-        GameObject go = new GameObject("Dummy");
-        go.AddComponent<CharacterManager>();
+        GameObject go = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
+        go.name = "Test " + numPlayers;
+        numPlayers++;
         go.AddComponent<TurnTool>();
+        go.transform.position = new Vector3(0, 0, 0);
         go.transform.parent = Players.transform;
         return go;
     }

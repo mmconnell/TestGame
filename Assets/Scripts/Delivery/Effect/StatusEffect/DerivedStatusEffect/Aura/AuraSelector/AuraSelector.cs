@@ -8,7 +8,6 @@ namespace Delivery
 {
     public abstract class AuraSelector : MonoBehaviour
     {
-        public Type AuraEffect;
         public AuraStatusEffect parent;
 
         public abstract void Initiate();

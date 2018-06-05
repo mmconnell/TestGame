@@ -1,35 +1,29 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using EnumsNew;
+using Manager;
+using System.Collections.Generic;
 
 namespace Delivery
 {
     public class DeliveryResult
     {
-        private Dictionary<GameObject, SubDeliveryResult> results;
+        public List<DerivedStatusEffect> AppliedStatusEffects { get; private set; }
+        public int[] DamageDone { get; private set; }
+        public List<bool> DamageUpdated { get; private set; }
+        public Dictionary<string, object> ExtraParameters { get; private set; }
+        public bool Critical { get; set; }
 
         public DeliveryResult()
         {
-            results = new Dictionary<GameObject, SubDeliveryResult>();
-        }
-
-        public SubDeliveryResult Get(GameObject go)
-        {
-            SubDeliveryResult result = null;
-            if (results.TryGetValue(go, out result))
+            AppliedStatusEffects = new List<DerivedStatusEffect>();
+            Damage_Type_Enum[] damageTypes = DamageTool.GetDamageTypes();
+            DamageDone = new int[damageTypes.Length];
+            DamageUpdated = new List<bool>();
+            foreach (Damage_Type_Enum damageType in damageTypes)
             {
-                return result;
+                DamageUpdated.Add(false);
             }
-            else
-            {
-                result = new SubDeliveryResult();
-                results.Add(go, result);
-                return result;
-            }
-        }
-
-        public Dictionary<GameObject, SubDeliveryResult> GetResults()
-        {
-            return results;
+            ExtraParameters = new Dictionary<string, object>();
+            Critical = false;
         }
     }
 }

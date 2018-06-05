@@ -9,24 +9,19 @@ namespace Manager
 {
     public class AuraCreator
     {
-        public static void CreateAura(GameObject source, GameObject auraSelectorGO, Type effect)
+        public static AuraStatusEffect CreateAura(ToolManager source, AuraSelector auraSelector)
         {
-            AuraStatusEffect ase = source.AddComponent<AuraStatusEffect>();
-            ase.aura = auraSelectorGO;
-            ase.auraEffect = effect;
-            ase.owner = source;
-            AuraSelector auraSelector = auraSelectorGO.GetComponent<AuraSelector>();
-            auraSelector.AuraEffect = effect;
-            ase.auraSelector = auraSelector;
+            return new AuraStatusEffect(source, source, -1, auraSelector);
         }
 
-        public static GameObject CreateAuraColliderChecker(float radius, Material material)
+        public static AuraSelector CreateAuraColliderChecker(float radius, DerivedStatusEffect effect, Material material)
         {
             GameObject gameObject = new GameObject();
             AuraColliderChecker acc = gameObject.AddComponent<AuraColliderChecker>();
+            acc.AuraEffect = effect;
             acc.material = material;
             acc.radius = radius;
-            return gameObject;
+            return acc;
         }
     }
 }

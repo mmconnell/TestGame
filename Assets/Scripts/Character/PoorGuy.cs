@@ -4,13 +4,15 @@ using Manager;
 
 public class PoorGuy : MonoBehaviour
 {
-    public CharacterManager CharacterManager { get; set; }
     public int FrameCount { get; set; }
+    StatusTool statusTool;
 
     // Use this for initialization
     void Start()
     {
         CreatureCreator.CreateHuman(gameObject, "Poor John");
+        statusTool = gameObject.GetComponent<StatusTool>();
+        gameObject.AddComponent<PlayerController>();
         /*DerivedStatusEffect dse = gameObject.AddComponent<OnFire>();
         dse.duration = 5;*/
 
@@ -20,6 +22,8 @@ public class PoorGuy : MonoBehaviour
 
     void TriggerTime()
     {
+        statusTool.Trigger(StatusTool.TURN_START);
+        statusTool.Trigger(StatusTool.TURN_END);
         EventManager.TriggerEvent(gameObject, "TURN_START");
         EventManager.TriggerEvent(gameObject, "TURN_END");
     }

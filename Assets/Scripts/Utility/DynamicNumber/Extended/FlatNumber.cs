@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using UnityEngine;
 
 namespace Utility
@@ -12,12 +13,12 @@ namespace Utility
             Amount = amount;
         }
 
-        public override float GetAmount(GameObject owner, GameObject target)
+        public override float GetAmount(ToolManager owner, ToolManager target)
         {
             return Amount;
         }
 
-        public override float GetAmount(GameObject source)
+        public override float GetAmount(ToolManager source)
         {
             return Amount;
         }

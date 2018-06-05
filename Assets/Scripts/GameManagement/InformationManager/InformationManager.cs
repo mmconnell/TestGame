@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Manager;
 
 public class InformationManager : MonoBehaviour
 {
     public bool isLogging = false;
+    public static int maxTools = 20;
     private static bool endGame = false;
 
-    private Dictionary<GameObject, Dictionary<Type, MonoBehaviour>> singletonRegisteredComponents;
+    private Dictionary<GameObject, ToolManager> toolManagers;
 
     private static List<string> TemporaryTags = new List<string>
     {
@@ -40,96 +42,50 @@ public class InformationManager : MonoBehaviour
 
     void Init()
     {
-        if (singletonRegisteredComponents == null)
+        if (toolManagers == null)
         {
-            singletonRegisteredComponents = new Dictionary<GameObject, Dictionary<Type, MonoBehaviour>>();
+            toolManagers = new Dictionary<GameObject, ToolManager>();
         }
     }
 
-    public static void RegisterComponent(GameObject go, Type type, MonoBehaviour monoBehaviour)
+    public static void RegisterToolManager(GameObject go, ToolManager toolManager)
     {
         if (go == null || endGame)
         {
             return;
         }
-        Dictionary<Type, MonoBehaviour> monoBehaviours;
-        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
+        if (Instance.toolManagers.ContainsKey(go))
         {
-            if (monoBehaviours != null)
-            {
-                if (monoBehaviours.ContainsKey(type))
-                {
-                    monoBehaviours[type] = monoBehaviour;
-                }
-                else
-                {
-                    monoBehaviours.Add(type, monoBehaviour);
-                }
-            }
-            else
-            {
-                monoBehaviours = new Dictionary<Type, MonoBehaviour>
-                {
-                    { type, monoBehaviour }
-                };
-                Instance.singletonRegisteredComponents.Add(go, monoBehaviours);
-            }
+            Instance.toolManagers[go] = toolManager;
         }
         else
         {
-            monoBehaviours = new Dictionary<Type, MonoBehaviour>
-            {
-                { type, monoBehaviour }
-            };
-            Instance.singletonRegisteredComponents.Add(go, monoBehaviours);
+            Instance.toolManagers.Add(go, toolManager);
         }
     }
 
-    public static void UnRegisterComponent(GameObject go, Type type)
+    public static void UnRegisterToolManager(GameObject go)
     {
         if (go == null || endGame)
         {
             return;
         }
-        Dictionary<Type, MonoBehaviour> monoBehaviours;
-        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
+        if (Instance.toolManagers.ContainsKey(go))
         {
-            if (monoBehaviours != null)
-            {
-                if (monoBehaviours.ContainsKey(type))
-                {
-                    monoBehaviours.Remove(type);
-                    if (monoBehaviours.Keys.Count == 0)
-                    {
-                        Instance.singletonRegisteredComponents.Remove(go);
-                    }
-                }
-            }
+            Instance.toolManagers.Remove(go);
         }
     }
 
-    public static MonoBehaviour GetRegisteredComponent(GameObject go, Type type)
+    public static ToolManager GetRegisteredToolManager(GameObject go)
     {
         if (go == null || endGame)
         {
             return null;
         }
-        Dictionary<Type, MonoBehaviour> monoBehaviours;
-        if (Instance.singletonRegisteredComponents.TryGetValue(go, out monoBehaviours))
+        ToolManager tm;
+        if (Instance.toolManagers.TryGetValue(go, out tm))
         {
-            if (monoBehaviours == null || endGame)
-            {
-                return null;
-            }
-            MonoBehaviour monoBehaviour;
-            if (monoBehaviours.TryGetValue(type, out monoBehaviour))
-            {
-                if (monoBehaviour.isActiveAndEnabled)
-                {
-                    return monoBehaviour;
-                }
-                return null;
-            }
+            return tm;
         }
         return null;
     }
@@ -149,11 +105,23 @@ public class InformationManager : MonoBehaviour
         return UnityEngine.Random.Range(0, 101);
     }
 
+    public static int RandomNumber(int number)
+    {
+        return UnityEngine.Random.Range(0, number);
+    }
+
     public static void Log(string info)
     {
-        if (Instance.isLogging)
-        {
-            Debug.Log(info);
-        }
+        Debug.Log(info);
+    }
+
+    public static bool IsLogging()
+    {
+        return Instance.isLogging;
+    }
+
+    public static int GetMaxTools()
+    {
+        return maxTools;
     }
 }

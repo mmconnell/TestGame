@@ -1,95 +1,126 @@
-﻿using System.Collections.Generic;
+﻿using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class DerivedStatusEffect : MonoBehaviour
+public abstract class DerivedStatusEffect
 {
-    public List<I_BaseStatusEffect> BaseStatusEffects { get; set; }
+    private List<I_BaseStatusEffect> baseStatusEffects;
+    private int duration = -1;
+    public ToolManager owner;
+    public ToolManager target;
+    public StatusTool statusTool;
+    private List<I_BaseStatusEffect>[] baseTriggers;
+    public bool ended = false;
+    public bool[] listsIncluded = new bool[StatusEnum.current];
 
-    public int duration = -1;
-    public GameObject owner;
-    public GameObject target;
+    protected DerivedStatusEffect(){}
 
-    public virtual void Awake()
+    public DerivedStatusEffect(ToolManager owner, ToolManager target, int duration)
     {
-        target = gameObject;
-        BaseStatusEffects = new List<I_BaseStatusEffect>();
+        this.owner = owner;
+        this.target = target;
+        this.duration = duration;
+        statusTool = target.Get(StatusTool.toolEnum) as StatusTool;
+        baseStatusEffects = new List<I_BaseStatusEffect>();
+        baseTriggers = new List<I_BaseStatusEffect>[StatusEnum.current];
+        for (int x = 0; x < baseTriggers.Length; x++)
+        {
+            baseTriggers[x] = new List<I_BaseStatusEffect>();
+        }
     }
 
-    public virtual void Start()
+    public void Initiate()
+    {}
+
+    public virtual void Enable()
     {
-        // bool applied = target.StringStatusEffectList.ContainsKey(GetName()) && target.StringStatusEffectList[GetName()] > 0;
-        // if (canStack || !applied)
-        // {
-        //    if(!applied)
-        //     {
-        //        target.StringStatusEffectList.Add(GetName(), 0);
-        //     }
-        //    target.StringStatusEffectList[GetName()]++;
-        //    target.StatusEffectList.Add(this);
-            if (duration != -1)
+        bool[] toAddTo = new bool[StatusEnum.current];
+        if (duration != -1 && !listsIncluded[StatusTool.TURN_END.intValue])
+        {
+            statusTool.RegisterStatusEffect(StatusTool.TURN_END, this);
+            toAddTo[StatusTool.TURN_END.intValue] = true;
+        }
+        foreach (I_BaseStatusEffect bse in baseStatusEffects)
+        {
+            bse.Apply(this);
+            foreach (StatusEnum statusEnum in bse.GetStatusEnums())
             {
-                EventManager.StartListening(target, "TURN_END", TurnEnd);
+                if (!toAddTo[statusEnum.intValue])
+                {
+                    toAddTo[statusEnum.intValue] = true;
+                    statusTool.RegisterStatusEffect(statusEnum, this);
+                }
             }
-            foreach (I_BaseStatusEffect bse in BaseStatusEffects)
+        }
+        ended = false;
+    }
+
+    public virtual void Disable()
+    {
+        if (baseStatusEffects != null)
+        {
+            foreach (I_BaseStatusEffect bse in baseStatusEffects)
             {
-                bse.Apply();
+                bse.End(this);
             }
-        // }
+            ended = true;
+        }
+    }
+
+    public void Trigger(StatusEnum statusEnum)
+    {
+        Trigger(baseTriggers[statusEnum.intValue], statusEnum);
+        switch (statusEnum.value)
+        {
+            case StatusTool.TURN_END_STRING: TurnEnd();
+                break;
+        }
+    }
+
+    private void TurnEnd()
+    {
+        if (duration > 0)
+        {
+            duration -= 1;
+            if (duration == 0)
+            {
+                Disable();
+            }
+        }
+    }
+
+    private void Trigger(List<I_BaseStatusEffect> list, StatusEnum statusEnum)
+    {
+        foreach (I_BaseStatusEffect statusEffect in list)
+        {
+            statusEffect.Trigger(this, statusEnum);
+        }
     }
 
     public void AddBaseStatusEffect(I_BaseStatusEffect baseStatusEffect)
     {
-        BaseStatusEffects.Add(baseStatusEffect);
+        StatusEnum[] statusEnums = baseStatusEffect.GetStatusEnums();
+        foreach (StatusEnum statusEnum in statusEnums)
+        {
+            List<I_BaseStatusEffect> list = baseTriggers[statusEnum.intValue];
+            list.Add(baseStatusEffect);
+        }
+        baseStatusEffects.Add(baseStatusEffect);
     }
 
-    protected void TurnEnd()
+    public virtual void Remove()
     {
-        duration -= 1;
-        if (duration == 0)
+        foreach (I_BaseStatusEffect bse in baseStatusEffects)
         {
-            Destroy(this);
+            bse.Remove(this);
         }
-    }
-
-    public virtual void OnDisable()
-    {
-    //    target.StringStatusEffectList[GetName()]--;
-    //    target.StatusEffectList.Remove(this);
-        foreach(I_BaseStatusEffect bse in BaseStatusEffects)
-        {
-            bse.End();
-        }
-        if (duration != -1)
-        {
-            EventManager.StopListening(target, "TURN_END", TurnEnd);
-        }
-    }
-
-    public void Remove()
-    {
-        foreach (I_BaseStatusEffect bse in BaseStatusEffects)
-        {
-            bse.Remove();
-        }
-        BaseStatusEffects.Clear();
-        Destroy(this);
+        ended = true;
     }
 
     public virtual string GetName()
     {
         return GetType().Name;
     }
-    /*
-    public override bool Equals(object other)
-    {
-        if (other is DerivedStatusEffect2)
-        {
-            DerivedStatusEffect2 d2 = (DerivedStatusEffect2)other;
-            return d2.GetName().Equals(GetName());
-        }
-        else
-        {
-            return base.Equals(other);
-        }
-    }*/
+
+    public abstract DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration);
 }

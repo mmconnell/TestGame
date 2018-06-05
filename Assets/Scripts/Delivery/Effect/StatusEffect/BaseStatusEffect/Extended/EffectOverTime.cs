@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,34 +9,44 @@ namespace Delivery
     public class EffectOverTime : I_BaseStatusEffect
     {
         private I_Effect effect;
-        private DerivedStatusEffect derivedStatusEffect;
 
-        public EffectOverTime(DerivedStatusEffect derivedStatusEffect, I_Effect effect)
+        public EffectOverTime(I_Effect effect)
         {
             this.effect = effect;
-            this.derivedStatusEffect = derivedStatusEffect;
         }
 
-        public void Apply()
+        public void Apply(DerivedStatusEffect dse)
         {
-            EventManager.StartListening(derivedStatusEffect.target, "TURN_START", TurnStart);
+            //EventManager.StartListening(dse.target.gameObject, "TURN_START", TurnStart);
         }
 
-        public void End()
-        {
-            Remove();
+        public void End(DerivedStatusEffect dse)
+        { 
+            Remove(dse);
         }
 
-        public void Remove()
+        public void Remove(DerivedStatusEffect dse)
         {
-            EventManager.StopListening(derivedStatusEffect.target, "TURN_START", TurnStart);
+            //EventManager.StopListening(dse.target.gameObject, "TURN_START", TurnStart);
         }
 
-        public void TurnStart()
+        public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
         {
-            DeliveryResult deliveryResult = new DeliveryResult();
-            effect.Apply(derivedStatusEffect.owner, derivedStatusEffect.target, deliveryResult);
-            deliveryResult.GetResults().Clear();
+            if (statusEnum.value.Equals(StatusTool.TURN_START_STRING))
+            {
+                TurnStart(dse);
+            }
+        }
+
+        public void TurnStart(DerivedStatusEffect dse)
+        {
+            effect.Apply(dse.owner, dse.target, false);
+        }
+
+        private static StatusEnum[] statusEnums = new StatusEnum[] { StatusTool.TURN_START };
+        public StatusEnum[] GetStatusEnums()
+        {
+            return statusEnums;
         }
     }
 }

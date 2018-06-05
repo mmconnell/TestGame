@@ -1,4 +1,5 @@
 ﻿using EnumsNew;
+using Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Delivery
 {
     public interface I_DynamicDamageType
     {
-        List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(GameObject target);
+        List<KeyValuePair<Damage_Type_Enum, float>> GetDamageTypes(ToolManager target);
     }
 }

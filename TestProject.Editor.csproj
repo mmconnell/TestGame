@@ -267,29 +267,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="TestProject.Plugins.csproj">
-      <Project>{26944574-760B-1A7E-D25A-8575836150C9}</Project>
-      <Name>TestProject.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="TestProject.csproj">
       <Project>{8E1C2576-245E-02BE-F560-937F7A66896E}</Project>
       <Name>TestProject</Name>
     </ProjectReference>
-    <ProjectReference Include="TestProject.Editor.Plugins.csproj">
-      <Project>{E0017731-2256-D168-4A17-F1285416D4B1}</Project>
-      <Name>TestProject.Editor.Plugins</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Editor\GenerateEnum.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
