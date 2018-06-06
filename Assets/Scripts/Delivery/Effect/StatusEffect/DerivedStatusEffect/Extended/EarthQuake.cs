@@ -1,9 +1,6 @@
 ﻿using Delivery;
 using Manager;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Utility;
 
 public class EarthQuake : DerivedStatusEffect
@@ -18,10 +15,20 @@ public class EarthQuake : DerivedStatusEffect
         if (statusEffects == null)
         {
             statusEffects = new List<I_BaseStatusEffect>();
-            DeliveryPack deliveryPack = new DeliveryPack();
-            deliveryPack.AreaEffect = new SimpleAreaCircle2D(new FlatNumber(2), true);
-            deliveryPack.AddEffect(new DamagePack(new SimpleDamageType(EnumsNew.Damage_Type_Enum.SHOCK), new RangeNumber(new FlatNumber(3), new FlatNumber(20))), 1);
-            statusEffects.Add(new EffectOverTime(new SubDeliveryPack(deliveryPack)));
+            DeliveryPack deliveryPack = new DeliveryPack
+            {
+                AreaEffect = new SimpleAreaCircle2D(new FlatNumber(2), true),
+                EffectMap = new SortedDictionary<int, List<I_Effect>>
+                {
+                    {
+                        1, new List<I_Effect>
+                        {
+                            new DamagePack(new SimpleDamageType(EnumsNew.Damage_Type_Enum.SHOCK), new RangeNumber(new FlatNumber(3), new FlatNumber(20)))
+                        }
+                    }
+                }
+            };
+            statusEffects.Add(new EffectOverTime(new SubDeliveryPack(deliveryPack, false)));
         }
 
         foreach (I_BaseStatusEffect bse in statusEffects)

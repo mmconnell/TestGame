@@ -39,6 +39,7 @@ namespace Manager
         public void Trigger(StatusEnum statusEnum)
         {
             List<DerivedStatusEffect> statusEffects = statusEvents[statusEnum.intValue];
+            bool statusApplied = false;
             for (int x = 0; x < statusEffects.Count; x++)
             {
                 DerivedStatusEffect dse = statusEffects[x];
@@ -50,7 +51,16 @@ namespace Manager
                 }
                 else
                 {
+                    statusApplied = true;
                     dse.Trigger(statusEnum);
+                }
+            }
+            if (statusApplied)
+            {
+                DeliveryTool dt = toolManager.Get(DeliveryTool.toolEnum) as DeliveryTool;
+                if (dt)
+                {
+                    dt.PublishAll();
                 }
             }
         }

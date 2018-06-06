@@ -1,13 +1,14 @@
 ﻿using Delivery;
 using Manager;
+using System.Collections.Generic;
 
 public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 {
-    public DamagePack DamagePack { get; set; }
+    public DamagePack Damage { get; set; }
 
     public DamageOverTimeStatusEffect(DamagePack damagePack)
     {
-        DamagePack = damagePack;
+        Damage = damagePack;
     }
 
     public void Apply(DerivedStatusEffect dse){}
@@ -21,7 +22,7 @@ public class DamageOverTimeStatusEffect : I_BaseStatusEffect
 
     private void TurnStart(DerivedStatusEffect dse)
     {
-        DamagePack.Apply(dse.owner, dse.target, false);
+        Damage.Apply(dse.owner, dse.target);
     }
 
     public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)

@@ -40,7 +40,7 @@ namespace Delivery
 
         public void TurnStart(DerivedStatusEffect dse)
         {
-            effect.Apply(dse.owner, dse.target, false);
+            effect.Apply(dse.owner, dse.target);
         }
 
         private static StatusEnum[] statusEnums = new StatusEnum[] { StatusTool.TURN_START };

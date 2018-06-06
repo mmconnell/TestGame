@@ -9,22 +9,23 @@ namespace Manager
     {
         public static ToolEnum toolEnum;
 
-        public Dictionary<Damage_Type_Enum, int> baseResistances;
-        public Dictionary<Damage_Type_Enum, List<NumberShift>> Shifts { get; private set; }
-        public List<int> CurrentResistance { get; private set; }
+        public int[] baseResistances;
+        public List<NumberShift>[] Shifts;
+        public int[] CurrentResistance;
 
         public override void Awake()
         {
             base.Awake();
             toolEnum = ToolEnum;
-            baseResistances = new Dictionary<Damage_Type_Enum, int>();
-            Shifts = new Dictionary<Damage_Type_Enum, List<NumberShift>>();
-            CurrentResistance = new List<int>();
-            foreach(Damage_Type_Enum damageType in Enum.GetValues(typeof(Damage_Type_Enum)))
+            int size = Enum.GetValues(typeof(Damage_Type_Enum)).Length;
+            baseResistances = new int[size];
+            Shifts = new List<NumberShift>[size];
+            CurrentResistance = new int[size];
+            for (int x = 0; x < size; x++) 
             {
-                baseResistances.Add(damageType, 0);
-                CurrentResistance.Add(0);
-                Shifts.Add(damageType, new List<NumberShift>());
+                baseResistances[x] = 0;
+                CurrentResistance[x] = 0;
+                Shifts[x] = new List<NumberShift>();
             }
         }
 
@@ -35,26 +36,26 @@ namespace Manager
 
         public void AddShift(Damage_Type_Enum damageType, NumberShift numberShift)
         {
-            Shifts[damageType].Add(numberShift);
-            Calculate(damageType);
+            Shifts[(int)damageType].Add(numberShift);
+            CurrentResistance[(int)damageType] += numberShift.FlatInt();
         }
 
         public void RemoveShift(Damage_Type_Enum damageType, NumberShift numberShift)
         {
-            Shifts[damageType].Remove(numberShift);
-            Calculate(damageType);
+            Shifts[(int)damageType].Remove(numberShift);
+            CurrentResistance[(int)damageType] -= numberShift.FlatInt();
         } 
 
         public void AddFlat(Damage_Type_Enum damageType, int flat)
         {
-            baseResistances[damageType] += flat;
-            Calculate(damageType);
+            baseResistances[(int)damageType] += flat;
+            CurrentResistance[(int)damageType] += flat;
         }
 
         public void Calculate(Damage_Type_Enum damageType)
         {
-            int total = baseResistances[damageType];
-            foreach (NumberShift numberShift in Shifts[damageType])
+            int total = baseResistances[(int)damageType];
+            foreach (NumberShift numberShift in Shifts[(int)damageType])
             {
                 total += numberShift.FlatInt();
             }

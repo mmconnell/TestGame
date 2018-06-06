@@ -11,6 +11,7 @@ namespace Delivery
         public List<bool> DamageUpdated { get; private set; }
         public Dictionary<string, object> ExtraParameters { get; private set; }
         public bool Critical { get; set; }
+        public bool empty = true;
 
         public DeliveryResult()
         {

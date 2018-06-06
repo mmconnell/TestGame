@@ -22,24 +22,21 @@ namespace Delivery
             return DynamicNumber.GetIntAmount(owner, target);
         }
 
-        public void Apply(ToolManager owner, ToolManager target, bool ignoreOwner)
+        public void Apply(ToolManager owner, ToolManager target)
         {
-            if (!ignoreOwner || target != owner)
+            int total = GetAmount(owner, target);
+            List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
+            DeliveryTool deliveryTool = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
+            DeliveryResult deliveryResult = deliveryTool.GetCurrent();
+            foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
             {
-                int total = GetAmount(owner, target);
-                List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
-                foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
+                Damage_Type_Enum damageType = pair.Key;
+                float percent = pair.Value;
+                int portion = (int)(total * percent);
+                deliveryResult.DamageDone[(int)damageType] += portion;
+                if (portion != 0)
                 {
-                    Damage_Type_Enum damageType = pair.Key;
-                    float percent = pair.Value;
-                    int portion = (int)(total * percent);
-                    DeliveryTool deliveryTool = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
-                    if (deliveryTool)
-                    {
-                        DeliveryResult deliveryResult = deliveryTool.GetCurrent();
-                        deliveryResult.DamageDone[(int)damageType] += portion;
-                        deliveryTool.update = true;
-                    }
+                    deliveryResult.empty = false;
                 }
             }
         }

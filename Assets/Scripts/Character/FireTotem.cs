@@ -33,7 +33,7 @@ public class FireTotem : MonoBehaviour
         dse.duration = 10;
         dse.owner = gameObject;*/
 
-        //AuraCreator.CreateAura(toolManager, AuraCreator.CreateAuraColliderChecker(2, Chilled.Cloner, Resources.Load("blue", typeof(Material)) as Material));
+        AuraCreator.CreateAura(toolManager, AuraCreator.CreateAuraColliderChecker(2, Chilled.Cloner, Resources.Load("blue", typeof(Material)) as Material));
         //AuraCreator.CreateAura(gameObject, AuraCreator.CreateAuraColliderChecker(2, typeof(Chilled), Resources.Load("blue", typeof(Material)) as Material));
         //AuraCreator.CreateAura(gameObject, AuraCreator.CreateAuraColliderChecker(2, typeof(Chilled), Resources.Load("blue", typeof(Material)) as Material));
         //AuraStatusEffect ase = AuraCreator.CreateAura(toolManager, AuraCreator.CreateAuraColliderChecker(1, typeof(OnFire), Resources.Load("red", typeof(Material)) as Material));

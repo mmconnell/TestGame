@@ -66,6 +66,29 @@ namespace Manager
             }
         }
 
+        public void TakeDamageRaw(Damage_Type_Enum damageType, int damage)
+        {
+            if (InformationManager.IsLogging())
+            {
+                InformationManager.Log(gameObject.name + " took " + damage + " " + damageType.ToString() + " damage");
+            }
+        }
+
+        public int GetDamage(Damage_Type_Enum damageType, int damage)
+        {
+            float resistanceMult = 1;
+            if (!resistanceTool)
+            {
+                resistanceTool = toolManager.Get(ResistanceTool.toolEnum) as ResistanceTool;
+            }
+            if (resistanceTool)
+            {
+                resistanceMult = resistanceTool.GetResistancePercentage(damageType);
+            }
+            int finalDamage = (int)Math.Round(damage * resistanceMult, 0);
+            return finalDamage;
+        }
+
         public override ToolEnum GetToolEnum()
         {
             return toolEnum;

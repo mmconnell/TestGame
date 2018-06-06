@@ -24,6 +24,12 @@ namespace Delivery
             return base.GetName();
         }
 
+        public override void Enable()
+        {
+            base.Enable();
+            auraSelector.enabled = true;
+        }
+
         public override void Remove()
         {
             base.Remove();
@@ -33,7 +39,7 @@ namespace Delivery
         public override void Disable()
         {
             base.Disable();
-            UnityEngine.Object.Destroy(aura);
+            auraSelector.enabled = false;
         }
 
         public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)

@@ -15,10 +15,12 @@ public class Chilled : DerivedStatusEffect
     {
         if (statusEffects == null)
         {
-            statusEffects = new List<I_BaseStatusEffect>();
-            statusEffects.Add(new DamageOverTimeStatusEffect(new DamagePack(new SimpleDamageType(Damage_Type_Enum.COLD), new RangeNumber(new FlatNumber(5), new FlatNumber(15)))));
-            statusEffects.Add(new ResistanceStatusEffect(Damage_Type_Enum.COLD, -15));
-            statusEffects.Add(new ResistanceStatusEffect(Damage_Type_Enum.FIRE, 15));
+            statusEffects = new List<I_BaseStatusEffect>
+            {
+                new DamageOverTimeStatusEffect(new DamagePack(new SimpleDamageType(Damage_Type_Enum.COLD), new RangeNumber(new FlatNumber(5), new FlatNumber(15)))),
+                new ResistanceStatusEffect(Damage_Type_Enum.COLD, -15),
+                new ResistanceStatusEffect(Damage_Type_Enum.FIRE, 15)
+            };
         }
 
         foreach (I_BaseStatusEffect bse in statusEffects)

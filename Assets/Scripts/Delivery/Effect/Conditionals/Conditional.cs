@@ -15,7 +15,7 @@ namespace Delivery
             Result = result;
         }
 
-        public void Apply(ToolManager owner, ToolManager targets, bool ignoreOwner)
+        public void Apply(ToolManager owner, ToolManager targets)
         {
             
         }

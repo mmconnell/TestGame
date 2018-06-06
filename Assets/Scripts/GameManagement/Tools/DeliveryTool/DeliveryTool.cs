@@ -7,99 +7,112 @@ using System.Text;
 
 namespace Manager
 {
+    
     public class DeliveryTool : AbstractTool
     {
         public static ToolEnum toolEnum;
         public static int maxDeliveryResults = 5;
 
-        private List<DeliveryResult> deliveryResults;
+        private DeliveryResult deliveryResult;
+        private List<DeliveryResult> temporaryDeliveryResults;
         private int current = 0;
-        public bool update = false;
+        public HashSet<DeliveryTool> ToDeliver;
 
         public override void Awake()
         {
             base.Awake();
             toolEnum = ToolEnum;
-            deliveryResults = new List<DeliveryResult>();
+            deliveryResult = new DeliveryResult();
+            temporaryDeliveryResults = new List<DeliveryResult>();
+            ToDeliver = new HashSet<DeliveryTool>();
             for (int x = 0; x < maxDeliveryResults; x++)
             {
-                deliveryResults.Add(null);
+                temporaryDeliveryResults.Add(new DeliveryResult());
             } 
         }
 
-        void Update()
+        public void SetNext()
         {
-            if (update)
+            current++;
+            if (current == temporaryDeliveryResults.Count)
             {
-                Apply();
-                update = false;
+                temporaryDeliveryResults.Add(new DeliveryResult());
             }
-        }
-
-        public DeliveryResult GetNext()
-        {
-            DeliveryResult deliveryResult = null;
-            if (current == deliveryResults.Count)
-            {
-                deliveryResult = deliveryResults[current - 1];
-            }
-            else
-            {
-                deliveryResult = deliveryResults[current];
-            }
-            if (deliveryResult == null)
-            {
-                deliveryResult = new DeliveryResult();
-                deliveryResults[current] = deliveryResult;
-            }
-            if (current < deliveryResults.Count)
-            {
-                current++;
-            }
-            return deliveryResult;
         }
 
         public DeliveryResult GetCurrent()
         {
             DeliveryResult deliveryResult = null;
-            if (current == deliveryResults.Count)
+            if (current == temporaryDeliveryResults.Count)
             {
-                deliveryResult = deliveryResults[current - 1];
+                deliveryResult = temporaryDeliveryResults[current - 1];
             }
             else
             {
-                deliveryResult = deliveryResults[current];
+                deliveryResult = temporaryDeliveryResults[current];
             }
             if (deliveryResult == null)
             {
                 deliveryResult = new DeliveryResult();
-                deliveryResults[current] = deliveryResult;
+                temporaryDeliveryResults[current] = deliveryResult;
             }
             return deliveryResult;
         }
 
-        public void Apply()
+        public bool PublishCurrent()
         {
-            for (int x = 0; x <= current; x++)
+            DamageTool damageable = toolManager.Get(DamageTool.toolEnum) as DamageTool;
+            DeliveryResult temporaryDeliveryResult = temporaryDeliveryResults[current];
+            if (damageable && !temporaryDeliveryResult.empty)
             {
-                DamageTool damageable = toolManager.Get(DamageTool.toolEnum) as DamageTool;
-                DeliveryResult deliveryResult = deliveryResults[x];
-                if (damageable)
+                for (int x = 0; x < temporaryDeliveryResult.DamageDone.Length; x++)
                 {
-                    int count = 0;
-                    foreach (int damage in deliveryResult.DamageDone)
+                    int damage = temporaryDeliveryResult.DamageDone[x];
+                    if (damage != 0)
                     {
-                        if (damage != 0)
-                        {
-                            Damage_Type_Enum damageType = DamageTool.GetDamageType(count);
-                            damageable.TakeDamage(damageType, damage);
-                        }
-                        deliveryResult.DamageDone[count] = 0;
-                        count++;
+                        Damage_Type_Enum damageType = DamageTool.GetDamageType(x);
+                        deliveryResult.DamageDone[x] += damageable.GetDamage(damageType, damage);
+                        deliveryResult.empty = false;
                     }
+                    temporaryDeliveryResult.DamageDone[x] = 0;
                 }
+                temporaryDeliveryResult.empty = true;
             }
-            current = 0;
+            current--;
+            if (current < 0)
+            {
+                current = 0;
+                return true;
+            }
+            return false;
+        }
+
+        public void PublishAll()
+        {
+            DeliveryResult dr = GetCurrent();
+            while (!dr.empty || current > 0)
+            {
+                PublishCurrent();
+            }
+            Deliver();
+        }
+
+        public bool Deliver()
+        {
+            int x = 0;
+            DamageTool damageTool = toolManager.Get(DamageTool.toolEnum) as DamageTool;
+            foreach (int damage in deliveryResult.DamageDone)
+            {
+                if (damage != 0)
+                {
+                    Damage_Type_Enum damageType = DamageTool.GetDamageType(x);
+                    damageTool.TakeDamageRaw(damageType, damage);
+                }
+                deliveryResult.DamageDone[x] = 0;
+                x++;
+            }
+            deliveryResult.empty = true;
+            return true;
         }
 
         public override ToolEnum GetToolEnum()

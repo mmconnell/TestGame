@@ -16,7 +16,7 @@ public class OnFire : DerivedStatusEffect
         if (statusEffects == null)
         {
             statusEffects = new List<I_BaseStatusEffect>();
-            DamagePack damagePack = new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new RangeNumber(new FlatNumber(10), new FlatNumber(20)));
+            DamagePack damagePack = new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(20)/*new RangeNumber(new FlatNumber(10), new FlatNumber(20))*/);
             statusEffects.Add(new DamageOverTimeStatusEffect(damagePack));
             statusEffects.Add(new ResistanceStatusEffect(Damage_Type_Enum.FIRE, -15));
             statusEffects.Add(new ResistanceStatusEffect(Damage_Type_Enum.COLD, 15));

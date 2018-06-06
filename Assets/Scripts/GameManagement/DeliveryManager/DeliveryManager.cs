@@ -47,7 +47,7 @@ public class DeliveryManager : MonoBehaviour
     protected virtual void RunMethod(ToolManager owner, I_Position position, DeliveryPack deliveryPack)
     {
         //DeliveryResult deliveryResult = new DeliveryResult();
-        deliveryPack.Apply(owner, position);
+        //deliveryPack.Apply(owner, position);
         //ApplyResultMethod(deliveryResult);
     }
 

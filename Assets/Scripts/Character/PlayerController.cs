@@ -23,11 +23,10 @@ public class PlayerController : MonoBehaviour
                     1, new List<I_Effect>
                     {
                         new StatusEffect(OnFire.Cloner, Persistance.COMBAT, 2),
-                        new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new RangeNumber(new FlatNumber(10), new FlatNumber(50)))
+                        new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(10)/*new RangeNumber(new FlatNumber(10), new FlatNumber(50))*/)
                     }
                 }
             },
-            ignoreOwner = true
         };
         toolManager = InformationManager.GetRegisteredToolManager(gameObject);
         material = Resources.Load("red", typeof(Material)) as Material;
@@ -48,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            deliveryPack.Apply(toolManager, new GeneralPosition(gameObject.transform.position));
+            DeliveryPack.Deliver(deliveryPack, toolManager, new GeneralPosition(gameObject.transform.position));
             GameObject area = new GameObject();
             area.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y);
             MeshFilter mf = area.AddComponent<MeshFilter>();

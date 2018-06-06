@@ -28,7 +28,7 @@ namespace Delivery
             this.targetOwner = targetOwner;
         }
 
-        public void Apply(ToolManager owner, ToolManager target, bool ignoreOwner)
+        public void Apply(ToolManager owner, ToolManager target)
         {
             GameObject go = new GameObject();
             

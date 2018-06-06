@@ -8,7 +8,6 @@ namespace Delivery
     {
         public SortedDictionary<int, List<I_Effect>> EffectMap { get; set; }
         public I_AreaEffect AreaEffect { get; set; }
-        public bool ignoreOwner { get; set; }
 
         public DeliveryPack(SortedDictionary<int, List<I_Effect>> effectMap, I_AreaEffect areaEffect)
         {
@@ -52,19 +51,51 @@ namespace Delivery
             return newDeliveryPack;
         }
 
-        public void Apply(ToolManager owner, I_Position position)
+        public void Apply(ToolManager owner, I_Position position, bool isNewAttack)
         {
             List<ToolManager> targets = AreaEffect.GatherTargets(position, owner);
-            foreach (KeyValuePair<int, List<I_Effect>> pair in EffectMap)
+            DeliveryTool ownerDT = owner.Get(DeliveryTool.toolEnum) as DeliveryTool;
+            foreach (ToolManager target in targets)
             {
-                foreach (I_Effect effectPack in pair.Value)
+                DeliveryTool dt = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
+                if (dt)
                 {
-                    foreach (ToolManager target in targets)
+                    if (isNewAttack)
                     {
-                        effectPack.Apply(owner, target, ignoreOwner);
+                        if (!dt.GetCurrent().empty)
+                        {
+                            dt.SetNext();
+                        }
+                        dt.GetCurrent().empty = false;
                     }
+                    foreach (KeyValuePair<int, List<I_Effect>> pair in EffectMap)
+                    {
+                        foreach (I_Effect effectPack in pair.Value)
+                        {
+                            effectPack.Apply(owner, target);
+                        }
+                    }
+                    ownerDT.ToDeliver.Add(dt);
                 }
             }
+            if (isNewAttack)
+            {
+                foreach (DeliveryTool dt in ownerDT.ToDeliver)
+                {
+                    dt.PublishCurrent();
+                }
+            }
+        }
+
+        public static void Deliver(DeliveryPack deliveryPack, ToolManager owner, I_Position position)
+        {
+            deliveryPack.Apply(owner, position, true);
+            DeliveryTool ownerDT = owner.Get(DeliveryTool.toolEnum) as DeliveryTool;
+            foreach (DeliveryTool dt in ownerDT.ToDeliver)
+            {
+                dt.Deliver();
+            }
+            ownerDT.ToDeliver.Clear();
         }
     }
 }
