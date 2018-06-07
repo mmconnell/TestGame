@@ -9,23 +9,17 @@ namespace Manager
     {
         public static ToolEnum toolEnum;
 
-        public int[] baseResistances;
-        public List<NumberShift>[] Shifts;
-        public int[] CurrentResistance;
+        public ResistancePack[] resistances;
 
         public override void Awake()
         {
             base.Awake();
             toolEnum = ToolEnum;
             int size = Enum.GetValues(typeof(Damage_Type_Enum)).Length;
-            baseResistances = new int[size];
-            Shifts = new List<NumberShift>[size];
-            CurrentResistance = new int[size];
+            resistances = new ResistancePack[size];
             for (int x = 0; x < size; x++) 
             {
-                baseResistances[x] = 0;
-                CurrentResistance[x] = 0;
-                Shifts[x] = new List<NumberShift>();
+                resistances[x] = new ResistancePack();
             }
         }
 
@@ -36,35 +30,27 @@ namespace Manager
 
         public void AddShift(Damage_Type_Enum damageType, NumberShift numberShift)
         {
-            Shifts[(int)damageType].Add(numberShift);
-            CurrentResistance[(int)damageType] += numberShift.FlatInt();
+            resistances[(int)damageType].AddShift(numberShift);
         }
 
         public void RemoveShift(Damage_Type_Enum damageType, NumberShift numberShift)
         {
-            Shifts[(int)damageType].Remove(numberShift);
-            CurrentResistance[(int)damageType] -= numberShift.FlatInt();
+            resistances[(int)damageType].AddShift(numberShift);
         } 
 
-        public void AddFlat(Damage_Type_Enum damageType, int flat)
+        public void AddBase(Damage_Type_Enum damageType, int flat)
         {
-            baseResistances[(int)damageType] += flat;
-            CurrentResistance[(int)damageType] += flat;
+            resistances[(int)damageType].AddBase(flat);
         }
 
         public void Calculate(Damage_Type_Enum damageType)
         {
-            int total = baseResistances[(int)damageType];
-            foreach (NumberShift numberShift in Shifts[(int)damageType])
-            {
-                total += numberShift.FlatInt();
-            }
-            CurrentResistance[(int)damageType] = total;
+            resistances[(int)damageType].Calculate();
         }
 
         public int GetResistance(Damage_Type_Enum damageType)
         {
-            return CurrentResistance[(int)damageType];
+            return resistances[(int)damageType].CurrentValue;
         }
 
         public float GetResistancePercentage(Damage_Type_Enum damageType)

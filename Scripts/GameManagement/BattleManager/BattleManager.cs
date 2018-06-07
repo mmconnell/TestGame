@@ -163,7 +163,7 @@ namespace Manager
                         TurnTool entityManager = TurnOrder[0];
 
                         TurnOrder.RemoveAt(0);
-                        yield return StartCoroutine(entityManager.TakeTurn());
+                        //yield return StartCoroutine(entityManager.TakeTurn());
 
                         entityManager.CalculateInitiative();
                         AddOrdered(NextTurnOrder, entityManager, 0);

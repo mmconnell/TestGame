@@ -12,6 +12,8 @@ namespace Delivery
         public DeliveryPack DeliveryPack { get; set; }
         public bool IsNewAttack { get; set; }
 
+        public SubDeliveryPack() { }
+
         public SubDeliveryPack(DeliveryPack deliveryPack, bool isNewAttack)
         {
             DeliveryPack = deliveryPack;

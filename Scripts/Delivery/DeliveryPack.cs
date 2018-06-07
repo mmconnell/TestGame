@@ -67,6 +67,7 @@ namespace Delivery
                             dt.SetNext();
                         }
                         dt.GetCurrent().empty = false;
+                        dt.GetCurrent().Owner = owner;
                     }
                     foreach (KeyValuePair<int, List<I_Effect>> pair in EffectMap)
                     {

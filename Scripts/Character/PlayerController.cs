@@ -22,8 +22,56 @@ public class PlayerController : MonoBehaviour
                 {
                     1, new List<I_Effect>
                     {
-                        new StatusEffect(OnFire.Cloner, Persistance.COMBAT, 2),
-                        new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(10)/*new RangeNumber(new FlatNumber(10), new FlatNumber(50))*/)
+                        //new StatusEffect(OnFire.Cloner, Persistance.COMBAT, 2),
+                        new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(110)/*new RangeNumber(new FlatNumber(10), new FlatNumber(50))*/),
+                        new SubDeliveryPack
+                        {
+                            IsNewAttack = true,
+                            DeliveryPack = new DeliveryPack
+                            {
+                                EffectMap = new SortedDictionary<int, List<I_Effect>>
+                                {
+                                    {
+                                        1, new List<I_Effect>
+                                        {
+                                            new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(110)),
+                                            new SubDeliveryPack
+                                            {
+                                                IsNewAttack = true,
+                                                DeliveryPack = new DeliveryPack
+                                                {
+                                                    EffectMap = new SortedDictionary<int, List<I_Effect>>
+                                                    {
+                                                        {
+                                                            1, new List<I_Effect>
+                                                            {
+                                                                new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(110)),
+                                                                new SubDeliveryPack
+                                                                {
+                                                                    IsNewAttack = true,
+                                                                    DeliveryPack = new DeliveryPack
+                                                                    {
+                                                                        EffectMap = new SortedDictionary<int, List<I_Effect>>
+                                                                        {
+                                                                            {
+                                                                                1, new List<I_Effect>
+                                                                                {
+                                                                                    new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(110)),
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },

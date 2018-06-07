@@ -1,9 +1,6 @@
 ﻿using Delivery;
 using EnumsNew;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Manager
 {
@@ -16,6 +13,10 @@ namespace Manager
         private DeliveryResult deliveryResult;
         private List<DeliveryResult> temporaryDeliveryResults;
         private int current = 0;
+
+        public List<I_Filter> FinalFilters { get; private set; }
+        public List<I_Filter> AttackFilters { get; private set; }
+
         public HashSet<DeliveryTool> ToDeliver;
 
         public override void Awake()
@@ -28,7 +29,9 @@ namespace Manager
             for (int x = 0; x < maxDeliveryResults; x++)
             {
                 temporaryDeliveryResults.Add(new DeliveryResult());
-            } 
+            }
+            FinalFilters = new List<I_Filter>();
+            AttackFilters = new List<I_Filter>();
         }
 
         public void SetNext()
@@ -59,10 +62,11 @@ namespace Manager
             return deliveryResult;
         }
 
-        public bool PublishCurrent()
+        public void PublishCurrent()
         {
             DamageTool damageable = toolManager.Get(DamageTool.toolEnum) as DamageTool;
             DeliveryResult temporaryDeliveryResult = temporaryDeliveryResults[current];
+            ApplyAttackFilters();
             if (damageable && !temporaryDeliveryResult.empty)
             {
                 for (int x = 0; x < temporaryDeliveryResult.DamageDone.Length; x++)
@@ -73,18 +77,25 @@ namespace Manager
                         Damage_Type_Enum damageType = DamageTool.GetDamageType(x);
                         deliveryResult.DamageDone[x] += damageable.GetDamage(damageType, damage);
                         deliveryResult.empty = false;
+                        deliveryResult.Owner = temporaryDeliveryResult.Owner;
                     }
-                    temporaryDeliveryResult.DamageDone[x] = 0;
                 }
-                temporaryDeliveryResult.empty = true;
+                temporaryDeliveryResult.Clear();
             }
             current--;
             if (current < 0)
             {
                 current = 0;
-                return true;
             }
-            return false;
+        }
+
+        private void ApplyAttackFilters()
+        {
+            DeliveryResult dr = temporaryDeliveryResults[current];
+            foreach (I_Filter filter in AttackFilters)
+            {
+                filter.Apply(dr.Owner, toolManager, dr);
+            }
         }
 
         public void PublishAll()
@@ -97,10 +108,11 @@ namespace Manager
             Deliver();
         }
 
-        public bool Deliver()
+        public void Deliver()
         {
             int x = 0;
             DamageTool damageTool = toolManager.Get(DamageTool.toolEnum) as DamageTool;
+            ApplyFinalFilters();
             foreach (int damage in deliveryResult.DamageDone)
             {
                 if (damage != 0)
@@ -108,11 +120,17 @@ namespace Manager
                     Damage_Type_Enum damageType = DamageTool.GetDamageType(x);
                     damageTool.TakeDamageRaw(damageType, damage);
                 }
-                deliveryResult.DamageDone[x] = 0;
                 x++;
             }
-            deliveryResult.empty = true;
-            return true;
+            deliveryResult.Clear();
+        }
+
+        private void ApplyFinalFilters()
+        {
+            foreach (I_Filter filter in FinalFilters)
+            {
+                filter.Apply(deliveryResult.Owner, toolManager, deliveryResult);
+            }
         }
 
         public override ToolEnum GetToolEnum()

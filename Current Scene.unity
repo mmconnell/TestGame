@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3cfa544d8fc35b4e9172c0a2fcbbe50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLogging: 0
+  isLogging: 1
 --- !u!114 &89484304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleManagers: {fileID: 1623584685}
   Players: {fileID: 393779435}
-  test: 0a0000000a0000000a0000000a0000000a000000
+  test: 3200000032000000320000003200000032000000
   player: {fileID: 1686354403113748, guid: c26464e2ca68be94193f367045d428eb, type: 2}
 --- !u!4 &452440211
 Transform:

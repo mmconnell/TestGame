@@ -6,6 +6,7 @@ public class PoorGuy : MonoBehaviour
 {
     public int FrameCount { get; set; }
     StatusTool statusTool;
+    ToolManager tm;
 
     // Use this for initialization
     void Start()
@@ -13,6 +14,9 @@ public class PoorGuy : MonoBehaviour
         CreatureCreator.CreateHuman(gameObject, "Poor John");
         statusTool = gameObject.GetComponent<StatusTool>();
         gameObject.AddComponent<PlayerController>();
+        tm = InformationManager.GetRegisteredToolManager(gameObject);
+        DeliveryTool dt = tm.Get(DeliveryTool.toolEnum) as DeliveryTool;
+        dt.FinalFilters.Add(new ReduceFireByOneFilterTest());
         /*DerivedStatusEffect dse = gameObject.AddComponent<OnFire>();
         dse.duration = 5;*/
 
