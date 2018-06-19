@@ -6,7 +6,7 @@ namespace Delivery
 {
     public class DeliveryResult
     {
-        public List<DerivedStatusEffect> AppliedStatusEffects { get; private set; }
+        public List<I_DerivedStatus> AppliedStatusEffects { get; private set; }
         public int[] DamageDone { get; private set; }
         public Dictionary<string, object> ExtraParameters { get; private set; }
         public bool Critical { get; set; }
@@ -15,7 +15,7 @@ namespace Delivery
 
         public DeliveryResult()
         {
-            AppliedStatusEffects = new List<DerivedStatusEffect>();
+            AppliedStatusEffects = new List<I_DerivedStatus>();
             Damage_Type_Enum[] damageTypes = DamageTool.GetDamageTypes();
             DamageDone = new int[damageTypes.Length];
             ExtraParameters = new Dictionary<string, object>();

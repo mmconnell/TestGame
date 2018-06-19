@@ -3,9 +3,9 @@ using Manager;
 
 public class DelayedStatusEffect : I_BaseStatusEffect
 {
-    public DeliveryPack DeliveryPack { get; set; }
+    public I_DeliveryPack DeliveryPack { get; set; }
 
-    public DelayedStatusEffect(DeliveryPack deliveryPack)
+    public DelayedStatusEffect(I_DeliveryPack deliveryPack)
     {
         DeliveryPack = deliveryPack;
     }
@@ -14,7 +14,7 @@ public class DelayedStatusEffect : I_BaseStatusEffect
 
     public void End(DerivedStatusEffect dse)
     {
-        DeliveryManager.Run(dse.owner, new ObjectPosition(dse.target), DeliveryPack);
+        DeliveryUtility.Deliver(DeliveryPack, dse.owner, dse.target.position);
     }
 
     public void Remove(DerivedStatusEffect dse){}

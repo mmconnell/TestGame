@@ -15,7 +15,7 @@ namespace Delivery
             Result = result;
         }
 
-        public void Apply(ToolManager owner, ToolManager targets)
+        public void Apply(ToolManager owner, ToolManager targets, DeliveryInformation di, DeliveryResultPack targetDeliveryResult)
         {
             
         }

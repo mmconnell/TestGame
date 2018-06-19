@@ -1,7 +1,6 @@
 ﻿using EnumsNew;
 using System;
-using System.Collections.Generic;
-using UnityEngine;
+using Utility;
 
 namespace Manager
 {
@@ -9,17 +8,17 @@ namespace Manager
     {
         public static ToolEnum toolEnum;
 
-        public ResistancePack[] resistances;
+        private FlatShiftPack[] resistances;
 
         public override void Awake()
         {
             base.Awake();
             toolEnum = ToolEnum;
             int size = Enum.GetValues(typeof(Damage_Type_Enum)).Length;
-            resistances = new ResistancePack[size];
+            resistances = new FlatShiftPack[size];
             for (int x = 0; x < size; x++) 
             {
-                resistances[x] = new ResistancePack();
+                resistances[x] = new FlatShiftPack();
             }
         }
 
@@ -35,7 +34,7 @@ namespace Manager
 
         public void RemoveShift(Damage_Type_Enum damageType, NumberShift numberShift)
         {
-            resistances[(int)damageType].AddShift(numberShift);
+            resistances[(int)damageType].RemoveShift(numberShift);
         } 
 
         public void AddBase(Damage_Type_Enum damageType, int flat)
@@ -50,21 +49,14 @@ namespace Manager
 
         public int GetResistance(Damage_Type_Enum damageType)
         {
-            return resistances[(int)damageType].CurrentValue;
+            return resistances[(int)damageType].FinalValue;
         }
 
         public float GetResistancePercentage(Damage_Type_Enum damageType)
         {
             float resistance = GetResistance(damageType);
             float resistancePercentage = 0f;
-            if (resistance >= 0)
-            {
-                resistancePercentage = (100f - resistance)/100f;
-            }
-            else
-            {
-                resistancePercentage = (100f - resistance)/100f;
-            }
+            resistancePercentage = (100f - resistance)/100f;
             return resistancePercentage;
         }
 

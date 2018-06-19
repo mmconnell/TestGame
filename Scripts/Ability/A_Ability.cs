@@ -4,6 +4,6 @@ namespace Ability
 {
     class A_Ability
     {
-        public DeliveryPack DeliveryPack { get; set; }
+        public I_DeliveryPack DeliveryPack { get; set; }
     }
 }

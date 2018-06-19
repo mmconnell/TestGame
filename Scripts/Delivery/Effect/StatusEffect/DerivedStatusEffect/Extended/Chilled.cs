@@ -11,15 +11,16 @@ public class Chilled : DerivedStatusEffect
 
     private Chilled() : base(){}
 
-    public Chilled(ToolManager owner, ToolManager target, int duration) : base(owner, target, duration)
+    public Chilled(ToolManager owner, ToolManager target) : base(owner, target)
     {
         if (statusEffects == null)
         {
             statusEffects = new List<I_BaseStatusEffect>
             {
-                new DamageOverTimeStatusEffect(new DamagePack(new SimpleDamageType(Damage_Type_Enum.COLD), new RangeNumber(new FlatNumber(5), new FlatNumber(15)))),
+                new EffectOverTime(new DamagePack(new SimpleDamageType(Damage_Type_Enum.COLD), new StatBasedNumber(new FlatNumber(10), Character_Attribute_Enum.STRENGTH, .1f, true))),
                 new ResistanceStatusEffect(Damage_Type_Enum.COLD, -15),
-                new ResistanceStatusEffect(Damage_Type_Enum.FIRE, 15)
+                new ResistanceStatusEffect(Damage_Type_Enum.FIRE, 15),
+                new AttributeStatusEffect(Character_Attribute_Enum.STRENGTH, 10)
             };
         }
 
@@ -27,18 +28,10 @@ public class Chilled : DerivedStatusEffect
         {
             AddBaseStatusEffect(bse);
         }
-
-        Initiate();
-        Enable();
     }
 
-    public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)
+    public override I_DerivedStatus Clone(ToolManager owner, ToolManager target)
     {
-        return Create(owner, target, duration);
-    }
-
-    public static Chilled Create(ToolManager owner, ToolManager target, int duration)
-    {
-        return new Chilled(owner, target, duration);
+        return new Chilled(owner, target);
     }
 }

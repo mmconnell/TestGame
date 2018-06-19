@@ -1,34 +1,35 @@
 ﻿using EnumsNew;
 using Manager;
-using UnityEngine;
 
 namespace Delivery
 {
     public class StatusEffect : I_Effect
     {
-        public DerivedStatusEffect Copy { get; set; }
+        public I_DerivedStatus Copy { get; set; }
         public Persistance Persistance { get; set; }
-        public int Duration { get; set; }
+        public I_TickerPack TickerPack { get; set; }
 
-        public StatusEffect(DerivedStatusEffect copy, Persistance persistance, int duration)
+        public StatusEffect(I_DerivedStatus copy, Persistance persistance, I_TickerPack tickerPack)
         {
             Copy = copy;
             Persistance = persistance;
-            Duration = duration;
+            TickerPack = tickerPack;
         }
 
-        public StatusEffect(DerivedStatusEffect copy, Persistance persistance)
+        public StatusEffect(I_DerivedStatus copy, Persistance persistance)
         {
             Copy = copy;
             Persistance = persistance;
-            Duration = -1;
         }
 
-        public void Apply(ToolManager owner, ToolManager target)
+        public void Apply(ToolManager owner, ToolManager target, DeliveryInformation di, DeliveryResultPack targetResultPack)
         {
-            DeliveryTool deliveryTool = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
-            DerivedStatusEffect statusEffect = Copy.Clone(owner, target, Duration);
-            DeliveryResult deliveryResult = deliveryTool.GetCurrent();
+            I_DerivedStatus statusEffect = Copy.Clone(owner, target);
+            if (TickerPack != null)
+            {
+                statusEffect.SetTicker(TickerPack.Build(statusEffect));
+            }
+            DeliveryResult deliveryResult = targetResultPack.GetCurrent();
             deliveryResult.AppliedStatusEffects.Add(statusEffect);
             deliveryResult.empty = false;
         }

@@ -11,12 +11,13 @@ namespace Manager
         public static void CreateCreature(GameObject go)
         {
             go.AddComponent<StatusTool>();
-            go.AddComponent<TurnTool>();
+            go.AddComponent<TurnManager>();
             go.AddComponent<DamageTool>();
             go.AddComponent<ResistanceTool>();
             go.AddComponent<BuffTool>();
             go.AddComponent<InitiativeTool>();
             go.AddComponent<DeliveryTool>();
+            go.AddComponent<AttributeTool>();
         }
 
         public static void CreateInatimate(GameObject go)

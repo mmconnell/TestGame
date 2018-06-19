@@ -35,7 +35,7 @@ public class DeliveryManager : MonoBehaviour
     {
     }
 
-    public static void Run(ToolManager owner, I_Position position, DeliveryPack deliveryPack)
+    public static void Run(ToolManager owner, I_Position position, I_DeliveryPack deliveryPack)
     {
         if (endGame)
         {
@@ -44,7 +44,7 @@ public class DeliveryManager : MonoBehaviour
         Instance.RunMethod(owner, position, deliveryPack);
     }
 
-    protected virtual void RunMethod(ToolManager owner, I_Position position, DeliveryPack deliveryPack)
+    protected virtual void RunMethod(ToolManager owner, I_Position position, I_DeliveryPack deliveryPack)
     {
         //DeliveryResult deliveryResult = new DeliveryResult();
         //deliveryPack.Apply(owner, position);

@@ -33,8 +33,8 @@ namespace Delivery
                         MonoBehaviour buffable = tm.Get(BuffTool.toolEnum);
                         if (buffable)
                         {
-                            DerivedStatusEffect dse = AuraEffect.Clone(parent.owner, tm, -1);
-                            attached.Add(collider.gameObject, dse);
+                            //DerivedStatusEffect dse = AuraEffect.Clone(parent.owner, tm, -1);
+                            //attached.Add(collider.gameObject, dse);
                         }
                     }
                 }
@@ -53,15 +53,15 @@ namespace Delivery
                     StatusTool statusTool = tm.Get(StatusTool.toolEnum) as StatusTool;
                     if (buffable)
                     {
-                        DerivedStatusEffect comp = AuraEffect.Clone(parent.owner, tm, -1);
-                        comp.owner = parent.owner;
-                        attached.Add(go, comp);
+                        //DerivedStatusEffect comp = AuraEffect.Clone(parent.owner, tm);
+                        //comp.owner = parent.owner;
+                        //attached.Add(go, comp);
                     }
                 }
             } else
             {
                 DerivedStatusEffect statusEffect = attached[go];
-                if (statusEffect.ended)
+                if (!statusEffect.enabled)
                 {
                     statusEffect.Enable();
                 }

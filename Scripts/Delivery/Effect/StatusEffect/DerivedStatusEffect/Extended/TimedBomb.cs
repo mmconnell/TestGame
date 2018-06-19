@@ -11,15 +11,15 @@ public class TimedBomb : DerivedStatusEffect
 
     private TimedBomb() : base() { }
 
-    public TimedBomb(ToolManager owner, ToolManager target, int duration) : base(owner, target, duration)
+    public TimedBomb(ToolManager owner, ToolManager target) : base(owner, target)
     {
         if (statusEffects == null)
         {
             statusEffects = new List<I_BaseStatusEffect>();
-            DeliveryPack dp = new DeliveryPack();
+            PriorityDeliveryPack dp = new PriorityDeliveryPack();
             dp.AddEffect(new DamagePack(new SimpleDamageType(Damage_Type_Enum.FIRE), new FlatNumber(100)), 1);
 
-            DeliveryPack innerDp = new DeliveryPack();
+            PriorityDeliveryPack innerDp = new PriorityDeliveryPack();
             dp.AddEffect(new SubDeliveryPack(innerDp, false), 2);
             innerDp.AreaEffect = new SimpleAreaCircle2D(new FlatNumber(5), true);
             innerDp.AddEffect(new DamagePack(new SimpleDamageType(Damage_Type_Enum.BLUDGEONING), new FlatNumber(50)), 1);
@@ -31,18 +31,10 @@ public class TimedBomb : DerivedStatusEffect
         {
             AddBaseStatusEffect(bse);
         }
-
-        Initiate();
-        Enable();
     }
 
-    public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)
+    public override I_DerivedStatus Clone(ToolManager owner, ToolManager target)
     {
-        return Create(owner, target, duration);
-    }
-
-    public static TimedBomb Create(ToolManager owner, ToolManager target, int duration)
-    {
-        return new TimedBomb(owner, target, duration);
+        return new TimedBomb(owner, target);
     }
 }

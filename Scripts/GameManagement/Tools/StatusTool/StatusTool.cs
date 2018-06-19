@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Delivery;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,12 @@ namespace Manager
         public static StatusEnum TURN_START = new StatusEnum(TURN_START_STRING);
         public const string TURN_END_STRING = "TURN_END";
         public static StatusEnum TURN_END = new StatusEnum(TURN_END_STRING);
+        public const string TICK_STRING = "TICK";
+        public static StatusEnum TICK = new StatusEnum(TICK_STRING, false);
 
-        private List<DerivedStatusEffect>[] statusEvents; 
+        private List<DerivedStatusEffect>[] statusEvents;
+
+        public DeliveryResultPack currentPack;
  
         public override void Awake()
         {
@@ -29,10 +34,13 @@ namespace Manager
 
         public void RegisterStatusEffect(StatusEnum statusEnum, DerivedStatusEffect derivedStatusEffect)
         {
-            if (!derivedStatusEffect.listsIncluded[statusEnum.intValue])
+            if (statusEnum.shouldRegister)
             {
-                derivedStatusEffect.listsIncluded[statusEnum.intValue] = true;
-                statusEvents[statusEnum.intValue].Add(derivedStatusEffect);
+                if (!derivedStatusEffect.listsIncluded[statusEnum.intValue])
+                {
+                    derivedStatusEffect.listsIncluded[statusEnum.intValue] = true;
+                    statusEvents[statusEnum.intValue].Add(derivedStatusEffect);
+                }
             }
         }
 
@@ -40,10 +48,11 @@ namespace Manager
         {
             List<DerivedStatusEffect> statusEffects = statusEvents[statusEnum.intValue];
             bool statusApplied = false;
+            currentPack = DeliveryResultPack.GetPack(toolManager);
             for (int x = 0; x < statusEffects.Count; x++)
             {
                 DerivedStatusEffect dse = statusEffects[x];
-                if (dse.ended)
+                if (!dse.enabled)
                 {
                     dse.listsIncluded[statusEnum.intValue] = false;
                     statusEffects.RemoveAt(x);
@@ -53,15 +62,16 @@ namespace Manager
                 {
                     statusApplied = true;
                     dse.Trigger(statusEnum);
+                    currentPack.PublishCurrent();
                 }
             }
             if (statusApplied)
             {
-                DeliveryTool dt = toolManager.Get(DeliveryTool.toolEnum) as DeliveryTool;
-                if (dt)
-                {
-                    dt.PublishAll();
-                }
+                currentPack.Deliver();
+            }
+            else
+            {
+                currentPack.Clear();
             }
         }
 

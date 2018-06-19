@@ -1,25 +1,24 @@
-﻿using Manager;
+﻿using Delivery;
+using Manager;
 using System.Collections.Generic;
-using UnityEngine;
 
-public abstract class DerivedStatusEffect
+public abstract class DerivedStatusEffect : I_DerivedStatus
 {
     private List<I_BaseStatusEffect> baseStatusEffects;
-    private int duration = -1;
+    public I_Ticker Ticker { get; set; }
     public ToolManager owner;
     public ToolManager target;
     public StatusTool statusTool;
     private List<I_BaseStatusEffect>[] baseTriggers;
-    public bool ended = false;
+    public bool enabled = false;
     public bool[] listsIncluded = new bool[StatusEnum.current];
 
     protected DerivedStatusEffect(){}
 
-    public DerivedStatusEffect(ToolManager owner, ToolManager target, int duration)
+    public DerivedStatusEffect(ToolManager owner, ToolManager target)
     {
         this.owner = owner;
         this.target = target;
-        this.duration = duration;
         statusTool = target.Get(StatusTool.toolEnum) as StatusTool;
         baseStatusEffects = new List<I_BaseStatusEffect>();
         baseTriggers = new List<I_BaseStatusEffect>[StatusEnum.current];
@@ -29,64 +28,88 @@ public abstract class DerivedStatusEffect
         }
     }
 
-    public void Initiate()
-    {}
-
     public virtual void Enable()
     {
-        bool[] toAddTo = new bool[StatusEnum.current];
-        if (duration != -1 && !listsIncluded[StatusTool.TURN_END.intValue])
+        if (!enabled)
         {
-            statusTool.RegisterStatusEffect(StatusTool.TURN_END, this);
-            toAddTo[StatusTool.TURN_END.intValue] = true;
-        }
-        foreach (I_BaseStatusEffect bse in baseStatusEffects)
-        {
-            bse.Apply(this);
-            foreach (StatusEnum statusEnum in bse.GetStatusEnums())
+            bool[] toAddTo = new bool[StatusEnum.current];
+            if (Ticker != null)
             {
-                if (!toAddTo[statusEnum.intValue])
+                StatusEnum[] statusEnums = Ticker.GetStatusEnums();
+                foreach (StatusEnum statusEnum in statusEnums)
                 {
-                    toAddTo[statusEnum.intValue] = true;
-                    statusTool.RegisterStatusEffect(statusEnum, this);
+                    if (!toAddTo[statusEnum.intValue] && !listsIncluded[statusEnum.intValue])
+                    {
+                        toAddTo[statusEnum.intValue] = true;
+                        statusTool.RegisterStatusEffect(statusEnum, this);
+                    }
                 }
             }
+            foreach (I_BaseStatusEffect bse in baseStatusEffects)
+            {
+                bse.Apply(this);
+                foreach (StatusEnum statusEnum in bse.GetStatusEnums())
+                {
+                    if (!toAddTo[statusEnum.intValue] && !listsIncluded[statusEnum.intValue])
+                    {
+                        toAddTo[statusEnum.intValue] = true;
+                        statusTool.RegisterStatusEffect(statusEnum, this);
+                    }
+                }
+            }
+            enabled = true;
         }
-        ended = false;
+        if (Ticker != null)
+        {
+            Ticker.Enable();
+        }
     }
 
     public virtual void Disable()
     {
-        if (baseStatusEffects != null)
+        if (enabled)
         {
-            foreach (I_BaseStatusEffect bse in baseStatusEffects)
+            if (baseStatusEffects != null)
             {
-                bse.End(this);
+                foreach (I_BaseStatusEffect bse in baseStatusEffects)
+                {
+                    bse.End(this);
+                }
             }
-            ended = true;
+            enabled = false;
+        }
+        if (Ticker != null)
+        {
+            Ticker.Disable();
         }
     }
 
-    public void Trigger(StatusEnum statusEnum)
+    public virtual void Trigger(StatusEnum statusEnum)
     {
         Trigger(baseTriggers[statusEnum.intValue], statusEnum);
-        switch (statusEnum.value)
+        if (Ticker != null)
         {
-            case StatusTool.TURN_END_STRING: TurnEnd();
-                break;
+            Ticker.Trigger(statusEnum);
         }
     }
 
-    private void TurnEnd()
+    public virtual void Remove()
     {
-        if (duration > 0)
+        foreach (I_BaseStatusEffect bse in baseStatusEffects)
         {
-            duration -= 1;
-            if (duration == 0)
-            {
-                Disable();
-            }
+            bse.Remove(this);
         }
+        enabled = true;
+    }
+
+    public virtual ToolManager Owner()
+    {
+        return owner;
+    }
+
+    public virtual ToolManager Target()
+    {
+        return target;
     }
 
     private void Trigger(List<I_BaseStatusEffect> list, StatusEnum statusEnum)
@@ -97,7 +120,7 @@ public abstract class DerivedStatusEffect
         }
     }
 
-    public void AddBaseStatusEffect(I_BaseStatusEffect baseStatusEffect)
+    protected void AddBaseStatusEffect(I_BaseStatusEffect baseStatusEffect)
     {
         StatusEnum[] statusEnums = baseStatusEffect.GetStatusEnums();
         foreach (StatusEnum statusEnum in statusEnums)
@@ -108,19 +131,15 @@ public abstract class DerivedStatusEffect
         baseStatusEffects.Add(baseStatusEffect);
     }
 
-    public virtual void Remove()
-    {
-        foreach (I_BaseStatusEffect bse in baseStatusEffects)
-        {
-            bse.Remove(this);
-        }
-        ended = true;
-    }
-
     public virtual string GetName()
     {
         return GetType().Name;
     }
 
-    public abstract DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration);
+    public void SetTicker(I_Ticker ticker)
+    {
+        Ticker = ticker;
+    }
+
+    public abstract I_DerivedStatus Clone(ToolManager owner, ToolManager target);
 }

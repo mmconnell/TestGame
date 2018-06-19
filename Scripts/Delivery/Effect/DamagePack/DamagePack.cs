@@ -1,5 +1,6 @@
 ﻿using EnumsNew;
 using Manager;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
@@ -22,12 +23,12 @@ namespace Delivery
             return DynamicNumber.GetIntAmount(owner, target);
         }
 
-        public void Apply(ToolManager owner, ToolManager target)
+        public void Apply(ToolManager owner, ToolManager target, DeliveryInformation di, DeliveryResultPack targetDeliveryResult)
         {
             int total = GetAmount(owner, target);
             List<KeyValuePair<Damage_Type_Enum, float>> damageTypeList = DamageTypes.GetDamageTypes(target);
             DeliveryTool deliveryTool = target.Get(DeliveryTool.toolEnum) as DeliveryTool;
-            DeliveryResult deliveryResult = deliveryTool.GetCurrent();
+            DeliveryResult deliveryResult = targetDeliveryResult.GetCurrent();
             foreach (KeyValuePair<Damage_Type_Enum, float> pair in damageTypeList)
             {
                 Damage_Type_Enum damageType = pair.Key;

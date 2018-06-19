@@ -9,7 +9,7 @@ namespace Delivery
         private AuraSelector auraSelector;
         private GameObject aura;
 
-        public AuraStatusEffect(ToolManager owner, ToolManager target, int duration, AuraSelector auraSelector) : base(owner, target, duration)
+        public AuraStatusEffect(ToolManager owner, ToolManager target, int duration, AuraSelector auraSelector) : base(owner, target)
         {
             this.auraSelector = auraSelector;
             aura = auraSelector.gameObject;
@@ -42,7 +42,7 @@ namespace Delivery
             auraSelector.enabled = false;
         }
 
-        public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)
+        public override I_DerivedStatus Clone(ToolManager owner, ToolManager target)
         {
             return null;
         }

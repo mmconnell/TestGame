@@ -29,12 +29,9 @@ public abstract class DisableStatusEffect : I_BaseStatusEffect
     public abstract void ApplyEffect(DerivedStatusEffect dse);
     public abstract void RemoveEffect(DerivedStatusEffect dse);
 
-    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
-    {
-        
-    }
+    public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum) {}
 
-    public static StatusEnum[] statusEnums = new StatusEnum[] { };
+    public static StatusEnum[] statusEnums = new StatusEnum[] {};
     public StatusEnum[] GetStatusEnums()
     {
         return statusEnums;

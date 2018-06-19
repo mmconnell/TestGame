@@ -12,6 +12,6 @@ namespace Delivery
             Conditional = conditional;
         }
 
-        public abstract bool Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts);
+        public abstract bool Apply(GameObject owner, GameObject target, I_DeliveryPack pack, I_DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts);
     }
 }

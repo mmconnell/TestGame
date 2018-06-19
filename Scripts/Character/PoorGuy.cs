@@ -16,7 +16,11 @@ public class PoorGuy : MonoBehaviour
         gameObject.AddComponent<PlayerController>();
         tm = InformationManager.GetRegisteredToolManager(gameObject);
         DeliveryTool dt = tm.Get(DeliveryTool.toolEnum) as DeliveryTool;
-        dt.FinalFilters.Add(new ReduceFireByOneFilterTest());
+        dt.AttackFilters.Add(new ReduceFireByOneFilterTest());
+        for (int x = 0; x < 1; x++)
+        {
+            //OnFire.Cloner.Clone(tm, tm, -1).Enable();
+        }
         /*DerivedStatusEffect dse = gameObject.AddComponent<OnFire>();
         dse.duration = 5;*/
 

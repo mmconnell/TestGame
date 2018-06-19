@@ -1,27 +1,30 @@
 ﻿using Delivery;
 using EnumsNew;
 using Manager;
+using System.Collections.Generic;
 
 public class TriggeredStatusEffect : I_BaseStatusEffect
 {
     public Character_Trigger_Enum CharacterTrigger { get; set; }
-    public DeliveryPack DeliveryPack { get; set; }
+    public I_DeliveryPack DeliveryPack { get; set; }
+    private DeliveryInformation deliveryInformation;
+    private StatusEnum[] statusEnums; 
 
-    public TriggeredStatusEffect(Character_Trigger_Enum statusTrigger, DeliveryPack deliveryPack)
+    public TriggeredStatusEffect(Character_Trigger_Enum statusTrigger, I_DeliveryPack deliveryPack, params StatusEnum[] statusEnums)
     {
         CharacterTrigger = statusTrigger;
         DeliveryPack = deliveryPack;
+        this.statusEnums = statusEnums;
+        deliveryInformation = new DeliveryInformation
+        {
+            canTargetOwner = true,
+            packInfo = new Dictionary<ToolManager, DeliveryResultPack>()
+        };
     }
 
-    public void Apply(DerivedStatusEffect dse)
-    {
-        //EventManager.StartListening(dse.target.gameObject, CharacterTrigger.ToString(), Trigger);
-    }
+    public void Apply(DerivedStatusEffect dse){}
 
-    public void Remove(DerivedStatusEffect dse)
-    {
-        //EventManager.StopListening(dse.target.gameObject, CharacterTrigger.ToString(), Trigger);
-    }
+    public void Remove(DerivedStatusEffect dse){}
 
     public void End(DerivedStatusEffect dse)
     {
@@ -30,10 +33,16 @@ public class TriggeredStatusEffect : I_BaseStatusEffect
 
     public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
     {
-        DeliveryManager.Run(dse.owner, new ObjectPosition(dse.target), DeliveryPack);
+        for (int x = 0; x < statusEnums.Length; x++)
+        {
+            if (statusEnum == statusEnums[x])
+            {
+                DeliveryUtility.Deliver(DeliveryPack, dse.owner, dse.target.position);
+                break;
+            }
+        }
     }
 
-    public static StatusEnum[] statusEnums = new StatusEnum[] {  };
     public StatusEnum[] GetStatusEnums()
     {
         return statusEnums;

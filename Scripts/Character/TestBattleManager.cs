@@ -94,7 +94,7 @@ public class TestBattleManager : MonoBehaviour
         GameObject go = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
         go.name = "Test " + numPlayers;
         numPlayers++;
-        go.AddComponent<TurnTool>();
+        go.AddComponent<TurnManager>();
         go.transform.position = new Vector3(0, 0, 0);
         go.transform.parent = Players.transform;
         return go;

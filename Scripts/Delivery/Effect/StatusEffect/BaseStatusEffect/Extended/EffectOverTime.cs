@@ -1,49 +1,51 @@
 ﻿using Manager;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Delivery
 {
     public class EffectOverTime : I_BaseStatusEffect
     {
-        private I_Effect effect;
+        private I_DeliveryPack effect;
+        private DeliveryInformation deliveryInformation;
 
         public EffectOverTime(I_Effect effect)
         {
-            this.effect = effect;
+            this.effect = new DeliveryPackEffect
+            {
+                AreaEffect = new SingleTarget(),
+                Effect = effect
+            };
+            deliveryInformation = new DeliveryInformation
+            {
+                canTargetOwner = true,
+                packInfo = new Dictionary<ToolManager, DeliveryResultPack>()
+            };
         }
 
-        public void Apply(DerivedStatusEffect dse)
-        {
-            //EventManager.StartListening(dse.target.gameObject, "TURN_START", TurnStart);
-        }
+        public void Apply(DerivedStatusEffect dse){}
 
         public void End(DerivedStatusEffect dse)
         { 
             Remove(dse);
         }
 
-        public void Remove(DerivedStatusEffect dse)
-        {
-            //EventManager.StopListening(dse.target.gameObject, "TURN_START", TurnStart);
-        }
+        public void Remove(DerivedStatusEffect dse){}
 
         public void Trigger(DerivedStatusEffect dse, StatusEnum statusEnum)
         {
-            if (statusEnum.value.Equals(StatusTool.TURN_START_STRING))
+            if (statusEnum.value.Equals(StatusTool.TICK_STRING))
             {
-                TurnStart(dse);
+                Tick(dse);
             }
         }
 
-        public void TurnStart(DerivedStatusEffect dse)
+        private void Tick(DerivedStatusEffect dse)
         {
-            effect.Apply(dse.owner, dse.target);
+            deliveryInformation.packInfo.Clear();
+            DeliveryUtility.Deliver(effect, dse.owner, deliveryInformation, dse.target.position);
         }
 
-        private static StatusEnum[] statusEnums = new StatusEnum[] { StatusTool.TURN_START };
+        private static StatusEnum[] statusEnums = new StatusEnum[] { StatusTool.TICK };
         public StatusEnum[] GetStatusEnums()
         {
             return statusEnums;

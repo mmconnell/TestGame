@@ -12,7 +12,7 @@ namespace Delivery
             EffectPack = effectPack;
         }
 
-        public override void Apply(GameObject owner, GameObject target, DeliveryPack pack, DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts) {
+        public override void Apply(GameObject owner, GameObject target, I_DeliveryPack pack, I_DeliveryPack newPack, List<Result> results, Dictionary<Delivery_Pack_Shifts, NumberShift> shifts) {
             //newPack.AddEffect(EffectPack);
         }        
     }

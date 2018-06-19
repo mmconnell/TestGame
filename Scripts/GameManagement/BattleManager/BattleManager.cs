@@ -6,9 +6,9 @@ namespace Manager
 {
     public class BattleManager : MonoBehaviour
     {
-        public List<TurnTool> TurnOrder;
-        public List<TurnTool> NextTurnOrder;
-        public List<TurnTool> Swap;
+        public List<TurnManager> TurnOrder;
+        public List<TurnManager> NextTurnOrder;
+        public List<TurnManager> Swap;
         public List<GameObject> Entities;
         public bool Inturruptable { get; private set; }
         public bool requestInturrupt = false;
@@ -21,8 +21,8 @@ namespace Manager
 
         private void Awake()
         {
-            TurnOrder = new List<TurnTool>();
-            NextTurnOrder = new List<TurnTool>();
+            TurnOrder = new List<TurnManager>();
+            NextTurnOrder = new List<TurnManager>();
             Inturruptable = false;
 
             notMerging = new WaitUntil(() => !merging);
@@ -36,7 +36,7 @@ namespace Manager
             {
                 if (!InformationManager.IsTemporaryTag(go.tag))
                 {
-                    TurnTool manager = go.GetComponent<TurnTool>();// InformationManager.GetRegisteredComponent(go, typeof(TurnTool)) as TurnTool;
+                    TurnManager manager = go.GetComponent<TurnManager>();// InformationManager.GetRegisteredComponent(go, typeof(TurnTool)) as TurnTool;
                     if (manager != null)
                     {
                         manager.CalculateInitiative();
@@ -53,10 +53,10 @@ namespace Manager
             if (!InformationManager.IsTemporaryTag(go.tag))
             {
                 ToolManager tm = InformationManager.GetRegisteredToolManager(go);
-                TurnTool turnTool = null;
+                TurnManager turnTool = null;
                 if (tm)
                 {
-                    turnTool = tm.Get(TurnTool.toolEnum) as TurnTool;
+                    turnTool = tm.Get(TurnManager.toolEnum) as TurnManager;
                 }
                 
                 if (turnTool)
@@ -109,9 +109,9 @@ namespace Manager
             }
         }
 
-        private void MergeInitiative(List<TurnTool> main, List<TurnTool> other)
+        private void MergeInitiative(List<TurnManager> main, List<TurnManager> other)
         {
-            TurnTool em;
+            TurnManager em;
             if (other.Count == 0)
             {
                 return;
@@ -160,10 +160,10 @@ namespace Manager
 
                     if (TurnOrder.Count > 0)
                     {
-                        TurnTool entityManager = TurnOrder[0];
+                        TurnManager entityManager = TurnOrder[0];
 
                         TurnOrder.RemoveAt(0);
-                        //yield return StartCoroutine(entityManager.TakeTurn());
+                        yield return StartCoroutine(entityManager.TakeTurn());
 
                         entityManager.CalculateInitiative();
                         AddOrdered(NextTurnOrder, entityManager, 0);
@@ -180,7 +180,7 @@ namespace Manager
             return ((false /*&& !requestInturrupt*/) || (endBattle));
         }
 
-        private bool AddOrdered(List<TurnTool> list, TurnTool unit, int start)
+        private bool AddOrdered(List<TurnManager> list, TurnManager unit, int start)
         {
             for (int x = start; x < list.Count; x++)
             {

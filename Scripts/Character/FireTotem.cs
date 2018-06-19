@@ -1,5 +1,7 @@
 ﻿using Delivery;
+using EnumsNew;
 using Manager;
+using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
@@ -7,9 +9,9 @@ public class FireTotem : MonoBehaviour
 {
     public int FrameCount { get; set; }
     public bool test = true;
-    public DamageOverTimeStatusEffect dot;
+    public EffectOverTime dot;
     DerivedStatusEffect dse;
-    TurnTool turnTool;
+    TurnManager turnTool;
     DeliveryTool dt;
     I_Filter filter;
     DynamicNumber random = new RangeNumber(new FlatNumber(1), new FlatNumber(5));
@@ -28,15 +30,16 @@ public class FireTotem : MonoBehaviour
         }
         // DerivedStatusEffect dse;
         DynamicNumber dynamicNumber = new RangeNumber(new FlatNumber(1), new FlatNumber(5));
-        gameObject.transform.position = new Vector3(dynamicNumber.GetIntAmount(toolManager), dynamicNumber.GetIntAmount(toolManager));
+        gameObject.transform.position = new Vector3(dynamicNumber.GetAmount(toolManager), dynamicNumber.GetAmount(toolManager));
         for (int x = 0; x < 100; x++)
         {
-            dt.AttackFilters.Add(filter);
-            OnFire.Create(toolManager, toolManager, -1);
+            //dt.AttackFilters.Add(filter);
+            //OnFire.Create(toolManager, toolManager, -1);
             //dse = gameObject.AddComponent<OnFire>();
             //dse.owner = toolManager;
             //dse.duration = dynamicNumber.GetIntAmount(toolManager, toolManager);
         }
+        //OnFire.Cloner.Clone(toolManager, toolManager, -1).Enable();
 
         /*dse = gameObject.AddComponent<TimedBomb>();
         dse.duration = 10;
@@ -53,8 +56,8 @@ public class FireTotem : MonoBehaviour
         //dse = gameObject.AddComponent<FirePulse>();
         //dse.owner = gameObject;
 
-        turnTool = toolManager.Get(TurnTool.toolEnum) as TurnTool;
-        InvokeRepeating("TriggerTime", Random.value * random.GetAmount(toolManager) , 1f);
+        turnTool = toolManager.Get(TurnManager.toolEnum) as TurnManager;
+        //InvokeRepeating("TriggerTime", Random.value * random.GetAmount(toolManager) , 1f);
     }
 
     public void TriggerTime()

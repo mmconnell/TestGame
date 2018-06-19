@@ -18,7 +18,7 @@ public class InformationManager : MonoBehaviour
 
     private static InformationManager informationManager;
 
-    private static InformationManager Instance
+    public static InformationManager Instance
     {
         get
         {
@@ -108,6 +108,11 @@ public class InformationManager : MonoBehaviour
     public static int RandomNumber(int number)
     {
         return UnityEngine.Random.Range(0, number);
+    }
+
+    public static float RandomFloat(float number)
+    {
+        return UnityEngine.Random.Range(0f, number);
     }
 
     public static void Log(string info)

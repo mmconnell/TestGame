@@ -11,12 +11,16 @@ namespace Manager
 
         public string value;
         public int intValue;
+        public bool shouldRegister;
 
-        public StatusEnum(string value)
+        public StatusEnum(string value, bool shouldRegister)
         {
             this.value = value;
+            this.shouldRegister = shouldRegister;
             intValue = current;
             current++;
         }
+
+        public StatusEnum(string value) : this(value, true) { }
     }
 }

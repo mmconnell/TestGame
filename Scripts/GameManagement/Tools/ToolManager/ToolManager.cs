@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Delivery;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,9 @@ namespace Manager
     {
         private static ToolEnum[] tools = new ToolEnum[InformationManager.GetMaxTools()];
         private static int count = 0;
+
+        public I_Position position;
+        public Rigidbody2D rigidBody;
 
         public static void AddTool(ToolEnum toolEnum)
         {
@@ -40,6 +44,8 @@ namespace Manager
             else
             {
                 InformationManager.RegisterToolManager(gameObject, this);
+                position = new ObjectPosition(this);
+                rigidBody = GetComponent<Rigidbody2D>();
             }
         }
 

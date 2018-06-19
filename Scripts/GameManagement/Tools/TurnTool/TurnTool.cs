@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Manager
 {
     [RequireComponent(typeof(StatusTool))]
-    public class TurnTool : AbstractTool
+    public class TurnManager : AbstractTool
     {
         private BattleManager currentBattleManager;
         private StatusTool statusTool;

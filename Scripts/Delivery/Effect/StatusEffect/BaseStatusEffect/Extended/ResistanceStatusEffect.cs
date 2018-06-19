@@ -9,8 +9,10 @@ public class ResistanceStatusEffect : I_BaseStatusEffect
     public ResistanceStatusEffect(Damage_Type_Enum resistanceType, int shiftAmount)
     {
         ResistanceType = resistanceType;
-        NumberShift = new NumberShift();
-        NumberShift.Flat = shiftAmount;
+        NumberShift = new NumberShift
+        {
+            Flat = shiftAmount
+        };
     }
 
     public void Apply(DerivedStatusEffect dse)

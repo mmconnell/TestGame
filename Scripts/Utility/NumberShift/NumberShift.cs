@@ -1,4 +1,6 @@
-﻿public class NumberShift
+﻿using System;
+
+public class NumberShift
 {
     public NumberShift()
     {
@@ -7,7 +9,18 @@
     }
 
     public float Flat { get; set; }
-    public float Scale { get; set; }
+
+    private float scale;
+    public float Scale {
+        get
+        {
+            return scale;
+        }
+        set
+        {
+            scale = Math.Abs(value);
+        }
+    }
 
     public int FlatInt()
     {

@@ -16,16 +16,16 @@ namespace Utility
 
         public override float GetAmount(ToolManager owner, ToolManager target)
         {
-            int lowVal = low.GetIntAmount(owner, target);
-            int highVal = high.GetIntAmount(owner, target);
-            return (InformationManager.RandomNumber(highVal - lowVal) + lowVal);
+            float lowVal = low.GetIntAmount(owner, target);
+            float highVal = high.GetIntAmount(owner, target);
+            return (InformationManager.RandomFloat(highVal - lowVal) + lowVal);
         }
 
         public override float GetAmount(ToolManager source)
         {
-            int lowVal = low.GetIntAmount(source);
-            int highVal = high.GetIntAmount(source);
-            return (InformationManager.RandomNumber(highVal - lowVal) + lowVal);
+            float lowVal = low.GetIntAmount(source);
+            float highVal = high.GetIntAmount(source);
+            return (InformationManager.RandomFloat(highVal - lowVal) + lowVal);
         }
     }
 }

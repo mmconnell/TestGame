@@ -10,15 +10,15 @@ public class EarthQuake : DerivedStatusEffect
 
     private EarthQuake() : base() { }
 
-    public EarthQuake(ToolManager owner, ToolManager target, int duration) : base(owner, target, duration)
+    public EarthQuake(ToolManager owner, ToolManager target) : base(owner, target)
     {
         if (statusEffects == null)
         {
             statusEffects = new List<I_BaseStatusEffect>();
-            DeliveryPack deliveryPack = new DeliveryPack
+            I_DeliveryPack deliveryPack = new PriorityDeliveryPack
             {
                 AreaEffect = new SimpleAreaCircle2D(new FlatNumber(2), true),
-                EffectMap = new SortedDictionary<int, List<I_Effect>>
+                EffectMap = new Dictionary<int, List<I_Effect>>
                 {
                     {
                         1, new List<I_Effect>
@@ -35,18 +35,10 @@ public class EarthQuake : DerivedStatusEffect
         {
             AddBaseStatusEffect(bse);
         }
-
-        Initiate();
-        Enable();
     }
 
-    public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)
+    public override I_DerivedStatus Clone(ToolManager owner, ToolManager target)
     {
-        return Create(owner, target, duration);
-    }
-
-    public static EarthQuake Create(ToolManager owner, ToolManager target, int duration)
-    {
-        return new EarthQuake(owner, target, duration);
+        return new EarthQuake(owner, target);
     }
 }

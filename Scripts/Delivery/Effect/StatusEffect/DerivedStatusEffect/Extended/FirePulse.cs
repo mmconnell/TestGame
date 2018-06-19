@@ -15,7 +15,7 @@ namespace Delivery
 
         private FirePulse() : base() { }
 
-        public FirePulse(ToolManager owner, ToolManager target, int duration) : base(owner, target, duration)
+        public FirePulse(ToolManager owner, ToolManager target) : base(owner, target)
         {
             if (statusEffects == null)
             {
@@ -30,19 +30,11 @@ namespace Delivery
             {
                 AddBaseStatusEffect(bse);
             }
-
-            Initiate();
-            Enable();
         }
 
-        public override DerivedStatusEffect Clone(ToolManager owner, ToolManager target, int duration)
+        public override I_DerivedStatus Clone(ToolManager owner, ToolManager target)
         {
-            return Create(owner, target, duration);
-        }
-
-        public static FirePulse Create(ToolManager owner, ToolManager target, int duration)
-        {
-            return new FirePulse(owner, target, duration);
+            return new FirePulse(owner, target);
         }
     }
 }
