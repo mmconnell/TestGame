@@ -10,6 +10,7 @@ namespace Manager
         private BattleManager currentBattleManager;
         private StatusTool statusTool;
         private WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+        private CharacterController characterController;
 
         public static ToolEnum toolEnum;
 
@@ -18,6 +19,7 @@ namespace Manager
             base.Awake();
             toolEnum = ToolEnum;
             statusTool = toolManager.Get(StatusTool.toolEnum) as StatusTool;
+            characterController = gameObject.GetComponent<CharacterController>();
         }
 
         public void CalculateInitiative()
@@ -48,10 +50,8 @@ namespace Manager
         public IEnumerator TakeTurn()
         {
             statusTool.Trigger(StatusTool.TURN_START);
+            yield return StartCoroutine(characterController.TakeTurn());
             statusTool.Trigger(StatusTool.TURN_END);
-            EventManager.TriggerEvent(gameObject, "TURN_START");
-            EventManager.TriggerEvent(gameObject, "TURN_END");
-            yield return waitForSeconds;
         }
 
         public override ToolEnum GetToolEnum()

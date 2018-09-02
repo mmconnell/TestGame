@@ -1,4 +1,4 @@
-﻿using Delivery;
+﻿using DeliverySystem;
 using EnumsNew;
 using Manager;
 using System.Collections.Generic;
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         deliveryPack = new DeliveryPackEffect
         {
             AreaEffect = new SimpleAreaCircle2D(new FlatNumber(1)),
-            Effect = new StatusEffect(Chilled.Cloner, Persistance.COMBAT, new TurnTickerPack(new FlatNumber(2)) /*new TimeTickerPack(new FlatNumber(10f), new FlatNumber(1f))*/)
+            Effect = new StatusEffect(Chilled.Cloner, Persistance.COMBAT, /*new TurnTickerPack(new FlatNumber(2))*/ new TimeTickerPack(new FlatNumber(10f), new FlatNumber(1f)))
         };
         toolManager = InformationManager.GetRegisteredToolManager(gameObject);
         material = Resources.Load("red", typeof(Material)) as Material;

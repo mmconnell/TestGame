@@ -14,8 +14,10 @@ public class TestBattleManager : MonoBehaviour
     public GameObject Players;
     public int[] test = new int[3];
     public GameObject player;
+    public GameObject enemy;
     private int numPlayers = 1;
     private int battlesBuilt = 0;
+    private bool useEnemy = false;
     // Use this for initialization
     void Start()
     {
@@ -91,8 +93,20 @@ public class TestBattleManager : MonoBehaviour
 
     private GameObject CreatePlayer()
     {
-        GameObject go = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
-        go.name = "Test " + numPlayers;
+        GameObject go;
+        if (useEnemy)
+        {
+            go = Instantiate(enemy, new Vector3(0, 0, 0), Quaternion.identity);
+            go.name = "Enemy Test " + numPlayers;
+            useEnemy = false;
+        }
+        else
+        {
+            go = Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
+            go.name = "Player Test " + numPlayers;
+            useEnemy = true;
+        }
+        
         numPlayers++;
         go.AddComponent<TurnManager>();
         go.transform.position = new Vector3(0, 0, 0);

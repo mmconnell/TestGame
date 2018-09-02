@@ -87,6 +87,11 @@ namespace Manager
             }
         }
 
+        public void InstancePause()
+        {
+            Pause();
+        }
+
         public static void Pause()
         {
             Instance.paused = !Instance.paused;

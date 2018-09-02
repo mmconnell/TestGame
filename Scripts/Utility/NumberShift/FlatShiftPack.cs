@@ -42,7 +42,6 @@ namespace Utility
         protected override void SetValues()
         {
             shiftValue = baseValue + finalNumberShift.FlatInt();
-            FinalValue = finalTempNumberShift.FlatInt();
             if (hasBaseMax)
             {
                 shiftValue = Math.Min(shiftValue, baseMax);

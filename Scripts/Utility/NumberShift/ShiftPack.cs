@@ -28,7 +28,7 @@ namespace Utility
         {
             shifts.Add(numberShift);
             finalNumberShift.Flat += numberShift.Flat;
-            if (AllowMultiplier())
+            if (AllowMultiplier() && numberShift.Scale != 0)
             {
                 finalNumberShift.Scale *= numberShift.Scale;
             }
@@ -39,9 +39,9 @@ namespace Utility
         {
             shifts.Remove(numberShift);
             finalNumberShift.Flat -= numberShift.Flat;
-            if (AllowMultiplier())
+            if (AllowMultiplier() && numberShift.Scale != 0)
             {
-                finalNumberShift.Scale *= numberShift.Scale;
+                finalNumberShift.Scale /= numberShift.Scale;
             }
             SetValues();
         }
